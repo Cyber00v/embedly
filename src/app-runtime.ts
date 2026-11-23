@@ -3305,7 +3305,7 @@ export function startRuntime(
     }
   }
 
-  window.TakweenStudio = Object.freeze({
+  window.embadly = Object.freeze({
     showMessage: showMessageDialog,
     navigateToPage(pageId) {
       showPage(pageId, true);

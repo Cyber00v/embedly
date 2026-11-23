@@ -296,6 +296,9 @@ test("the bundled calendar, Google Map, Step, and Stepper plugins validate", asy
 });
 
 test("mounts plugins into native Shadow DOM and exposes scoped plugin context", async () => {
+  const standaloneMountPluginElements = new Function(
+    `return (${mountPluginElements.toString()})`,
+  )();
   const previous = {
     Element: globalThis.Element,
     HTMLElement: globalThis.HTMLElement,
@@ -376,7 +379,7 @@ test("mounts plugins into native Shadow DOM and exposes scoped plugin context", 
     host.closest = () => ({ getAttribute: () => "ar" });
 
     const propertyChanges = [];
-    mountPluginElements(host, { [plugin.id]: plugin }, (changedHost, key, value) =>
+    standaloneMountPluginElements(host, { [plugin.id]: plugin }, (changedHost, key, value) =>
       propertyChanges.push({ host: changedHost, key, value }),
     );
 

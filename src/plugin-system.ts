@@ -751,7 +751,7 @@ export function mountPluginElements(
         : "en";
       host.setAttribute(
         "aria-label",
-        localizePluginDefinition(plugin, language).title,
+        plugin.localizations?.[language]?.title ?? plugin.title,
       );
       const emit = (event: string, detail?: unknown) => {
         if (
