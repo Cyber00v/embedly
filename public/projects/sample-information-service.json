@@ -1,0 +1,307 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    {
+      "id": "page-home",
+      "name": "home",
+      "kind": "page"
+    },
+    {
+      "id": "page-splash",
+      "name": "splash",
+      "kind": "splash"
+    },
+    {
+      "id": "page-error",
+      "name": "error",
+      "kind": "error"
+    }
+  ],
+  "elements": [
+    {
+      "id": "scrollview",
+      "type": "scrollView",
+      "pageId": "page-home",
+      "content": "",
+      "styles": {
+        "height": "100%"
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "tabs",
+      "pageId": "page-home",
+      "content": "",
+      "localizations": {
+        "ar": "بيانات المستخدم"
+      },
+      "parentId": "scrollview",
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "activeTabId": "tab1"
+    },
+    {
+      "id": "tab1",
+      "type": "tab",
+      "pageId": "page-home",
+      "content": "تبويب جديد",
+      "localizations": {
+        "ar": "بيانات المستخدم"
+      },
+      "parentId": "tabs",
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "grid",
+      "type": "grid",
+      "pageId": "page-home",
+      "content": "",
+      "parentId": "tab1",
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "name",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "اكتب النص هنا",
+      "className": "bold",
+      "localizations": {
+        "ar": "الإسم"
+      },
+      "parentId": "grid",
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "user_name",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "اكتب النص هنا",
+      "binding": {
+        "source": "twk",
+        "path": "full_name"
+      },
+      "parentId": "grid",
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "tab2",
+      "type": "tab",
+      "pageId": "page-home",
+      "content": "تبويب جديد",
+      "localizations": {
+        "ar": "بيانات أفراد الاسرة"
+      },
+      "parentId": "tabs",
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "family-collection",
+      "type": "collection",
+      "pageId": "page-home",
+      "content": "",
+      "parentId": "tab2",
+      "listSource": {
+        "type": "twk",
+        "field": "family_members",
+        "labelPath": "label",
+        "valuePath": "value"
+      },
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "family-member",
+      "type": "checkbox",
+      "pageId": "page-home",
+      "content": "أوافق على الشروط",
+      "binding": {
+        "source": "item"
+      },
+      "fieldName": "selected_members",
+      "parentId": "family-collection",
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "itemLabelPath": "name",
+      "itemValuePath": "national_id"
+    },
+    {
+      "id": "element-13",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "اكتب النص هنا",
+      "className": "bold",
+      "localizations": {
+        "ar": "تاريخ الميلاد"
+      },
+      "parentId": "grid",
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "element-14",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "اكتب النص هنا",
+      "binding": {
+        "source": "twk",
+        "path": "birth_date"
+      },
+      "parentId": "grid",
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "element-15",
+      "type": "absoluteLayout",
+      "pageId": "page-splash",
+      "content": "",
+      "styles": {
+        "height": "100%"
+      }
+    },
+    {
+      "id": "element-16",
+      "type": "layout",
+      "pageId": "page-splash",
+      "content": "",
+      "parentId": "element-15",
+      "layout": {
+        "direction": "column",
+        "align": "center",
+        "justify": "center",
+        "gap": 8,
+        "columns": 2
+      },
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "horizontalAlignment": "center",
+      "verticalAlignment": "center"
+    },
+    {
+      "id": "element-18",
+      "type": "loading",
+      "pageId": "page-splash",
+      "content": "جارٍ التحميل",
+      "parentId": "element-16",
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "element-17",
+      "type": "text",
+      "pageId": "page-splash",
+      "content": "اكتب النص هنا",
+      "localizations": {
+        "ar": "يتم تجهيز البيانات"
+      },
+      "parentId": "element-16",
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "element-19",
+      "type": "fab",
+      "pageId": "page-home",
+      "content": "+",
+      "action": {
+        "type": "condition",
+        "condition": {
+          "source": "form",
+          "operator": "notEmpty",
+          "value": "null",
+          "elementId": "scrollview",
+          "property": "content",
+          "fieldName": "selected_members"
+        },
+        "actions": [
+          {
+            "type": "message",
+            "elementId": "scrollview",
+            "title": "",
+            "message": "{{form.selected_members}}"
+          }
+        ]
+      },
+      "styles": {
+        "background": "#007A53"
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "serviceId-variable",
+      "name": "ServiceID",
+      "source": "static",
+      "value": "12121212"
+    }
+  ],
+  "customCss": ".bold{font-weight:bold}",
+  "theme": {
+    "primary": "#363636",
+    "secondary": "#e8e8e8",
+    "secondaryForeground": "#262726"
+  },
+  "settings": {
+    "title": "عنوان الخدمة",
+    "orgnization": "إسم القطاع",
+    "appTopBarType": "none",
+    "appElementSize": "large"
+  }
+}

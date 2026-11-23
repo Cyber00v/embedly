@@ -1,0 +1,74 @@
+{
+  "projects": [
+    {
+      "name": "Basic Information Service",
+      "description": "A simple service displaying user and family member data including tabbed navigation.",
+      "file": "sample-information-service.json"
+    },
+    {
+      "name": "Contact Service",
+      "description": "A contact form featuring input fields and a submit button.",
+      "file": "sample-contact-form.json"
+    },
+    {
+      "name": "Sample Calculator",
+      "description": "A simple calculator demonstrating variable storage and external function calls.",
+      "file": "sample-calculator.json"
+    },
+    {
+      "name": "File Picker Mime Type",
+      "description": "Opens the file explorer and displays a message showing the selected file's MIME type.",
+      "file": "file-picker-example.json"
+    },
+    {
+      "name": "Open Sheet Dialog",
+      "description": "A simple service that opens a dialog window for email input validation.",
+      "file": "open-sheet-example.json"
+    },
+    {
+      "name": "Appointment Booking",
+      "description": "An appointment booking form showing linked fields inside a sheet dialog with input validation.",
+      "file": "sample-appointment-booking.json"
+    },
+    {
+      "name": "Customer Feedback",
+      "description": "A short feedback survey featuring options list and confirmation message tied to responses.",
+      "file": "sample-customer-feedback.json"
+    },
+    {
+      "name": "Service Directory",
+      "description": "A service directory demonstrating repeating lists and data-action binding for each item.",
+      "file": "sample-service-directory.json"
+    },
+    {
+      "name": "API Fetch",
+      "description": "Fetches articles from a server and displays them in a list.",
+      "file": "sample-api-fetch-post.json"
+    },
+    {
+      "name": "Service Catalog",
+      "description": "A bilingual service directory demonstrating static Collections, item bindings, badges, and per-item actions.",
+      "file": "sample-service-catalog.json"
+    },
+    {
+      "name": "Permission Branching",
+      "description": "Requests notification permission and demonstrates separate granted and denied action paths.",
+      "file": "sample-permission-branching.json"
+    },
+    {
+      "name": "Location Permission Access",
+      "description": "Requests location permission, navigates to the permission page, and displays the granted or denied status with corresponding icons and text.",
+      "file": "location-permission-access.json"
+    },
+    {
+      "name": "Profile Photo Picker",
+      "description": "Uses the File Picker onFilesSelected event and reads the selected image MIME type from self.files.",
+      "file": "sample-profile-photo.json"
+    },
+    {
+      "name": "Support Request Form",
+      "description": "A bilingual support form with a live form preview and conditional validation before confirmation.",
+      "file": "sample-support-request.json"
+    }
+  ]
+}

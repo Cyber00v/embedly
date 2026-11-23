@@ -1,0 +1,49 @@
+:host {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.map-widget {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  color: inherit;
+  font: inherit;
+}
+
+.map-canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--theme-accent, var(--accent, #eaf4f0));
+}
+
+.map-status {
+  position: absolute;
+  inset: 12px 12px auto;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--theme-border, var(--border, #dfe7e3));
+  border-radius: var(--radius-sm, 8px);
+  background: var(--theme-surface, var(--card, #fff));
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgb(23 107 89 / 6%));
+}
+
+.map-status[data-error="true"] {
+  color: var(--destructive, #b42318);
+}
+
+[hidden] {
+  display: none !important;
+}

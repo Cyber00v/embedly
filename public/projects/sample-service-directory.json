@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    { "id": "page-home", "name": "home", "kind": "page" },
+    { "id": "page-splash", "name": "splash", "kind": "splash" },
+    { "id": "page-error", "name": "error", "kind": "error" }
+  ],
+  "elements": [
+    {
+      "id": "directory-title",
+      "type": "heading",
+      "pageId": "page-home",
+      "content": "دليل الخدمات",
+      "localizations": { "en": "Service directory" },
+      "styles": { "fontSize": 24 }
+    },
+    {
+      "id": "directory-description",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "استعرض الخدمات واختر الخدمة المناسبة.",
+      "localizations": { "en": "Browse the available services and choose one." },
+      "styles": {}
+    },
+    {
+      "id": "service-list",
+      "type": "collection",
+      "pageId": "page-home",
+      "content": "",
+      "listSource": { "type": "static" },
+      "collectionItems": [
+        {
+          "name": "إصدار وثيقة",
+          "description": "تقديم طلب إصدار وثيقة جديدة",
+          "category": "المستندات"
+        },
+        {
+          "name": "تحديث البيانات",
+          "description": "مراجعة وتحديث بيانات المستفيد",
+          "category": "الحساب"
+        },
+        {
+          "name": "حجز موعد",
+          "description": "اختيار موعد لزيارة مركز الخدمة",
+          "category": "المواعيد"
+        }
+      ],
+      "layout": {
+        "direction": "column",
+        "align": "stretch",
+        "justify": "start",
+        "gap": 8,
+        "columns": 2
+      },
+      "styles": {}
+    },
+    {
+      "id": "service-card",
+      "type": "card",
+      "pageId": "page-home",
+      "parentId": "service-list",
+      "content": "",
+      "cardHeader": "",
+      "cardFooter": "",
+      "styles": {}
+    },
+    {
+      "id": "service-name",
+      "type": "heading",
+      "pageId": "page-home",
+      "parentId": "service-card",
+      "content": "اسم الخدمة",
+      "binding": { "source": "item", "path": "name" },
+      "styles": {}
+    },
+    {
+      "id": "service-description",
+      "type": "text",
+      "pageId": "page-home",
+      "parentId": "service-card",
+      "content": "وصف الخدمة",
+      "binding": { "source": "item", "path": "description" },
+      "styles": {}
+    },
+    {
+      "id": "service-category",
+      "type": "badge",
+      "pageId": "page-home",
+      "parentId": "service-card",
+      "content": "التصنيف",
+      "binding": { "source": "item", "path": "category" },
+      "styles": { "variant": "secondary" }
+    },
+    {
+      "id": "service-details",
+      "type": "button",
+      "pageId": "page-home",
+      "parentId": "service-card",
+      "content": "عرض التفاصيل",
+      "localizations": { "en": "View details" },
+      "action": {
+        "type": "message",
+        "event": "click",
+        "title": "{{item.name}}",
+        "message": "{{item.description}}"
+      },
+      "styles": { "variant": "primary" }
+    }
+  ],
+  "requests": [],
+  "components": [],
+  "userComponents": [],
+  "variables": [],
+  "assets": [],
+  "customCss": "",
+  "settings": {
+    "title": "دليل الخدمات",
+    "orgnization": "الخدمات الإلكترونية",
+    "appTopBarType": "standard",
+    "appLanguage": "ar"
+  }
+}

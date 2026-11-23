@@ -1,0 +1,13 @@
+<section class="stepper" data-stepper>
+  <ol class="stepper-list" data-stepper-list aria-label="Progress"></ol>
+  <div class="stepper-content">
+    <slot data-stepper-steps></slot>
+  </div>
+  <div class="stepper-footer">
+    <p data-stepper-status aria-live="polite"></p>
+    <div class="stepper-controls" data-stepper-controls>
+      <button class="stepper-button" type="button" data-stepper-back></button>
+      <button class="stepper-button stepper-button-primary" type="button" data-stepper-next></button>
+    </div>
+  </div>
+</section>

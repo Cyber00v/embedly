@@ -1,0 +1,581 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    {
+      "id": "page-home",
+      "name": "home",
+      "kind": "page"
+    },
+    {
+      "id": "page-splash",
+      "name": "splash",
+      "kind": "splash"
+    },
+    {
+      "id": "page-error",
+      "name": "error",
+      "kind": "error"
+    },
+    {
+      "id": "page-dc6e94c0-06a6-41c1-886c-7b74dcb1bd0f",
+      "name": "post",
+      "kind": "page"
+    }
+  ],
+  "elements": [
+    {
+      "id": "element-1",
+      "type": "absoluteLayout",
+      "pageId": "page-home",
+      "content": "",
+      "className": "container",
+      "styles": {}
+    },
+    {
+      "id": "top-layout",
+      "type": "layout",
+      "pageId": "page-home",
+      "content": "",
+      "parentId": "element-1",
+      "layout": {
+        "direction": "row",
+        "align": "center",
+        "justify": "center",
+        "gap": 1,
+        "columns": 2
+      },
+      "styles": {
+        "paddingTop": 16,
+        "paddingRight": 16,
+        "paddingBottom": 16,
+        "paddingLeft": 16
+      },
+      "horizontalAlignment": "start",
+      "verticalAlignment": "top"
+    },
+    {
+      "id": "element-3",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "اكتب النص هنا",
+      "className": "bold",
+      "localizations": {
+        "ar": "مرحبا",
+        "en": "Welcome"
+      },
+      "parentId": "top-layout",
+      "styles": {
+        "fontSize": 20,
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "element-5",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "اكتب النص هنا",
+      "binding": {
+        "source": "twk",
+        "path": "full_name"
+      },
+      "parentId": "top-layout",
+      "styles": {
+        "fontSize": 20,
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "element-4",
+      "type": "icon",
+      "pageId": "page-home",
+      "content": "أيقونة",
+      "iconClass": "fa-hand-spock",
+      "parentId": "top-layout",
+      "styles": {
+        "fontSize": 20,
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "color": "#dbc329"
+      }
+    },
+    {
+      "id": "element-11",
+      "type": "scrollView",
+      "pageId": "page-dc6e94c0-06a6-41c1-886c-7b74dcb1bd0f",
+      "content": "",
+      "styles": {}
+    },
+    {
+      "id": "element-12",
+      "type": "collection",
+      "pageId": "page-dc6e94c0-06a6-41c1-886c-7b74dcb1bd0f",
+      "content": "",
+      "parentId": "element-11",
+      "listSource": {
+        "type": "endpoint",
+        "requestId": "element-31",
+        "path": ""
+      },
+      "styles": {
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "element-13",
+      "type": "layout",
+      "content": "",
+      "action": {
+        "type": "message",
+        "message": "{{item.userId}}"
+      },
+      "parentId": "element-12",
+      "layout": {
+        "direction": "row",
+        "align": "center",
+        "justify": "start",
+        "gap": 8,
+        "columns": 2
+      },
+      "styles": {
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "pageId": "page-dc6e94c0-06a6-41c1-886c-7b74dcb1bd0f",
+      "savedComponentId": "component-c947844a-f77c-407f-b9a3-a19e9d4d9127",
+      "savedComponentInstanceId": "element-9",
+      "savedComponentElementId": "element-16"
+    },
+    {
+      "id": "element-19",
+      "type": "icon",
+      "content": "أيقونة",
+      "iconClass": "fa-folder",
+      "action": {
+        "event": "onItemRender",
+        "type": "condition",
+        "targetElementId": "element-19",
+        "property": "iconClass",
+        "condition": {
+          "source": "item",
+          "requestId": "element-31",
+          "operator": "equals",
+          "value": "3",
+          "elementId": "element-1",
+          "property": "content",
+          "itemPath": "userId"
+        },
+        "actions": [
+          {
+            "type": "changeProperty",
+            "elementId": "element-1",
+            "targetElementId": "element-19",
+            "property": "iconClass",
+            "value": "fa-heart"
+          }
+        ]
+      },
+      "parentId": "element-13",
+      "styles": {
+        "color": "#e4c111",
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "fontSize": 26
+      },
+      "pageId": "page-dc6e94c0-06a6-41c1-886c-7b74dcb1bd0f",
+      "savedComponentId": "component-c947844a-f77c-407f-b9a3-a19e9d4d9127",
+      "savedComponentInstanceId": "element-9",
+      "savedComponentElementId": "element-17"
+    },
+    {
+      "id": "element-20",
+      "type": "text",
+      "content": "اكتب النص هنا",
+      "binding": {
+        "source": "item",
+        "path": "title"
+      },
+      "parentId": "element-13",
+      "styles": {
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "fontSize": 18
+      },
+      "pageId": "page-dc6e94c0-06a6-41c1-886c-7b74dcb1bd0f",
+      "savedComponentId": "component-c947844a-f77c-407f-b9a3-a19e9d4d9127",
+      "savedComponentInstanceId": "element-9",
+      "savedComponentElementId": "element-18"
+    },
+    {
+      "id": "element-14",
+      "type": "absoluteLayout",
+      "pageId": "page-splash",
+      "content": "",
+      "styles": {
+        "height": "100%"
+      }
+    },
+    {
+      "id": "element-15",
+      "type": "loading",
+      "pageId": "page-splash",
+      "content": "جارٍ التحميل",
+      "parentId": "element-14",
+      "styles": {
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "horizontalAlignment": "center",
+      "verticalAlignment": "center"
+    },
+    {
+      "id": "element-10",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "عرض المنشورات",
+        "en": "View Posts"
+      },
+      "action": {
+        "type": "request",
+        "requestId": "element-31",
+        "handlers": [
+          {
+            "event": "click",
+            "type": "navigate",
+            "pageId": "page-dc6e94c0-06a6-41c1-886c-7b74dcb1bd0f"
+          }
+        ]
+      },
+      "styles": {
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    }
+  ],
+  "requests": [
+    {
+      "id": "element-31",
+      "name": "fetch post",
+      "method": "GET",
+      "url": "https://jsonplaceholder.typicode.com/posts",
+      "trigger": "load",
+      "buttonId": "",
+      "headers": "{}",
+      "body": ""
+    }
+  ],
+  "components": [
+    {
+      "id": "component-c947844a-f77c-407f-b9a3-a19e9d4d9127",
+      "name": "post-item",
+      "elements": [
+        {
+          "id": "element-16",
+          "type": "layout",
+          "content": "",
+          "action": {
+            "type": "message",
+            "message": "{{item.userId}}"
+          },
+          "parentId": null,
+          "layout": {
+            "direction": "row",
+            "align": "center",
+            "justify": "start",
+            "gap": 8,
+            "columns": 2
+          },
+          "styles": {
+            "width": "",
+            "height": "",
+            "margin": 0,
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "borderColor": "#dbe5e1",
+            "variant": "custom",
+            "paddingTop": 0,
+            "paddingRight": 0,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "marginTop": 0,
+            "marginRight": 0,
+            "marginBottom": 0,
+            "marginLeft": 0
+          },
+          "localizations": {},
+          "hidden": false,
+          "activeTabId": "",
+          "className": ""
+        },
+        {
+          "id": "element-17",
+          "type": "icon",
+          "content": "أيقونة",
+          "iconClass": "fa-folder",
+          "action": {
+            "event": "onItemRender",
+            "type": "condition",
+            "targetElementId": "element-17",
+            "property": "iconClass",
+            "condition": {
+              "source": "item",
+              "requestId": "element-31",
+              "operator": "equals",
+              "value": "3",
+              "elementId": "element-1",
+              "property": "content",
+              "itemPath": "userId"
+            },
+            "actions": [
+              {
+                "type": "changeProperty",
+                "elementId": "element-1",
+                "targetElementId": "element-17",
+                "property": "iconClass",
+                "value": "fa-heart"
+              }
+            ]
+          },
+          "parentId": "element-16",
+          "styles": {
+            "color": "#e4c111",
+            "padding": 0,
+            "paddingTop": 0,
+            "paddingRight": 0,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "width": "",
+            "height": "",
+            "margin": 0,
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "borderColor": "#dbe5e1",
+            "variant": "custom",
+            "marginTop": 0,
+            "marginRight": 0,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "fontSize": 26
+          },
+          "localizations": {},
+          "hidden": false,
+          "activeTabId": "",
+          "className": ""
+        },
+        {
+          "id": "element-18",
+          "type": "text",
+          "content": "اكتب النص هنا",
+          "parentId": "element-16",
+          "styles": {
+            "padding": 0,
+            "paddingTop": 0,
+            "paddingRight": 0,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "width": "",
+            "height": "",
+            "margin": 0,
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "borderColor": "#dbe5e1",
+            "variant": "custom",
+            "marginTop": 0,
+            "marginRight": 0,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "fontSize": 18
+          },
+          "localizations": {},
+          "hidden": false,
+          "activeTabId": "",
+          "className": "",
+          "action": {
+            "type": "none",
+            "requestId": "",
+            "serviceId": "",
+            "values": "{}"
+          }
+        }
+      ]
+    },
+    {
+      "id": "component-312dedd1-2720-4971-bacb-87a1b083fd4a",
+      "name": "post-item",
+      "elements": [
+        {
+          "id": "element-22",
+          "type": "layout",
+          "pageId": "page-dc6e94c0-06a6-41c1-886c-7b74dcb1bd0f",
+          "content": "",
+          "action": {
+            "type": "none",
+            "message": "{{item.userId}}",
+            "handlers": []
+          },
+          "parentId": "element-12",
+          "layout": {
+            "direction": "row",
+            "align": "center",
+            "justify": "start",
+            "gap": 8,
+            "columns": 2
+          },
+          "styles": {
+            "paddingTop": 0,
+            "paddingRight": 0,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "width": "",
+            "height": "",
+            "margin": 0,
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "borderColor": "#dbe5e1",
+            "variant": "custom",
+            "marginTop": 0,
+            "marginRight": 0,
+            "marginBottom": 0,
+            "marginLeft": 0
+          },
+          "localizations": {},
+          "hidden": false,
+          "activeTabId": "",
+          "className": ""
+        },
+        {
+          "id": "icon",
+          "type": "icon",
+          "pageId": "page-dc6e94c0-06a6-41c1-886c-7b74dcb1bd0f",
+          "content": "أيقونة",
+          "iconClass": "fa-folder",
+          "parentId": "element-22",
+          "styles": {
+            "color": "#e4c111",
+            "padding": 0,
+            "paddingTop": 0,
+            "paddingRight": 0,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "fontSize": 26,
+            "width": "",
+            "height": "",
+            "margin": 0,
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "borderColor": "#dbe5e1",
+            "variant": "custom",
+            "marginTop": 0,
+            "marginRight": 0,
+            "marginBottom": 0,
+            "marginLeft": 0
+          },
+          "localizations": {},
+          "hidden": false,
+          "activeTabId": "",
+          "className": "",
+          "action": {
+            "type": "none",
+            "requestId": "",
+            "serviceId": "",
+            "values": "{}",
+            "event": "click",
+            "handlers": [],
+            "condition": {
+              "source": "item",
+              "requestId": "element-31",
+              "operator": "equals",
+              "value": "3",
+              "elementId": "element-1",
+              "property": "content",
+              "itemPath": "userId"
+            },
+            "actions": [
+              {
+                "type": "changeProperty",
+                "elementId": "element-1",
+                "targetElementId": "element-24",
+                "property": "content",
+                "value": ""
+              }
+            ],
+            "elseActions": []
+          }
+        },
+        {
+          "id": "element-24",
+          "type": "text",
+          "pageId": "page-dc6e94c0-06a6-41c1-886c-7b74dcb1bd0f",
+          "content": "اكتب النص هنا",
+          "parentId": "element-22",
+          "styles": {
+            "align": "end",
+            "padding": 0,
+            "paddingTop": 0,
+            "paddingRight": 0,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "fontSize": 18,
+            "width": "",
+            "height": "",
+            "margin": 0,
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "borderColor": "#dbe5e1",
+            "variant": "custom",
+            "marginTop": 0,
+            "marginRight": 0,
+            "marginBottom": 0,
+            "marginLeft": 0
+          },
+          "localizations": {},
+          "hidden": false,
+          "activeTabId": "",
+          "className": "",
+          "action": {
+            "type": "none",
+            "requestId": "",
+            "serviceId": "",
+            "values": "{}"
+          }
+        }
+      ]
+    }
+  ],
+  "customCss": "\n.bold {\n  font-weight: bold;\n}\n.container {\n  height: calc(100% - 72px);\n}",
+  "settings": {
+    "title": "إستعراض المنشورات",
+    "orgnization": "Cyberoov",
+    "appTopBarType": "none"
+  }
+}

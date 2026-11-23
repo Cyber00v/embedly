@@ -1,0 +1,1216 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    {
+      "id": "page-home",
+      "name": "home",
+      "kind": "page"
+    },
+    {
+      "id": "page-splash",
+      "name": "splash",
+      "kind": "splash"
+    },
+    {
+      "id": "page-error",
+      "name": "error",
+      "kind": "error"
+    }
+  ],
+  "elements": [
+    {
+      "id": "numbers",
+      "type": "input",
+      "pageId": "page-home",
+      "content": "أدخل النص",
+      "fieldName": "input_lement-1",
+      "styles": {
+        "fontSize": 26,
+        "paddingRight": 16,
+        "paddingLeft": 16,
+        "borderWidth": 2,
+        "borderColor": "#212121",
+        "borderRadius": 14
+      }
+    },
+    {
+      "id": "element-2",
+      "type": "grid",
+      "pageId": "page-home",
+      "content": "",
+      "layout": {
+        "direction": "row",
+        "align": "center",
+        "justify": "center",
+        "gap": 8,
+        "columns": 4
+      },
+      "styles": {
+        "background": "transparent"
+      }
+    },
+    {
+      "id": "multiply",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "X"
+      },
+      "action": {
+        "type": "setVariable",
+        "variableId": "element-27",
+        "value": "\"multiply\""
+      },
+      "parentId": "element-2",
+      "styles": {
+        "background": "#f2a650",
+        "fontSize": 26,
+        "padding": 0,
+        "width": "82px",
+        "height": "82px",
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "borderRadius": 41,
+        "variant": "custom"
+      }
+    },
+    {
+      "id": "element-7",
+      "type": "grid",
+      "pageId": "page-home",
+      "content": "",
+      "layout": {
+        "direction": "row",
+        "align": "center",
+        "justify": "center",
+        "gap": 8,
+        "columns": 4
+      },
+      "styles": {
+        "background": "transparent"
+      }
+    },
+    {
+      "id": "divide",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "÷"
+      },
+      "action": {
+        "type": "setVariable",
+        "variableId": "element-27",
+        "value": "\"divide\""
+      },
+      "parentId": "element-7",
+      "styles": {
+        "background": "#7aafe1",
+        "fontSize": 26,
+        "padding": 0,
+        "width": "82px",
+        "height": "82px",
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "borderRadius": 41,
+        "variant": "custom"
+      }
+    },
+    {
+      "id": "element-12",
+      "type": "grid",
+      "pageId": "page-home",
+      "content": "",
+      "layout": {
+        "direction": "row",
+        "align": "center",
+        "justify": "center",
+        "gap": 8,
+        "columns": 4
+      },
+      "styles": {
+        "background": "transparent"
+      }
+    },
+    {
+      "id": "addition",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "+"
+      },
+      "action": {
+        "type": "setVariable",
+        "variableId": "element-27",
+        "value": "\"add\""
+      },
+      "parentId": "element-12",
+      "styles": {
+        "background": "#e34f8a",
+        "fontSize": 26,
+        "padding": 0,
+        "width": "82px",
+        "height": "82px",
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "borderRadius": 41,
+        "variant": "custom"
+      }
+    },
+    {
+      "id": "subtract",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "-"
+      },
+      "action": {
+        "type": "setVariable",
+        "variableId": "element-27",
+        "value": "\"subtract\""
+      },
+      "parentId": "element-23",
+      "styles": {
+        "background": "#e34f4f",
+        "fontSize": 26,
+        "padding": 0,
+        "width": "82px",
+        "height": "82px",
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "borderRadius": 41,
+        "variant": "custom"
+      }
+    },
+    {
+      "id": "element-23",
+      "type": "layout",
+      "pageId": "page-home",
+      "content": "",
+      "layout": {
+        "direction": "row",
+        "align": "start",
+        "justify": "start",
+        "gap": 8,
+        "columns": 2
+      },
+      "styles": {
+        "background": "transparent"
+      }
+    },
+    {
+      "id": "one",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "9"
+      },
+      "action": {
+        "type": "condition",
+        "targetElementId": "numbers",
+        "property": "content",
+        "value": "{{var.value}} + {{var.result}}",
+        "functionSource": "asset",
+        "functionName": "doMath",
+        "parameters": "[\n\"{{var.operator}}\",\n\"{{var.value}}\",\n\"{{var.result}}\"\n]",
+        "scriptAssetId": "element-29",
+        "resultVariableId": "element-24",
+        "variableId": "element-24",
+        "condition": {
+          "source": "variable",
+          "operator": "notEmpty",
+          "value": "null",
+          "elementId": "numbers",
+          "property": "content",
+          "variableName": "operator"
+        },
+        "actions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "\"{{var.result}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "targetElementId": "numbers",
+            "property": "content",
+            "value": "{{var.result}}"
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-25",
+            "value": "\"{{var.value}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "{{var.value}}",
+            "targetElementId": "numbers",
+            "property": "content"
+          }
+        ]
+      },
+      "parentId": "element-2",
+      "styles": {
+        "fontSize": 26,
+        "width": "82px",
+        "height": "82px",
+        "borderRadius": 41,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "extraData": [
+        {
+          "key": "number",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "id": "equal",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "="
+      },
+      "action": {
+        "type": "function",
+        "handlers": [
+          {
+            "event": "click",
+            "type": "changeProperty",
+            "variableId": "element-25",
+            "value": "\"{{var.result}}\"",
+            "targetElementId": "numbers",
+            "property": "content"
+          },
+          {
+            "event": "click",
+            "type": "setVariable",
+            "variableId": "element-27",
+            "value": "null"
+          },
+          {
+            "event": "click",
+            "type": "setVariable",
+            "variableId": "element-24",
+            "value": "null"
+          },
+          {
+            "event": "click",
+            "type": "setVariable",
+            "variableId": "element-25",
+            "value": "null"
+          }
+        ],
+        "targetElementId": "numbers",
+        "property": "content",
+        "value": "{{var.value}} + {{var.result}}",
+        "functionSource": "asset",
+        "functionName": "doMath",
+        "parameters": "[\n\"{{var.operator}}\",\n\"{{var.value}}\",\n\"{{var.result}}\"\n]",
+        "scriptAssetId": "element-29",
+        "resultVariableId": "element-24"
+      },
+      "styles": {
+        "fontSize": 26,
+        "width": "82px",
+        "height": "82px",
+        "borderRadius": 41,
+        "variant": "custom",
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0,
+        "background": "#1c734d"
+      }
+    },
+    {
+      "id": "element-34",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "اكتب النص هنا",
+      "binding": {
+        "source": "variable",
+        "path": "element-25"
+      },
+      "styles": {}
+    },
+    {
+      "id": "element-35",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "اكتب النص هنا",
+      "binding": {
+        "source": "variable",
+        "path": "element-24"
+      },
+      "styles": {}
+    },
+    {
+      "id": "element-36",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "اكتب النص هنا (نسخة)",
+      "binding": {
+        "source": "variable",
+        "path": "element-27"
+      },
+      "styles": {}
+    },
+    {
+      "id": "element-39",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "8"
+      },
+      "action": {
+        "type": "condition",
+        "targetElementId": "numbers",
+        "property": "content",
+        "value": "{{var.value}} + {{var.result}}",
+        "functionSource": "asset",
+        "functionName": "doMath",
+        "parameters": "[\n\"{{var.operator}}\",\n\"{{var.value}}\",\n\"{{var.result}}\"\n]",
+        "scriptAssetId": "element-29",
+        "resultVariableId": "element-24",
+        "variableId": "element-24",
+        "condition": {
+          "source": "variable",
+          "operator": "notEmpty",
+          "value": "null",
+          "elementId": "numbers",
+          "property": "content",
+          "variableName": "operator"
+        },
+        "actions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "\"{{var.result}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "targetElementId": "numbers",
+            "property": "content",
+            "value": "{{var.result}}"
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-25",
+            "value": "\"{{var.value}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "{{var.value}}",
+            "targetElementId": "numbers",
+            "property": "content"
+          }
+        ]
+      },
+      "parentId": "element-2",
+      "styles": {
+        "fontSize": 26,
+        "width": "82px",
+        "height": "82px",
+        "borderRadius": 41,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "extraData": [
+        {
+          "key": "number",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "id": "element-40",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "7"
+      },
+      "action": {
+        "type": "condition",
+        "targetElementId": "numbers",
+        "property": "content",
+        "value": "{{var.value}} + {{var.result}}",
+        "functionSource": "asset",
+        "functionName": "doMath",
+        "parameters": "[\n\"{{var.operator}}\",\n\"{{var.value}}\",\n\"{{var.result}}\"\n]",
+        "scriptAssetId": "element-29",
+        "resultVariableId": "element-24",
+        "variableId": "element-24",
+        "condition": {
+          "source": "variable",
+          "operator": "notEmpty",
+          "value": "null",
+          "elementId": "numbers",
+          "property": "content",
+          "variableName": "operator"
+        },
+        "actions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "\"{{var.result}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "targetElementId": "numbers",
+            "property": "content",
+            "value": "{{var.result}}"
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-25",
+            "value": "\"{{var.value}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "{{var.value}}",
+            "targetElementId": "numbers",
+            "property": "content"
+          }
+        ]
+      },
+      "parentId": "element-2",
+      "styles": {
+        "fontSize": 26,
+        "width": "82px",
+        "height": "82px",
+        "borderRadius": 41,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "extraData": [
+        {
+          "key": "number",
+          "value": "7"
+        }
+      ]
+    },
+    {
+      "id": "element-41",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "6"
+      },
+      "action": {
+        "type": "condition",
+        "targetElementId": "numbers",
+        "property": "content",
+        "value": "{{var.value}} + {{var.result}}",
+        "functionSource": "asset",
+        "functionName": "doMath",
+        "parameters": "[\n\"{{var.operator}}\",\n\"{{var.value}}\",\n\"{{var.result}}\"\n]",
+        "scriptAssetId": "element-29",
+        "resultVariableId": "element-24",
+        "variableId": "element-24",
+        "condition": {
+          "source": "variable",
+          "operator": "notEmpty",
+          "value": "null",
+          "elementId": "numbers",
+          "property": "content",
+          "variableName": "operator"
+        },
+        "actions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "\"{{var.result}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "targetElementId": "numbers",
+            "property": "content",
+            "value": "{{var.result}}"
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-25",
+            "value": "\"{{var.value}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "{{var.value}}",
+            "targetElementId": "numbers",
+            "property": "content"
+          }
+        ]
+      },
+      "parentId": "element-7",
+      "styles": {
+        "fontSize": 26,
+        "width": "82px",
+        "height": "82px",
+        "borderRadius": 41,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "extraData": [
+        {
+          "key": "number",
+          "value": "6"
+        }
+      ]
+    },
+    {
+      "id": "element-42",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "5"
+      },
+      "action": {
+        "type": "condition",
+        "targetElementId": "numbers",
+        "property": "content",
+        "value": "{{var.value}} + {{var.result}}",
+        "functionSource": "asset",
+        "functionName": "doMath",
+        "parameters": "[\n\"{{var.operator}}\",\n\"{{var.value}}\",\n\"{{var.result}}\"\n]",
+        "scriptAssetId": "element-29",
+        "resultVariableId": "element-24",
+        "variableId": "element-24",
+        "condition": {
+          "source": "variable",
+          "operator": "notEmpty",
+          "value": "null",
+          "elementId": "numbers",
+          "property": "content",
+          "variableName": "operator"
+        },
+        "actions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "\"{{var.result}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "targetElementId": "numbers",
+            "property": "content",
+            "value": "{{var.result}}"
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-25",
+            "value": "\"{{var.value}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "{{var.value}}",
+            "targetElementId": "numbers",
+            "property": "content"
+          }
+        ]
+      },
+      "parentId": "element-7",
+      "styles": {
+        "fontSize": 26,
+        "width": "82px",
+        "height": "82px",
+        "borderRadius": 41,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "extraData": [
+        {
+          "key": "number",
+          "value": "5"
+        }
+      ]
+    },
+    {
+      "id": "element-43",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "4"
+      },
+      "action": {
+        "type": "condition",
+        "targetElementId": "numbers",
+        "property": "content",
+        "value": "{{var.value}} + {{var.result}}",
+        "functionSource": "asset",
+        "functionName": "doMath",
+        "parameters": "[\n\"{{var.operator}}\",\n\"{{var.value}}\",\n\"{{var.result}}\"\n]",
+        "scriptAssetId": "element-29",
+        "resultVariableId": "element-24",
+        "variableId": "element-24",
+        "condition": {
+          "source": "variable",
+          "operator": "notEmpty",
+          "value": "null",
+          "elementId": "numbers",
+          "property": "content",
+          "variableName": "operator"
+        },
+        "actions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "\"{{var.result}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "targetElementId": "numbers",
+            "property": "content",
+            "value": "{{var.result}}"
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-25",
+            "value": "\"{{var.value}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "{{var.value}}",
+            "targetElementId": "numbers",
+            "property": "content"
+          }
+        ]
+      },
+      "parentId": "element-7",
+      "styles": {
+        "fontSize": 26,
+        "width": "82px",
+        "height": "82px",
+        "borderRadius": 41,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "extraData": [
+        {
+          "key": "number",
+          "value": "4"
+        }
+      ]
+    },
+    {
+      "id": "element-44",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "3"
+      },
+      "action": {
+        "type": "condition",
+        "targetElementId": "numbers",
+        "property": "content",
+        "value": "{{var.value}} + {{var.result}}",
+        "functionSource": "asset",
+        "functionName": "doMath",
+        "parameters": "[\n\"{{var.operator}}\",\n\"{{var.value}}\",\n\"{{var.result}}\"\n]",
+        "scriptAssetId": "element-29",
+        "resultVariableId": "element-24",
+        "variableId": "element-24",
+        "condition": {
+          "source": "variable",
+          "operator": "notEmpty",
+          "value": "null",
+          "elementId": "numbers",
+          "property": "content",
+          "variableName": "operator"
+        },
+        "actions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "\"{{var.result}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "targetElementId": "numbers",
+            "property": "content",
+            "value": "{{var.result}}"
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-25",
+            "value": "\"{{var.value}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "{{var.value}}",
+            "targetElementId": "numbers",
+            "property": "content"
+          }
+        ]
+      },
+      "parentId": "element-12",
+      "styles": {
+        "fontSize": 26,
+        "width": "82px",
+        "height": "82px",
+        "borderRadius": 41,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "extraData": [
+        {
+          "key": "number",
+          "value": "3"
+        }
+      ]
+    },
+    {
+      "id": "element-45",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "2"
+      },
+      "action": {
+        "type": "condition",
+        "targetElementId": "numbers",
+        "property": "content",
+        "value": "{{var.value}} + {{var.result}}",
+        "functionSource": "asset",
+        "functionName": "doMath",
+        "parameters": "[\n\"{{var.operator}}\",\n\"{{var.value}}\",\n\"{{var.result}}\"\n]",
+        "scriptAssetId": "element-29",
+        "resultVariableId": "element-24",
+        "variableId": "element-24",
+        "condition": {
+          "source": "variable",
+          "operator": "notEmpty",
+          "value": "null",
+          "elementId": "numbers",
+          "property": "content",
+          "variableName": "operator"
+        },
+        "actions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "\"{{var.result}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "targetElementId": "numbers",
+            "property": "content",
+            "value": "{{var.result}}"
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-25",
+            "value": "\"{{var.value}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "{{var.value}}",
+            "targetElementId": "numbers",
+            "property": "content"
+          }
+        ]
+      },
+      "parentId": "element-12",
+      "styles": {
+        "fontSize": 26,
+        "width": "82px",
+        "height": "82px",
+        "borderRadius": 41,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "extraData": [
+        {
+          "key": "number",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "id": "element-46",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "1"
+      },
+      "action": {
+        "type": "condition",
+        "targetElementId": "numbers",
+        "property": "content",
+        "value": "{{var.value}} + {{var.result}}",
+        "functionSource": "asset",
+        "functionName": "doMath",
+        "parameters": "[\n\"{{var.operator}}\",\n\"{{var.value}}\",\n\"{{var.result}}\"\n]",
+        "scriptAssetId": "element-29",
+        "resultVariableId": "element-24",
+        "variableId": "element-24",
+        "condition": {
+          "source": "variable",
+          "operator": "notEmpty",
+          "value": "null",
+          "elementId": "numbers",
+          "property": "content",
+          "variableName": "operator"
+        },
+        "actions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "\"{{var.result}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "targetElementId": "numbers",
+            "property": "content",
+            "value": "{{var.result}}"
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-25",
+            "value": "\"{{var.value}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "{{var.value}}",
+            "targetElementId": "numbers",
+            "property": "content"
+          }
+        ]
+      },
+      "parentId": "element-12",
+      "styles": {
+        "fontSize": 26,
+        "width": "82px",
+        "height": "82px",
+        "borderRadius": 41,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "extraData": [
+        {
+          "key": "number",
+          "value": "1"
+        }
+      ]
+    },
+    {
+      "id": "element-47",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "0"
+      },
+      "action": {
+        "type": "condition",
+        "targetElementId": "numbers",
+        "property": "content",
+        "value": "{{var.value}} + {{var.result}}",
+        "functionSource": "asset",
+        "functionName": "doMath",
+        "parameters": "[\n\"{{var.operator}}\",\n\"{{var.value}}\",\n\"{{var.result}}\"\n]",
+        "scriptAssetId": "element-29",
+        "resultVariableId": "element-24",
+        "variableId": "element-24",
+        "condition": {
+          "source": "variable",
+          "operator": "notEmpty",
+          "value": "null",
+          "elementId": "numbers",
+          "property": "content",
+          "variableName": "operator"
+        },
+        "actions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "\"{{var.result}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "targetElementId": "numbers",
+            "property": "content",
+            "value": "{{var.result}}"
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "setVariable",
+            "elementId": "numbers",
+            "variableId": "element-25",
+            "value": "\"{{var.value}}{{self.extra.number}}\""
+          },
+          {
+            "type": "changeProperty",
+            "elementId": "numbers",
+            "variableId": "element-24",
+            "value": "{{var.value}}",
+            "targetElementId": "numbers",
+            "property": "content"
+          }
+        ]
+      },
+      "parentId": "element-23",
+      "styles": {
+        "fontSize": 26,
+        "width": "82px",
+        "height": "82px",
+        "borderRadius": 41,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "extraData": [
+        {
+          "key": "number",
+          "value": "0"
+        }
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "component-eb6396b1-ae9b-4750-aaf3-a1f8dff0e465",
+      "name": "rounded button",
+      "elements": [
+        {
+          "id": "element-32",
+          "type": "layout",
+          "pageId": "page-bf0c5d40-421d-4310-9e09-6e558a1f5d90",
+          "content": "",
+          "className": "",
+          "localizations": {},
+          "extraData": [],
+          "action": null,
+          "binding": null,
+          "hidden": false,
+          "parentId": null,
+          "layout": {
+            "direction": "row",
+            "align": "center",
+            "justify": "center",
+            "gap": 8,
+            "columns": 2
+          },
+          "styles": {
+            "color": "#111816",
+            "background": "transparent",
+            "fontSize": 14,
+            "align": "start",
+            "padding": 8,
+            "width": "56px",
+            "height": "",
+            "margin": 0,
+            "paddingTop": 0,
+            "paddingRight": 0,
+            "paddingBottom": 0,
+            "paddingLeft": 0,
+            "marginTop": 0,
+            "marginRight": 0,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "borderWidth": 0,
+            "borderColor": "#dbe5e1",
+            "borderRadius": 8,
+            "variant": "custom"
+          }
+        },
+        {
+          "id": "element-31",
+          "type": "button",
+          "pageId": "page-bf0c5d40-421d-4310-9e09-6e558a1f5d90",
+          "content": "اضغط هنا",
+          "className": "",
+          "localizations": {
+            "ar": "1"
+          },
+          "extraData": [
+            {
+              "key": "extra",
+              "value": "abc"
+            }
+          ],
+          "action": null,
+          "binding": null,
+          "hidden": false,
+          "disabled": false,
+          "parentId": "element-32",
+          "styles": {
+            "color": "#ffffff",
+            "background": "#393C3B",
+            "fontSize": 14,
+            "align": "start",
+            "padding": 8,
+            "width": "56px",
+            "height": "56px",
+            "margin": 0,
+            "paddingTop": 8,
+            "paddingRight": 8,
+            "paddingBottom": 8,
+            "paddingLeft": 8,
+            "marginTop": 0,
+            "marginRight": 0,
+            "marginBottom": 0,
+            "marginLeft": 0,
+            "borderWidth": 0,
+            "borderColor": "#dbe5e1",
+            "borderRadius": 28,
+            "variant": "primary"
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "id": "element-24",
+      "name": "result",
+      "source": "static",
+      "value": "",
+      "fieldName": "input_lement-1",
+      "fieldKey": "user_id",
+      "elementId": "numbers",
+      "property": "content"
+    },
+    {
+      "id": "element-25",
+      "name": "value",
+      "source": "static",
+      "value": "",
+      "fieldName": "input_lement-1",
+      "fieldKey": "user_id",
+      "elementId": "numbers",
+      "property": "content"
+    },
+    {
+      "id": "element-27",
+      "name": "operator",
+      "source": "static",
+      "value": "",
+      "fieldName": "input_lement-1",
+      "fieldKey": "user_id",
+      "elementId": "numbers",
+      "property": "content"
+    }
+  ],
+  "assets": [
+    {
+      "id": "element-29",
+      "name": "doMath.js",
+      "type": "text/javascript",
+      "size": 466,
+      "dataUrl": "data:text/javascript;base64,ZnVuY3Rpb24gZG9NYXRoKG9wZXJhdG9yLCBhLCBiKSB7DQogIGNvbnN0IG51bWJlcjEgPSBwYXJzZUludChhKTsNCiAgY29uc3QgbnVtYmVyMiA9IHBhcnNlSW50KGIpOw0KICBzd2l0Y2ggKG9wZXJhdG9yKSB7DQogICAgY2FzZSAiYWRkIjoNCiAgICAgIHJldHVybiBudW1iZXIxICsgbnVtYmVyMjsNCiAgICBjYXNlICJzdWJ0cmFjdCI6DQogICAgICByZXR1cm4gbnVtYmVyMSAtIG51bWJlcjI7DQogICAgY2FzZSAibXVsdGlwbHkiOg0KICAgICAgcmV0dXJuIG51bWJlcjEgKiBudW1iZXIyOw0KICAgIGNhc2UgImRpdmlkZSI6DQogICAgICByZXR1cm4gbnVtYmVyMiAhPT0gMCA/IG51bWJlcjEgLyBudW1iZXIyIDogItmE2Kcg2YrZhdmD2YYg2KfZhNmC2LPZhdipINi52YTZiSDYtdmB2LEiOw0KICAgIGRlZmF1bHQ6DQogICAgICByZXR1cm4gIti52YXZhNmK2Kkg2LrZitixINmF2LnYsdmI2YHYqSI7DQogIH0NCn0NCg=="
+    }
+  ],
+  "settings": {
+    "title": "عنوان الخدمة",
+    "orgnization": "إسم القطاع",
+    "appTopBarType": "none",
+    "appElementSize": "small"
+  }
+}

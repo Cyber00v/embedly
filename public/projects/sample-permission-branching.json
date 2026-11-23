@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    { "id": "page-home", "name": "home", "kind": "page" },
+    { "id": "page-splash", "name": "splash", "kind": "splash" },
+    { "id": "page-error", "name": "error", "kind": "error" }
+  ],
+  "elements": [
+    {
+      "id": "permission-title",
+      "type": "heading",
+      "pageId": "page-home",
+      "content": "ابقَ على اطلاع",
+      "localizations": { "en": "Stay up to date" },
+      "styles": { "fontSize": 26 }
+    },
+    {
+      "id": "permission-description",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "يمكنك تفعيل الإشعارات لتلقي تنبيهات الخدمة.",
+      "localizations": { "en": "Enable notifications to receive service updates." },
+      "styles": {}
+    },
+    {
+      "id": "request-permission",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "تفعيل الإشعارات",
+      "localizations": { "en": "Enable notifications" },
+      "action": {
+        "type": "askPushNotificationPermission",
+        "event": "click",
+        "actions": [
+          {
+            "type": "message",
+            "title": "تم التفعيل",
+            "message": "ستصلك تنبيهات عند توفر تحديثات."
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "message",
+            "title": "الإشعارات غير مفعّلة",
+            "message": "يمكنك متابعة الخدمة دون تفعيل الإشعارات."
+          }
+        ]
+      },
+      "styles": { "variant": "primary" }
+    },
+    {
+      "id": "permission-note",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "هذا المثال يوضح مساري السماح والرفض. سيطلب النظام الإذن بعد الضغط على الزر.",
+      "localizations": {
+        "en": "This example demonstrates both granted and denied paths. The system asks for permission after you press the button."
+      },
+      "styles": { "fontSize": 13 }
+    }
+  ],
+  "requests": [],
+  "components": [],
+  "userComponents": [],
+  "variables": [],
+  "assets": [],
+  "customCss": "",
+  "settings": {
+    "title": "إعداد الإشعارات",
+    "orgnization": "الخدمات الإلكترونية",
+    "appTopBarType": "standard",
+    "appLanguage": "ar"
+  }
+}

@@ -1,0 +1,132 @@
+:host {
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  color: inherit;
+  font: inherit;
+}
+
+.calendar {
+  width: 100%;
+  color: inherit;
+}
+
+.calendar-title {
+  margin: 0 0 8px;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+}
+
+.calendar-header,
+.calendar-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.calendar-header {
+  margin-bottom: 12px;
+}
+
+.calendar-header h2 {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  font-size: 1.05em;
+  font-weight: 700;
+  text-align: center;
+}
+
+.calendar-nav,
+.calendar-today,
+.calendar-day {
+  min-width: 36px;
+  min-height: 36px;
+  border: 1px solid var(--theme-border, var(--border, #dfe7e3));
+  border-radius: var(--radius-sm, 8px);
+  background: var(--theme-surface, var(--card, #fff));
+  cursor: pointer;
+}
+
+.calendar-nav {
+  color: var(--theme-primary, var(--primary, #176b59));
+  font-size: 1.25em;
+}
+
+.calendar-weekdays,
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+  text-align: center;
+}
+
+.calendar-weekdays {
+  margin-bottom: 4px;
+  color: var(--theme-muted, var(--muted-foreground, #687a73));
+  font-size: 0.8em;
+}
+
+.calendar-weekday {
+  padding: 4px 0;
+}
+
+.calendar-day {
+  min-width: 0;
+  padding: 4px;
+  border-color: transparent;
+  background: transparent;
+}
+
+.calendar-day:hover,
+.calendar-nav:hover,
+.calendar-today:hover {
+  border-color: var(--theme-primary, var(--primary, #176b59));
+}
+
+.calendar-day.is-today {
+  border-color: var(--theme-primary, var(--primary, #176b59));
+}
+
+.calendar-day.is-selected {
+  border-color: var(--theme-primary, var(--primary, #176b59));
+  background: var(--theme-primary, var(--primary, #176b59));
+  color: var(--primary-foreground, #fff);
+}
+
+.calendar-empty {
+  min-height: 36px;
+}
+
+.calendar-footer {
+  min-height: 36px;
+  margin-top: 8px;
+  color: var(--theme-muted, var(--muted-foreground, #687a73));
+  font-size: 0.9em;
+}
+
+.calendar-footer p {
+  margin: 0;
+}
+
+.calendar-today {
+  min-height: 32px;
+  padding: 4px 10px;
+  color: var(--theme-primary, var(--primary, #176b59));
+}
+
+[hidden] {
+  display: none !important;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--theme-ring, var(--ring, #176b59));
+  outline-offset: 2px;
+}

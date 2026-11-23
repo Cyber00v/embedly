@@ -1,0 +1,3 @@
+{
+  "plugins": ["calendar", "google-map", "step", "stepper"]
+}

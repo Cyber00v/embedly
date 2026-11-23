@@ -1,0 +1,60 @@
+{
+  "id": "calendar",
+  "title": "Calendar",
+  "group": "Date & time",
+  "description": "Theme-aware calendar with selectable days and workflow events.",
+  "icon": "fa-calendar-days",
+  "version": "1.0.0",
+  "properties": [
+    { "key": "title", "label": "Heading", "type": "text", "default": "" },
+    { "key": "locale", "label": "Language", "type": "select", "options": ["app", "en", "ar"], "default": "app" },
+    { "key": "weekStartsOn", "label": "Week starts on", "type": "select", "options": ["sunday", "monday"], "default": "sunday" },
+    { "key": "selectedDate", "label": "Selected date", "type": "text", "default": "" },
+    { "key": "showToday", "label": "Show today button", "type": "boolean", "default": true }
+  ],
+  "events": ["onDaySelected", "onMonthChanged"],
+  "localizations": {
+    "en": {
+      "properties": {
+        "locale": {
+          "options": {
+            "app": "App language",
+            "en": "English",
+            "ar": "Arabic"
+          }
+        },
+        "weekStartsOn": {
+          "options": {
+            "sunday": "Sunday",
+            "monday": "Monday"
+          }
+        }
+      }
+    },
+    "ar": {
+      "title": "التقويم",
+      "group": "التاريخ والوقت",
+      "description": "تقويم يراعي السمة ويتيح اختيار الأيام وتشغيل أحداث سير العمل.",
+      "properties": {
+        "title": { "label": "العنوان" },
+        "locale": {
+          "label": "اللغة",
+          "options": {
+            "app": "لغة التطبيق",
+            "en": "الإنجليزية",
+            "ar": "العربية"
+          }
+        },
+        "weekStartsOn": {
+          "label": "بداية الأسبوع",
+          "options": {
+            "sunday": "الأحد",
+            "monday": "الاثنين"
+          }
+        },
+        "selectedDate": { "label": "التاريخ المحدد" },
+        "showToday": { "label": "إظهار زر اليوم" }
+      }
+    }
+  }
+}

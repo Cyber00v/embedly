@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    {
+      "id": "page-home",
+      "name": "home",
+      "kind": "page"
+    },
+    {
+      "id": "page-splash",
+      "name": "splash",
+      "kind": "splash"
+    },
+    {
+      "id": "page-error",
+      "name": "error",
+      "kind": "error"
+    }
+  ],
+  "elements": [
+    {
+      "id": "scrollView",
+      "type": "scrollView",
+      "pageId": "page-home",
+      "content": "",
+      "styles": {}
+    },
+    {
+      "id": "element-1",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "action": {
+        "type": "showSheet",
+        "sheetId": "sheet"
+      },
+      "parentId": "scrollView",
+      "styles": {
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      },
+      "localizations": {
+        "ar": "Open Sheet"
+      }
+    },
+    {
+      "id": "sheet",
+      "type": "sheet",
+      "pageId": "page-home",
+      "content": "sheet",
+      "styles": {}
+    },
+    {
+      "id": "layout",
+      "type": "layout",
+      "pageId": "page-home",
+      "content": "",
+      "parentId": "sheet",
+      "layout": {
+        "direction": "column",
+        "align": "start",
+        "justify": "space-between",
+        "gap": 16,
+        "columns": 2
+      },
+      "styles": {
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "title",
+      "type": "heading",
+      "pageId": "page-home",
+      "content": "عنوان جديد",
+      "localizations": {
+        "ar": "تأكيد البريد الإلكتروني"
+      },
+      "parentId": "layout",
+      "styles": {
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "email",
+      "type": "input",
+      "pageId": "page-home",
+      "content": "أدخل النص",
+      "localizations": {
+        "ar": "البريد الالكتروني"
+      },
+      "fieldName": "email",
+      "parentId": "layout",
+      "styles": {
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    },
+    {
+      "id": "confirm-button",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "اضغط هنا",
+      "localizations": {
+        "ar": "تأكيد"
+      },
+      "action": {
+        "type": "condition",
+        "condition": {
+          "source": "form",
+          "operator": "empty",
+          "fieldName": "email"
+        },
+        "actions": [
+          {
+            "type": "message",
+            "elementId": "scrollView",
+            "title": " ",
+            "message": "يجب كتابة البريد الإلكتروني اولا"
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "hideSheet",
+            "targetElementId": "sheet",
+            "sheetId": "sheet"
+          }
+        ]
+      },
+      "parentId": "layout",
+      "styles": {
+        "padding": 0,
+        "paddingTop": 0,
+        "paddingRight": 0,
+        "paddingBottom": 0,
+        "paddingLeft": 0
+      }
+    }
+  ],
+  "settings": {
+    "title": "عنوان الخدمة",
+    "orgnization": "إسم القطاع",
+    "appTopBarType": "none"
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    {
+      "id": "page-home",
+      "name": "home",
+      "kind": "page"
+    },
+    {
+      "id": "page-splash",
+      "name": "splash",
+      "kind": "splash"
+    },
+    {
+      "id": "page-error",
+      "name": "error",
+      "kind": "error"
+    }
+  ],
+  "elements": [
+    {
+      "id": "scrollView",
+      "type": "scrollView",
+      "pageId": "page-home",
+      "content": "",
+      "styles": {
+        "background": "#f5f5f5"
+      }
+    },
+    {
+      "id": "file-picker",
+      "type": "filePicker",
+      "pageId": "page-home",
+      "content": "اختيار ملف",
+      "fieldName": "filePicker_lement-6",
+      "parentId": "scrollView",
+      "styles": {
+        "padding": 0,
+        "paddingRight": 0,
+        "paddingLeft": 0,
+        "paddingTop": 16,
+        "paddingBottom": 16
+      },
+      "action": {
+        "event": "onFilesSelected",
+        "type": "message",
+        "workflowId": "element-2",
+        "message": "Type of selected file is :{{self.files.0.mime_type}}"
+      }
+    }
+  ],
+  "settings": {
+    "title": "عنوان الخدمة",
+    "orgnization": "إسم القطاع",
+    "appTopBarType": "none",
+    "appElementSize": "normal",
+    "eventWorkflowGraphs": {
+      "element:element-1": {
+        "positions": {
+          "branch:element-4:elseActions": {
+            "x": 143,
+            "y": 456
+          }
+        },
+        "edges": [
+          {
+            "id": "sequence:trigger:element:element-1:click->action:element-4",
+            "from": "trigger:element:element-1:click",
+            "to": "action:element-4",
+            "kind": "sequence",
+            "label": ""
+          },
+          {
+            "id": "branch:action:element-4->branch:element-4:actions",
+            "from": "action:element-4",
+            "to": "branch:element-4:actions",
+            "kind": "branch",
+            "label": "Granted",
+            "branch": "actions",
+            "fromPort": "action:element-4:true"
+          },
+          {
+            "id": "branch:action:element-4->branch:element-4:elseActions",
+            "from": "action:element-4",
+            "to": "branch:element-4:elseActions",
+            "kind": "branch",
+            "label": "Denied",
+            "branch": "elseActions",
+            "fromPort": "action:element-4:false"
+          }
+        ],
+        "zoom": 1,
+        "panX": 0,
+        "panY": -400,
+        "minimapOpen": false,
+        "workflowNodeIds": {
+          "0": "element-4"
+        },
+        "nodeSignature": "action:element-4:click"
+      },
+      "app-load": {
+        "positions": {
+          "branch:element-2:elseActions": {
+            "x": 75,
+            "y": 413
+          },
+          "branch:element-2:actions": {
+            "x": 72,
+            "y": 510
+          },
+          "action:element-3": {
+            "x": 822,
+            "y": 83
+          }
+        },
+        "zoom": 1,
+        "panX": 305,
+        "panY": 86,
+        "minimapOpen": false,
+        "workflowNodeIds": {
+          "0": "element-2",
+          "1": "element-3"
+        }
+      },
+      "element:element-6": {
+        "positions": {
+          "action:element-1": {
+            "x": 389,
+            "y": 95
+          }
+        },
+        "edges": [
+          {
+            "id": "sequence:trigger:element:element-6:onFilesSelected->action:element-1",
+            "from": "trigger:element:element-6:onFilesSelected",
+            "to": "action:element-1",
+            "kind": "sequence",
+            "label": ""
+          },
+          {
+            "id": "sequence:action:element-1->action:element-2",
+            "from": "action:element-1",
+            "to": "action:element-2",
+            "kind": "sequence",
+            "label": ""
+          },
+          {
+            "id": "branch:action:element-1->branch:element-1:actions",
+            "from": "action:element-1",
+            "to": "branch:element-1:actions",
+            "kind": "branch",
+            "label": "True",
+            "branch": "actions",
+            "fromPort": "action:element-1:true"
+          },
+          {
+            "id": "branch:action:element-1->branch:element-1:elseActions",
+            "from": "action:element-1",
+            "to": "branch:element-1:elseActions",
+            "kind": "branch",
+            "label": "False",
+            "branch": "elseActions",
+            "fromPort": "action:element-1:false"
+          }
+        ],
+        "zoom": 1,
+        "panX": 0,
+        "panY": 0,
+        "minimapOpen": false,
+        "workflowNodeIds": {
+          "0": "element-1",
+          "1": "element-2"
+        },
+        "nodeSignature": "action:element-1:onFilesSelected|action:element-2:onFilesSelected"
+      },
+      "element:element-2": {
+        "edges": [
+          {
+            "id": "sequence:trigger:element:element-2:change->action:element-10",
+            "from": "trigger:element:element-2:change",
+            "to": "action:element-10",
+            "kind": "sequence",
+            "label": ""
+          }
+        ],
+        "zoom": 1,
+        "panX": 0,
+        "panY": 0,
+        "minimapOpen": false,
+        "workflowNodeIds": {
+          "0": "element-10"
+        },
+        "nodeSignature": "action:element-10:change"
+      }
+    }
+  }
+}

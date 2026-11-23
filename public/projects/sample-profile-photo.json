@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    { "id": "page-home", "name": "home", "kind": "page" },
+    { "id": "page-splash", "name": "splash", "kind": "splash" },
+    { "id": "page-error", "name": "error", "kind": "error" }
+  ],
+  "elements": [
+    {
+      "id": "profile-title",
+      "type": "heading",
+      "pageId": "page-home",
+      "content": "الصورة الشخصية",
+      "localizations": { "en": "Profile photo" },
+      "styles": { "fontSize": 26 }
+    },
+    {
+      "id": "profile-description",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "اختر صورة من المعرض لمعاينة تفاصيلها.",
+      "localizations": { "en": "Choose a photo from the gallery to view its details." },
+      "styles": {}
+    },
+    {
+      "id": "profile-photo-picker",
+      "type": "filePicker",
+      "pageId": "page-home",
+      "content": "اختيار صورة",
+      "localizations": { "en": "Choose a photo" },
+      "fieldName": "profile_photo",
+      "filePickerMode": "single",
+      "filePickerAppearance": "button",
+      "action": {
+        "type": "message",
+        "event": "onFilesSelected",
+        "title": "تم اختيار الصورة",
+        "message": "نوع الملف: {{self.files.0.mime_type}}"
+      },
+      "styles": { "padding": 12 }
+    },
+    {
+      "id": "photo-help",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "يعمل اختيار الصور داخل تطبيق توكلنا بعد تفعيل إذن Gallery للخدمة.",
+      "localizations": {
+        "en": "Gallery selection works in Tawakkalna when the service has the Gallery permission."
+      },
+      "styles": { "fontSize": 13 }
+    }
+  ],
+  "requests": [],
+  "components": [],
+  "userComponents": [],
+  "variables": [],
+  "assets": [],
+  "customCss": "",
+  "settings": {
+    "title": "الصورة الشخصية",
+    "orgnization": "الخدمات الإلكترونية",
+    "appTopBarType": "standard",
+    "appLanguage": "ar"
+  }
+}

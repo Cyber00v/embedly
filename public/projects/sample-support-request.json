@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    { "id": "page-home", "name": "home", "kind": "page" },
+    { "id": "page-splash", "name": "splash", "kind": "splash" },
+    { "id": "page-error", "name": "error", "kind": "error" }
+  ],
+  "elements": [
+    {
+      "id": "support-title",
+      "type": "heading",
+      "pageId": "page-home",
+      "content": "طلب دعم",
+      "localizations": { "en": "Support request" },
+      "styles": { "fontSize": 26 }
+    },
+    {
+      "id": "support-description",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "أرسل تفاصيل طلبك وسنساعدك.",
+      "localizations": { "en": "Share your request details and we will help." },
+      "styles": {}
+    },
+    {
+      "id": "support-name",
+      "type": "input",
+      "pageId": "page-home",
+      "content": "الاسم",
+      "localizations": { "en": "Name" },
+      "fieldName": "support_name",
+      "inputType": "text",
+      "styles": {}
+    },
+    {
+      "id": "support-category",
+      "type": "list",
+      "pageId": "page-home",
+      "content": "نوع الطلب",
+      "localizations": { "en": "Request category" },
+      "fieldName": "support_category",
+      "options": [
+        { "label": "الحساب", "value": "account" },
+        { "label": "المواعيد", "value": "appointments" },
+        { "label": "أخرى", "value": "other" }
+      ],
+      "listSource": { "type": "static" },
+      "styles": {}
+    },
+    {
+      "id": "support-details",
+      "type": "input",
+      "pageId": "page-home",
+      "content": "تفاصيل الطلب",
+      "localizations": { "en": "Request details" },
+      "fieldName": "support_details",
+      "inputType": "text",
+      "styles": {}
+    },
+    {
+      "id": "support-preview-title",
+      "type": "heading",
+      "pageId": "page-home",
+      "content": "معاينة الطلب",
+      "localizations": { "en": "Request preview" },
+      "styles": { "fontSize": 18 }
+    },
+    {
+      "id": "support-preview",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "ستظهر تفاصيلك هنا أثناء الكتابة.",
+      "localizations": { "en": "Your details will appear here as you type." },
+      "binding": { "source": "form", "path": "support_details" },
+      "styles": {}
+    },
+    {
+      "id": "support-submit",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "إرسال الطلب",
+      "localizations": { "en": "Submit request" },
+      "action": {
+        "type": "condition",
+        "event": "click",
+        "condition": {
+          "source": "form",
+          "operator": "empty",
+          "fieldName": "support_name"
+        },
+        "actions": [
+          {
+            "type": "message",
+            "title": "الاسم مطلوب",
+            "message": "يرجى إدخال الاسم قبل إرسال الطلب."
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "message",
+            "title": "تم تسجيل الطلب",
+            "message": "شكراً {{form.support_name}}. نوع الطلب: {{form.support_category}}. التفاصيل: {{form.support_details}}"
+          }
+        ]
+      },
+      "styles": { "variant": "primary" }
+    }
+  ],
+  "requests": [],
+  "components": [],
+  "userComponents": [],
+  "variables": [],
+  "assets": [],
+  "customCss": "",
+  "settings": {
+    "title": "طلب دعم",
+    "orgnization": "الخدمات الإلكترونية",
+    "appTopBarType": "standard",
+    "appLanguage": "ar"
+  }
+}

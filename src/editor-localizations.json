@@ -1,0 +1,3538 @@
+{
+  "MainMenu": {
+    "en": "Main menu",
+    "ar": "القائمة الرئيسية"
+  },
+  "File": {
+    "en": "File",
+    "ar": "ملف"
+  },
+  "ProjectGallery": {
+    "en": "Project gallery",
+    "ar": "معرض المشاريع"
+  },
+  "SavedSampleProjects": {
+    "en": "Saved sample projects",
+    "ar": "مشاريع محفوظة مسبقاً"
+  },
+  "SelectAProjectToLoadIt": {
+    "en": "Select a project to load it.",
+    "ar": "انقر على مشروع لتحميله."
+  },
+  "LoadingProjects": {
+    "en": "Loading projects...",
+    "ar": "جارٍ تحميل المشاريع..."
+  },
+  "NoSavedProjectsAreAvailable": {
+    "en": "No saved projects are available.",
+    "ar": "لا توجد مشاريع محفوظة."
+  },
+  "UnableToLoadTheProjectList": {
+    "en": "Unable to load the project list.",
+    "ar": "تعذر تحميل قائمة المشاريع."
+  },
+  "UnableToLoadProject": {
+    "en": "Unable to load project:",
+    "ar": "تعذر تحميل المشروع:"
+  },
+  "Project": {
+    "en": "Project",
+    "ar": "مشروع"
+  },
+  "Appearance": {
+    "en": "Appearance",
+    "ar": "شكل العنصر"
+  },
+  "Language": {
+    "en": "language",
+    "ar": "اللغة"
+  },
+  "ImportJSON": {
+    "en": "Import",
+    "ar": "استيراد"
+  },
+  "ExportJSON": {
+    "en": "Export",
+    "ar": "تصدير"
+  },
+  "ExportApp": {
+    "en": "Export app",
+    "ar": "تصدير التطبيق"
+  },
+  "Reset": {
+    "en": "Reset",
+    "ar": "إعادة ضبط"
+  },
+  "APISettings": {
+    "en": "API settings",
+    "ar": "إعدادات API"
+  },
+  "Variables": {
+    "en": "Variables",
+    "ar": "المتغيرات"
+  },
+  "Assets": {
+    "en": "Assets",
+    "ar": "الأصول"
+  },
+  "Colors": {
+    "en": "Colors",
+    "ar": "الألوان"
+  },
+  "CustomCSS": {
+    "en": "Custom CSS",
+    "ar": "CSS مخصص"
+  },
+  "Library": {
+    "en": "Library",
+    "ar": "المكتبة"
+  },
+  "PageElements": {
+    "en": "Page elements",
+    "ar": "عناصر الصفحة"
+  },
+  "LayoutContainers": {
+    "en": "Layout & containers",
+    "ar": "التخطيط والحاويات"
+  },
+  "TextDisplay": {
+    "en": "Text & display",
+    "ar": "النص والعرض"
+  },
+  "FormElements": {
+    "en": "Form elements",
+    "ar": "عناصر النموذج"
+  },
+  "ActionsFeedback": {
+    "en": "Actions & feedback",
+    "ar": "الإجراءات والتنبيهات"
+  },
+  "DataNavigation": {
+    "en": "Data & navigation",
+    "ar": "البيانات والتنقل"
+  },
+  "RippleEffect": {
+    "en": "Ripple effect",
+    "ar": "تأثير التموج"
+  },
+  "SearchElements": {
+    "en": "Search elements",
+    "ar": "ابحث في مكتبة العناصر"
+  },
+  "SearchForAnElement": {
+    "en": "Search for an element",
+    "ar": "ابحث عن عنصر"
+  },
+  "NoMatchingElements": {
+    "en": "No matching elements",
+    "ar": "لا توجد عناصر مطابقة"
+  },
+  "DragAnElementToThePreviewOrClickToAddIt": {
+    "en": "Drag an element to the preview or click to add it.",
+    "ar": "اسحب العنصر إلى المعاينة أو اضغط لإضافته."
+  },
+  "CustomElements": {
+    "en": "Custom elements",
+    "ar": "عناصر مخصصة"
+  },
+  "ChooseYesOrNo": {
+    "en": "Choose yes or no",
+    "ar": "اختيار نعم أو لا"
+  },
+  "ChooseOneItem": {
+    "en": "Choose one item",
+    "ar": "اختيار عنصر واحد"
+  },
+  "DividerBetweenSections": {
+    "en": "Divider between sections",
+    "ar": "فاصل بين الأقسام"
+  },
+  "ImageFromURL": {
+    "en": "Image from URL",
+    "ar": "صورة من رابط"
+  },
+  "FontAwesomeIcon": {
+    "en": "Font Awesome icon",
+    "ar": "أيقونة Font Awesome"
+  },
+  "RepeatingDataBoundItemTemplate": {
+    "en": "Repeating data-bound item template",
+    "ar": "قالب عنصر يتكرر مع البيانات"
+  },
+  "YourComponents": {
+    "en": "Your components",
+    "ar": "مكوناتك"
+  },
+  "SaveGroupAsComponent": {
+    "en": "Save group as component",
+    "ar": "حفظ المجموعة كمكون"
+  },
+  "SaveSelectedGroupAsComponent": {
+    "en": "Save selected group as component",
+    "ar": "حفظ المجموعة المحددة كمكون"
+  },
+  "SelectALayoutGroupToSave": {
+    "en": "Select a layout group to save",
+    "ar": "حدد مجموعة تخطيط لحفظها"
+  },
+  "SaveALayoutGroupAndReuseItOnYourPages": {
+    "en": "Save a layout group and reuse it on your pages.",
+    "ar": "احفظ مجموعة تخطيط وأعد استخدامها في صفحاتك."
+  },
+  "HTMLAndCSSComponents": {
+    "en": "HTML and CSS components",
+    "ar": "مكونات HTML وCSS"
+  },
+  "AddHTMLAndCSSComponent": {
+    "en": "Add HTML and CSS component",
+    "ar": "إضافة مكون HTML وCSS"
+  },
+  "ImportPluginZIP": {
+    "en": "Import plugin ZIP",
+    "ar": "استيراد إضافة ZIP"
+  },
+  "Plugins": {
+    "en": "Plugins",
+    "ar": "الإضافات"
+  },
+  "ChoosePlugins": {
+    "en": "Choose plugins",
+    "ar": "اختيار الإضافات"
+  },
+  "PluginLibrary": {
+    "en": "Plugin library",
+    "ar": "مكتبة الإضافات"
+  },
+  "ImportedPlugins": {
+    "en": "Imported plugins",
+    "ar": "الإضافات المستوردة"
+  },
+  "AppPreview": {
+    "en": "App preview",
+    "ar": "معاينة التطبيق"
+  },
+  "PreviewSize": {
+    "en": "Preview size",
+    "ar": "حجم المعاينة"
+  },
+  "Mobile": {
+    "en": "Mobile",
+    "ar": "جوال"
+  },
+  "Tablet": {
+    "en": "Tablet",
+    "ar": "لوحي"
+  },
+  "Full": {
+    "en": "Full",
+    "ar": "كامل"
+  },
+  "DragElementsHere": {
+    "en": "Drag elements here",
+    "ar": "اسحب العناصر إلى هنا"
+  },
+  "DeselectElement": {
+    "en": "Deselect element",
+    "ar": "إلغاء تحديد العنصر"
+  },
+  "ClearSelection": {
+    "en": "Clear selection",
+    "ar": "إلغاء التحديد"
+  },
+  "EditElements": {
+    "en": "Edit elements",
+    "ar": "تحرير العناصر"
+  },
+  "Undo": {
+    "en": "Undo",
+    "ar": "تراجع"
+  },
+  "Redo": {
+    "en": "Redo",
+    "ar": "إعادة"
+  },
+  "CopyElements": {
+    "en": "Copy elements",
+    "ar": "نسخ العناصر"
+  },
+  "PasteElements": {
+    "en": "Paste elements",
+    "ar": "لصق العناصر"
+  },
+  "SelectAll": {
+    "en": "Select all",
+    "ar": "تحديد الكل"
+  },
+  "UndoCtrlZ": {
+    "en": "Undo (Ctrl+Z)",
+    "ar": "تراجع (Ctrl+Z)"
+  },
+  "RedoCtrlShiftZ": {
+    "en": "Redo (Ctrl+Shift+Z)",
+    "ar": "إعادة (Ctrl+Shift+Z)"
+  },
+  "CopyCtrlC": {
+    "en": "Copy (Ctrl+C)",
+    "ar": "نسخ (Ctrl+C)"
+  },
+  "PasteCtrlV": {
+    "en": "Paste (Ctrl+V)",
+    "ar": "لصق (Ctrl+V)"
+  },
+  "SelectAllCtrlA": {
+    "en": "Select all (Ctrl+A)",
+    "ar": "تحديد الكل (Ctrl+A)"
+  },
+  "ElementsCopied": {
+    "en": "Elements copied.",
+    "ar": "تم نسخ العناصر."
+  },
+  "ElementsPasted": {
+    "en": "Elements pasted.",
+    "ar": "تم لصق العناصر."
+  },
+  "Page": {
+    "en": "Page",
+    "ar": "صفحة"
+  },
+  "PageBeingEdited": {
+    "en": "Page being edited",
+    "ar": "الصفحة الجاري تحريرها"
+  },
+  "PageName": {
+    "en": "Page name",
+    "ar": "اسم الصفحة"
+  },
+  "AddPage": {
+    "en": "Add page",
+    "ar": "إضافة صفحة"
+  },
+  "DeletePage": {
+    "en": "Delete page",
+    "ar": "حذف الصفحة"
+  },
+  "LivePreview": {
+    "en": "Live preview",
+    "ar": "معاينة مباشرة"
+  },
+  "Customize": {
+    "en": "Customize",
+    "ar": "التخصيص"
+  },
+  "Image": {
+    "en": "Image",
+    "ar": "صورة"
+  },
+  "Icon": {
+    "en": "Icon",
+    "ar": "ايقونه"
+  },
+  "Collection": {
+    "en": "Collection",
+    "ar": "قائمة مرئية"
+  },
+  "FilePicker": {
+    "en": "File Picker",
+    "ar": "اختيار ملف"
+  },
+  "ChooseImage": {
+    "en": "Choose image",
+    "ar": "اختر صورة"
+  },
+  "ChooseImages": {
+    "en": "Choose images",
+    "ar": "اختر عدة صور"
+  },
+  "DropImagesHereOrChooseFromGallery": {
+    "en": "Drop images here or choose from gallery",
+    "ar": "اسحب الصور هنا أو اختر من المعرض"
+  },
+  "ChooseImagesFromTawakkalnaGallery": {
+    "en": "Choose images from Tawakkalna gallery",
+    "ar": "اختر صوراً من معرض توكلنا"
+  },
+  "Tabs": {
+    "en": "Tabs",
+    "ar": "علامات تبويب"
+  },
+  "Tab": {
+    "en": "Tab",
+    "ar": "تبويب"
+  },
+  "Divider": {
+    "en": "Divider",
+    "ar": "فاصل"
+  },
+  "Grid": {
+    "en": "Grid",
+    "ar": "شبكة"
+  },
+  "Layout": {
+    "en": "Layout",
+    "ar": "التخطيط"
+  },
+  "EnterText": {
+    "en": "Enter text",
+    "ar": "أدخل النص"
+  },
+  "Title": {
+    "en": "Title",
+    "ar": "عنوان"
+  },
+  "Color": {
+    "en": "Color",
+    "ar": "لون"
+  },
+  "Text": {
+    "en": "Text",
+    "ar": "النص"
+  },
+  "Search": {
+    "en": "Search",
+    "ar": "بحث"
+  },
+  "Number": {
+    "en": "Number",
+    "ar": "رقم"
+  },
+  "Email": {
+    "en": "Email",
+    "ar": "بريد إلكتروني"
+  },
+  "Phone": {
+    "en": "Phone",
+    "ar": "رقم هاتف"
+  },
+  "Password": {
+    "en": "Password",
+    "ar": "كلمة مرور"
+  },
+  "URL": {
+    "en": "URL",
+    "ar": "رابط"
+  },
+  "Date": {
+    "en": "Date",
+    "ar": "تاريخ"
+  },
+  "Time": {
+    "en": "Time",
+    "ar": "وقت"
+  },
+  "DateAndTime": {
+    "en": "Date and time",
+    "ar": "تاريخ ووقت"
+  },
+  "Month": {
+    "en": "Month",
+    "ar": "شهر"
+  },
+  "Week": {
+    "en": "Week",
+    "ar": "أسبوع"
+  },
+  "Range": {
+    "en": "Range",
+    "ar": "نطاق"
+  },
+  "UserID": {
+    "en": "User ID",
+    "ar": "رقم المستخدم"
+  },
+  "AccessToken": {
+    "en": "Access token",
+    "ar": "رمز الدخول"
+  },
+  "UserType": {
+    "en": "User type",
+    "ar": "نوع المستخدم"
+  },
+  "FullName": {
+    "en": "Full name",
+    "ar": "الاسم الكامل"
+  },
+  "BirthDate": {
+    "en": "Birth date",
+    "ar": "تاريخ الميلاد"
+  },
+  "MobileNumber": {
+    "en": "Mobile number",
+    "ar": "رقم الجوال"
+  },
+  "Gender": {
+    "en": "Gender",
+    "ar": "الجنس"
+  },
+  "Location": {
+    "en": "Location",
+    "ar": "الموقع"
+  },
+  "Nationality": {
+    "en": "Nationality",
+    "ar": "الجنسية"
+  },
+  "NationalityCode": {
+    "en": "Nationality code",
+    "ar": "رمز الجنسية"
+  },
+  "MaritalStatus": {
+    "en": "Marital status",
+    "ar": "الحالة الاجتماعية"
+  },
+  "HealthStatus": {
+    "en": "Health status",
+    "ar": "الحالة الصحية"
+  },
+  "DisabilityType": {
+    "en": "Disability type",
+    "ar": "نوع الإعاقة"
+  },
+  "BloodType": {
+    "en": "Blood type",
+    "ar": "فصيلة الدم"
+  },
+  "NationalAddress": {
+    "en": "National address",
+    "ar": "العنوان الوطني"
+  },
+  "Education": {
+    "en": "Education",
+    "ar": "المؤهل الدراسي"
+  },
+  "Occupation": {
+    "en": "Occupation",
+    "ar": "المهنة"
+  },
+  "FamilyMembers": {
+    "en": "Family members",
+    "ar": "أفراد الاسرة"
+  },
+  "Dependents": {
+    "en": "Dependents",
+    "ar": "المكفولون"
+  },
+  "UnpaidViolations": {
+    "en": "Unpaid violations",
+    "ar": "المخالفات غير المدفوعة"
+  },
+  "PaidViolations": {
+    "en": "Paid violations",
+    "ar": "المخالفات المدفوعة"
+  },
+  "Vehicles": {
+    "en": "Vehicles",
+    "ar": "المركبات"
+  },
+  "Passports": {
+    "en": "Passports",
+    "ar": "جوازات السفر"
+  },
+  "Right": {
+    "en": "Right",
+    "ar": "يمين"
+  },
+  "Left": {
+    "en": "Left",
+    "ar": "يسار"
+  },
+  "Top": {
+    "en": "Top",
+    "ar": "أعلى"
+  },
+  "Bottom": {
+    "en": "Bottom",
+    "ar": "أسفل"
+  },
+  "Center": {
+    "en": "Center",
+    "ar": "الوسط"
+  },
+  "Vertical": {
+    "en": "Vertical",
+    "ar": "عمودي"
+  },
+  "Horizontal": {
+    "en": "Horizontal",
+    "ar": "أفقي"
+  },
+  "Both": {
+    "en": "Both",
+    "ar": "الاتجاهان"
+  },
+  "Start": {
+    "en": "Start",
+    "ar": "البداية"
+  },
+  "End": {
+    "en": "End",
+    "ar": "النهاية"
+  },
+  "Stretch": {
+    "en": "Stretch",
+    "ar": "تمديد"
+  },
+  "SpaceBetween": {
+    "en": "Space between",
+    "ar": "توزيع متساوٍ"
+  },
+  "CardContent": {
+    "en": "Card content",
+    "ar": "محتوى البطاقة"
+  },
+  "choosestaticvalueform": {
+    "en": "Choose a static value, form field, TWK data, or API response.",
+    "ar": "اختر مصدراً ثابتاً أو حقل نموذج أو TWK أو استجابة API."
+  },
+  "ChooseAValidTawakkalnaDataField": {
+    "en": "Choose a valid Tawakkalna data field.",
+    "ar": "اختر حقلاً صالحاً من بيانات توكلنا."
+  },
+  "tawakkalnavaluessavedvariable": {
+    "en": "Use {{twk.full_name}} for Tawakkalna data, {{form.field_name}} for current page values, or {{var.variable_name}} for a saved variable.",
+    "ar": "استخدم {{twk.full_name}} لبيانات توكلنا أو {{form.field_name}} لقيم الصفحة الحالية أو {{var.variable_name}} لمتغير محفوظ."
+  },
+  "TheTestUsesValuesFrom": {
+    "en": "The test uses values from",
+    "ar": "تستخدم التجربة قيماً من"
+  },
+  "SampleProfileFile": {
+    "en": "sample profile file",
+    "ar": "ملف الملف التجريبي"
+  },
+  "OfficialTWKHelper": {
+    "en": "official TWK helper",
+    "ar": "مساعد TWK الرسمي"
+  },
+  "PrimaryColor": {
+    "en": "Primary color",
+    "ar": "اللون الأساسي"
+  },
+  "AppBackground": {
+    "en": "App background",
+    "ar": "خلفية التطبيق"
+  },
+  "AppTitle": {
+    "en": "App title",
+    "ar": "عنوان الخدمة"
+  },
+  "Organization": {
+    "en": "Organization",
+    "ar": "اسم القطاع"
+  },
+  "AppLogoImage": {
+    "en": "App logo image",
+    "ar": "صورة شعار التطبيق"
+  },
+  "NoImage": {
+    "en": "No image",
+    "ar": "بدون صورة"
+  },
+  "AppMargin": {
+    "en": "App margin",
+    "ar": "هامش التطبيق"
+  },
+  "CardHeader": {
+    "en": "Card header",
+    "ar": "رأس البطاقة"
+  },
+  "CardFooter": {
+    "en": "Card footer",
+    "ar": "تذييل البطاقة"
+  },
+  "Margin": {
+    "en": "Margin",
+    "ar": "الهامش الخارجي"
+  },
+  "Padding": {
+    "en": "Padding",
+    "ar": "المسافة الداخلية"
+  },
+  "PageMarginsPx": {
+    "en": "Page margins (px)",
+    "ar": "هوامش الصفحة (px)"
+  },
+  "PagePaddingPx": {
+    "en": "Page padding (px)",
+    "ar": "حشوة الصفحة (px)"
+  },
+  "ElementSize": {
+    "en": "Element size",
+    "ar": "حجم العناصر"
+  },
+  "ShowLoadingIndicatorLabel": {
+    "en": "Show loading indicator label",
+    "ar": "إظهار نص مؤشر التحميل"
+  },
+  "ShowErrorMessage": {
+    "en": "Show error message",
+    "ar": "إظهار رسالة الخطأ"
+  },
+  "Small": {
+    "en": "Small",
+    "ar": "صغير"
+  },
+  "Normal": {
+    "en": "Normal",
+    "ar": "عادي"
+  },
+  "Large": {
+    "en": "Large",
+    "ar": "كبير"
+  },
+  "MarginPx": {
+    "en": "Margin (px)",
+    "ar": "الهامش الخارجي (px)"
+  },
+  "PaddingPx": {
+    "en": "Padding (px)",
+    "ar": "المسافة الداخلية (px)"
+  },
+  "ButtonVariant": {
+    "en": "Button variant",
+    "ar": "نمط الزر"
+  },
+  "ExtraElementData": {
+    "en": "Extra element data",
+    "ar": "معلومات إضافية للعنصر"
+  },
+  "ElementExtraData": {
+    "en": "Element extra data",
+    "ar": "معلومة إضافية لعنصر"
+  },
+  "ExtraDataItem": {
+    "en": "Extra data item",
+    "ar": "المعلومة الإضافية"
+  },
+  "StaticValueJSON": {
+    "en": "Static value (JSON)",
+    "ar": "قيمة ثابتة (JSON)"
+  },
+  "FieldPathInTheCurrentItem": {
+    "en": "Field path in the current item",
+    "ar": "مسار الحقل في العنصر الحالي"
+  },
+  "SourceVariable": {
+    "en": "Source variable",
+    "ar": "المتغير المصدر"
+  },
+  "AppEvents": {
+    "en": "App events",
+    "ar": "أحداث التطبيق"
+  },
+  "AddAppLoadEvent": {
+    "en": "Add App Load Event",
+    "ar": "إضافة حدث عند تحميل التطبيق"
+  },
+  "actionsrunonceinitial": {
+    "en": "Actions run once after the app's initial data has loaded.",
+    "ar": "إجراءات هذا الحدث تُنفذ مرة واحدة بعد تحميل بيانات التطبيق الأولية."
+  },
+  "AppLoad": {
+    "en": "App load",
+    "ar": "تحميل التطبيق"
+  },
+  "PropertyFromAnotherElement": {
+    "en": "Property from another element",
+    "ar": "خاصية من عنصر آخر"
+  },
+  "SourceElement": {
+    "en": "Source element",
+    "ar": "العنصر المصدر"
+  },
+  "Property": {
+    "en": "Property",
+    "ar": "الخاصية"
+  },
+  "ImageURL": {
+    "en": "Image URL",
+    "ar": "رابط الصورة"
+  },
+  "CurrentValue": {
+    "en": "Current value",
+    "ar": "القيمة الحالية"
+  },
+  "OpenState": {
+    "en": "Open state",
+    "ar": "حالة الفتح"
+  },
+  "ChipSelectedState": {
+    "en": "Chip selected state",
+    "ar": "حالة اختيار الشريحة"
+  },
+  "AddDataItem": {
+    "en": "Add data item",
+    "ar": "إضافة معلومة"
+  },
+  "Disabled": {
+    "en": "Disabled",
+    "ar": "معطّل"
+  },
+  "MinimumValue": {
+    "en": "Minimum value",
+    "ar": "القيمة الدنيا"
+  },
+  "MaximumValue": {
+    "en": "Maximum value",
+    "ar": "القيمة العليا"
+  },
+  "Variant": {
+    "en": "Variant",
+    "ar": "النمط"
+  },
+  "SwitchState": {
+    "en": "Switch state",
+    "ar": "حالة التحديد"
+  },
+  "CheckSwitch": {
+    "en": "Check switch",
+    "ar": "تحديد المفتاح"
+  },
+  "UncheckSwitch": {
+    "en": "Uncheck switch",
+    "ar": "إلغاء تحديد المفتاح"
+  },
+  "Indeterminate": {
+    "en": "Indeterminate",
+    "ar": "غير محدد"
+  },
+  "ProgressMode": {
+    "en": "Progress mode",
+    "ar": "وضع التقدم"
+  },
+  "Determinate": {
+    "en": "Determinate",
+    "ar": "قيمة محددة"
+  },
+  "Maximum": {
+    "en": "Maximum",
+    "ar": "الحد الأقصى"
+  },
+  "Primary": {
+    "en": "Primary",
+    "ar": "أساسي"
+  },
+  "Secondary": {
+    "en": "Secondary",
+    "ar": "ثانوي"
+  },
+  "Ghost": {
+    "en": "Ghost",
+    "ar": "شفاف"
+  },
+  "Outline": {
+    "en": "Outline",
+    "ar": "محدد"
+  },
+  "Custom": {
+    "en": "Custom",
+    "ar": "مخصص"
+  },
+  "CustomBackgroundColor": {
+    "en": "Custom background color",
+    "ar": "لون خلفية مخصص"
+  },
+  "BorderWidthPx": {
+    "en": "Border width (px)",
+    "ar": "سماكة الحد (px)"
+  },
+  "BorderColor": {
+    "en": "Border color",
+    "ar": "لون الحدود"
+  },
+  "BorderRadiusPx": {
+    "en": "Border radius (px)",
+    "ar": "استدارة الزوايا (px)"
+  },
+  "appearsactioncannotcompleted": {
+    "en": "This page appears when an action cannot be completed.",
+    "ar": "تظهر الصفحة عند تعذر تنفيذ إجراء."
+  },
+  "appearsrequestsrunning": {
+    "en": "This page appears while app requests are running.",
+    "ar": "تظهر هذه الصفحة أثناء تنفيذ طلبات التطبيق."
+  },
+  "DragElementsIntoThisAreaInTheEditor": {
+    "en": "Drag elements into this area in the editor",
+    "ar": "اسحب عناصر إلى هذه المنطقة في المحرر"
+  },
+  "AddElementsToTheCollectionTemplate": {
+    "en": "Add elements to the collection template",
+    "ar": "أضف عناصر إلى قالب القائمة"
+  },
+  "EnterTextHereCopy": {
+    "en": "Enter text here (copy)",
+    "ar": "اكتب النص هنا (نسخة)"
+  },
+  "FirstOption": {
+    "en": "First option",
+    "ar": "الخيار الأول"
+  },
+  "SecondOption": {
+    "en": "Second option",
+    "ar": "الخيار الثاني"
+  },
+  "FirstItem": {
+    "en": "First item",
+    "ar": "العنصر الأول"
+  },
+  "SecondItem": {
+    "en": "Second item",
+    "ar": "العنصر الثاني"
+  },
+  "FirstItemDescription": {
+    "en": "First item description",
+    "ar": "وصف العنصر الأول"
+  },
+  "SecondItemDescription": {
+    "en": "Second item description",
+    "ar": "وصف العنصر الثاني"
+  },
+  "OrganizationName": {
+    "en": "Organization name",
+    "ar": "إسم القطاع"
+  },
+  "MemberName": {
+    "en": "Member name",
+    "ar": "إسم الفرد"
+  },
+  "GoodMorningMuhammad": {
+    "en": "Good morning, Muhammad",
+    "ar": "صباح الخير، محمد"
+  },
+  "ReadDataFromTawakkalna": {
+    "en": "Read data from Tawakkalna",
+    "ar": "قراءة البيانات من توكلنا"
+  },
+  "ReadDataFromAVariable": {
+    "en": "Read data from a variable",
+    "ar": "قراءة البيانات من متغير"
+  },
+  "ChooseAnItem": {
+    "en": "Choose an item",
+    "ar": "اختر عنصراً"
+  },
+  "CardWithTitleAndFooter": {
+    "en": "Card with title and footer",
+    "ar": "بطاقة بعنوان وتذييل"
+  },
+  "TitleAndSubTitle": {
+    "en": "Title and SubTitle",
+    "ar": "العنوان والعنوان الفرعي"
+  },
+  "TitleAndSubtitle": {
+    "en": "Title and subtitle",
+    "ar": "Title and SubTitle"
+  },
+  "GroupElementsVerticallyOrHorizontally": {
+    "en": "Group elements vertically or horizontally",
+    "ar": "تجميع العناصر عمودياً أو أفقياً"
+  },
+  "GridColumns": {
+    "en": "Grid columns",
+    "ar": "أعمدة الشبكة"
+  },
+  "InputField": {
+    "en": "Input field",
+    "ar": "حقل إدخال"
+  },
+  "Properties": {
+    "en": "Properties",
+    "ar": "الخصائص"
+  },
+  "AppProperties": {
+    "en": "App properties",
+    "ar": "خصائص التطبيق"
+  },
+  "AppAppearance": {
+    "en": "App appearance",
+    "ar": "مظهر التطبيق"
+  },
+  "AppColors": {
+    "en": "App colors",
+    "ar": "ألوان التطبيق"
+  },
+  "spaceseparatedclassnames": {
+    "en": "Space-separated class names; use them in custom CSS.",
+    "ar": "أسماء فئات مفصولة بمسافة؛ استخدمها في CSS المخصص."
+  },
+  "ExampleFaStarFaHeartOrFaHouse": {
+    "en": "Example: fa-star, fa-heart, or fa-house.",
+    "ar": "مثال: fa-star أو fa-heart أو fa-house."
+  },
+  "editorusessamplecalls": {
+    "en": "The editor uses sample data. The app calls TWK when running inside Tawakkalna.",
+    "ar": "يستخدم المحرر بيانات الملف التجريبي، ويستدعي التطبيق TWK عند تشغيله داخل توكلنا."
+  },
+  "clickareapreviewreturn": {
+    "en": "Click an empty area in the preview to return to app properties.",
+    "ar": "انقر على مساحة فارغة في المعاينة للعودة إلى خصائص التطبيق."
+  },
+  "changessavedautomaticallybrow": {
+    "en": "Changes are saved automatically in this browser.",
+    "ar": "يتم حفظ التغييرات تلقائياً في هذا المتصفح."
+  },
+  "uniqueidstartingletter": {
+    "en": "Unique ID starting with a letter or _; may contain letters, numbers, _, ., :, or -.",
+    "ar": "معرّف فريد يبدأ بحرف أو _ ويحتوي أحرفاً أو أرقاماً أو _ . : -."
+  },
+  "EnterAutoOrAValidValueInPxRemEmVwOrVh": {
+    "en": "Enter auto or a valid value in px, %, rem, em, vw, or vh.",
+    "ar": "أدخل auto أو قيمة صالحة بوحدة px أو % أو rem أو em أو vw أو vh."
+  },
+  "Column": {
+    "en": "Column",
+    "ar": "عمود"
+  },
+  "Empty": {
+    "en": "Empty",
+    "ar": "فارغ"
+  },
+  "SaveCSS": {
+    "en": "Save CSS",
+    "ar": "حفظ CSS"
+  },
+  "CSSRules": {
+    "en": "CSS rules",
+    "ar": "قواعد CSS"
+  },
+  "SaveComponent": {
+    "en": "Save component",
+    "ar": "حفظ المكون"
+  },
+  "SavedVariable": {
+    "en": "Saved variable",
+    "ar": "متغير محفوظ"
+  },
+  "Variable": {
+    "en": "Variable",
+    "ar": "المتغير"
+  },
+  "ItemDistribution": {
+    "en": "Item distribution",
+    "ar": "توزيع العناصر"
+  },
+  "ProjectLibrary": {
+    "en": "Project library",
+    "ar": "مكتبة المشروع"
+  },
+  "FieldSettings": {
+    "en": "Field settings",
+    "ar": "إعدادات الحقول"
+  },
+  "GroupLayout": {
+    "en": "Group layout",
+    "ar": "تخطيط المجموعة"
+  },
+  "ItemAlignment": {
+    "en": "Item alignment",
+    "ar": "محاذاة العناصر"
+  },
+  "AddAction": {
+    "en": "Add Action",
+    "ar": "إضافة حدث"
+  },
+  "ScrollSettings": {
+    "en": "Scroll settings",
+    "ar": "إعدادات التمرير"
+  },
+  "ValuesFieldName": {
+    "en": "Values field name",
+    "ar": "اسم الحقل للقيم"
+  },
+  "FormFieldName": {
+    "en": "Form field name",
+    "ar": "اسم حقل النموذج"
+  },
+  "InputFieldType": {
+    "en": "Input field type",
+    "ar": "نوع حقل الإدخال"
+  },
+  "HeaderType": {
+    "en": "Header type",
+    "ar": "نوع شريط العنوان"
+  },
+  "AddAnAPIRequestToGetStarted": {
+    "en": "Add an API request to get started",
+    "ar": "أضف طلب API للبدء"
+  },
+  "DataAndIntegrations": {
+    "en": "Data and integrations",
+    "ar": "البيانات والتكامل"
+  },
+  "Headers": {
+    "en": "Headers",
+    "ar": "الترويسات"
+  },
+  "AddHeader": {
+    "en": "Add header",
+    "ar": "إضافة ترويسة"
+  },
+  "EditHeadersJSON": {
+    "en": "Edit headers JSON",
+    "ar": "تحرير JSON متقدم للترويسات"
+  },
+  "RequestBody": {
+    "en": "Request body",
+    "ar": "جسم الطلب"
+  },
+  "AddParameter": {
+    "en": "Add parameter",
+    "ar": "إضافة معلمة"
+  },
+  "EditRequestBodyJSON": {
+    "en": "Edit request body JSON",
+    "ar": "تحرير JSON متقدم لجسم الطلب"
+  },
+  "UserProfile": {
+    "en": "User profile",
+    "ar": "ملف المستخدم"
+  },
+  "AlignElementWithinAbsoluteLayout": {
+    "en": "Align element within Absolute Layout",
+    "ar": "محاذاة العنصر داخل Absolute Layout"
+  },
+  "HorizontalAlignment": {
+    "en": "Horizontal alignment",
+    "ar": "المحاذاة الأفقية"
+  },
+  "VerticalAlignment": {
+    "en": "Vertical alignment",
+    "ar": "المحاذاة الرأسية"
+  },
+  "ShowAProgressIndicatorDuringAPIRequests": {
+    "en": "Show a progress indicator during API requests",
+    "ar": "إظهار مؤشر التقدم أثناء طلبات API"
+  },
+  "DisableElement": {
+    "en": "Disable element",
+    "ar": "تعطيل العنصر"
+  },
+  "OptionsSource": {
+    "en": "Options source",
+    "ar": "مصدر الخيارات"
+  },
+  "SelectionCount": {
+    "en": "Selection count",
+    "ar": "عدد الصور"
+  },
+  "openstawakkalnanativeimage": {
+    "en": "Opens Tawakkalna's native image picker; the value is a JSON array for reading and data binding.",
+    "ar": "يستدعي اختيار الصور الأصلي في توكلنا، وتكون القيمة مصفوفة JSON للقراءة والربط."
+  },
+  "namedvaluesactionselement": {
+    "en": "Add named values to use in actions or element bindings. Values can be plain text or tokens such as {{item.id}}, {{twk.user_id}}, {{var.name}}, {{api.requestId.data.id}}, and {{form.field_name}}.",
+    "ar": "أضف قيماً مسماة متعددة لاستخدامها في الإجراءات أو ربط العناصر. تقبل القيم نصاً ثابتاً أو رموزاً مثل {{item.id}} و{{twk.user_id}} و{{var.name}} و{{api.requestId.data.id}} و{{form.field_name}}."
+  },
+  "SelectedElementActions": {
+    "en": "Selected element actions",
+    "ar": "إجراءات العنصر المحدد"
+  },
+  "AutoOrPx": {
+    "en": "auto, 100%, or 240px",
+    "ar": "auto أو 100% أو 240px"
+  },
+  "AutoOrPxAlternative": {
+    "en": "auto, 100%, or 120px",
+    "ar": "auto أو 100% أو 120px"
+  },
+  "NoAssetsYet": {
+    "en": "No assets yet.",
+    "ar": "لا توجد أصول بعد."
+  },
+  "StaticItemsJSON": {
+    "en": "Static items (JSON)",
+    "ar": "العناصر الثابتة (JSON)"
+  },
+  "ItemSpacing": {
+    "en": "Item spacing",
+    "ar": "المسافة بين العناصر"
+  },
+  "SubmittedValuesJSON": {
+    "en": "Submitted values (JSON)",
+    "ar": "القيم المرسلة (JSON)"
+  },
+  "FieldPathInItem": {
+    "en": "Field path in item",
+    "ar": "مسار الحقل في العنصر"
+  },
+  "AddAnActionForElse": {
+    "en": "Add an action for Else",
+    "ar": "إضافة إجراء لحالة Else"
+  },
+  "ActionsWhenConditionIsTrue": {
+    "en": "Actions when condition is true",
+    "ar": "الإجراءات عند تحقق الشرط"
+  },
+  "AddAnActionForTheTrueBranch": {
+    "en": "Add an action for the true branch",
+    "ar": "إضافة إجراء عند تحقق الشرط"
+  },
+  "ActionsWhenConditionIsFalse": {
+    "en": "Actions when condition is false",
+    "ar": "الإجراءات عند عدم تحقق الشرط"
+  },
+  "FieldFromTheCurrentListItem": {
+    "en": "Field from the current list item",
+    "ar": "حقل من عنصر القائمة الحالي"
+  },
+  "CollectionItemSource": {
+    "en": "Collection item source",
+    "ar": "مصدر عناصر القائمة المرئية"
+  },
+  "ValuePathInItem": {
+    "en": "Value path in item",
+    "ar": "مسار القيمة داخل العنصر"
+  },
+  "ComparisonValueJSONOrToken": {
+    "en": "Comparison value (JSON or token)",
+    "ar": "القيمة المقارنة (JSON أو رمز)"
+  },
+  "InContentAPIRequestsAndComponentActions": {
+    "en": "in content, API requests, and component actions.",
+    "ar": "في المحتوى وطلبات API وإجراءات المكونات."
+  },
+  "DefineAValueOnceAndUseItAs": {
+    "en": "Define a value once and use it as",
+    "ar": "عرّف قيمة مرة واحدة واستخدمها بصيغة"
+  },
+  "TargetCSSClassesAssignedToElementsSuchAs": {
+    "en": "Target CSS classes assigned to elements, such as",
+    "ar": "استهدف فئات CSS التي عيّنتها للعناصر، مثل"
+  },
+  "ExampleDataProfileNameOrResultsTitle": {
+    "en": "Example: data.profile.name or results.0.title",
+    "ar": "مثال: data.profile.name أو results.0.title"
+  },
+  "namebuttonvalues": {
+    "en": "Use this name in button values: {{form.selected_items}}",
+    "ar": "استخدم هذا الاسم في قيم الزر: {{form.selected_items}}"
+  },
+  "downloadstandalonehtmlfile": {
+    "en": "Download a standalone HTML file or copy the code into your project.",
+    "ar": "تنزيل ملف HTML مستقلاً أو انسخ الشيفرة لدمجها في مشروعك."
+  },
+  "rulespreviewedsavedcustom": {
+    "en": "Rules are previewed in the app and saved as custom.css in the ZIP.",
+    "ar": "تُعاين القواعد داخل التطبيق، وتُحفظ في custom.css بحزمة ZIP."
+  },
+  "ThemeColorVariables": {
+    "en": "Theme color variables",
+    "ar": "متغيرات ألوان السمة"
+  },
+  "clickvariableinsertcursor": {
+    "en": "Click a variable to insert it at the cursor. Values follow the active light or dark theme.",
+    "ar": "انقر على متغير لإدراجه في موضع المؤشر. تتبع الألوان السمة الفاتحة أو الداكنة النشطة."
+  },
+  "elementscollectionchildelemen": {
+    "en": "Add elements to this collection; its child elements repeat for each record.",
+    "ar": "أضف العناصر داخل هذه القائمة؛ ستتكرر العناصر الداخلية لكل سجل."
+  },
+  "dragelementscollectionthem": {
+    "en": "Drag elements into the collection to add them, or drag them out to remove them.",
+    "ar": "اسحب العناصر إلى المجموعة لإضافتها، أو اسحبها خارجها لإخراجها."
+  },
+  "requestssentwebviewserver": {
+    "en": "Requests are sent from the WebView; the server may need appropriate CORS configuration.",
+    "ar": "وتُرسل طلباتك من WebView؛ قد يتطلب الخادم تهيئة CORS المناسبة."
+  },
+  "requestssentwebviewserveralt": {
+    "en": ". Requests are sent from the WebView; the server may need appropriate CORS configuration.",
+    "ar": "، وتُرسل طلباتك من WebView؛ قد يتطلب الخادم تهيئة CORS المناسبة."
+  },
+  "OnExportTheAppLoads": {
+    "en": ". On export, the app loads",
+    "ar": ". عند التصدير يُحمّل"
+  },
+  "rulespreviewedsavedcustomalt": {
+    "en": ". Rules are previewed in the app and saved as custom.css in the ZIP.",
+    "ar": ". تُعاين القواعد داخل التطبيق، وتُحفظ في custom.css بحزمة ZIP."
+  },
+  "bindtawakkalnarequestdisplay": {
+    "en": "Bind Tawakkalna data to a request, then display response fields in page elements.",
+    "ar": "يمكن ربط بيانات توكلنا بالطلب، ثم عرض حقول الاستجابة في عناصر الصفحة."
+  },
+  "apiresponsemustload": {
+    "en": "The API response must load before the condition is evaluated. Compare numeric values using JSON numbers.",
+    "ar": "يجب تحميل استجابة API قبل تقييم الشرط. قارن القيم العددية باستخدام أرقام JSON."
+  },
+  "putsecretswebbackend": {
+    "en": "Do not put secrets in a web app; use a backend proxy to protect credentials.",
+    "ar": "لا تضع مفاتيح سرية في تطبيق الويب؛ استخدم خادماً وسيطاً لحماية بيانات الاعتماد."
+  },
+  "createhttprequestinclude": {
+    "en": "Create an HTTP request and include TWK data, form fields, or variables in its URL, headers, and body.",
+    "ar": "أنشئ طلب HTTP، وأدرج بيانات TWK أو حقول النموذج أو المتغيرات في الرابط والترويسات وجسم الطلب."
+  },
+  "customhtmlembeddedpreview": {
+    "en": "Custom HTML is embedded as-is in the preview and export. Script tags are not run; use an iframe for external content.",
+    "ar": "HTML المخصص يُضمّن كما هو في المعاينة والتصدير. لا تُشغّل وسوم script؛ استخدم iframe للمحتوى الخارجي."
+  },
+  "imagesaudiovideofiles": {
+    "en": "Add images, audio, video, and other files. Assets are included in the project and ZIP; total local storage is limited to 2 MB.",
+    "ar": "أضف الصور والصوت والفيديو والملفات الأخرى. تُضمّن الأصول في المشروع وحزمة ZIP؛ حد التخزين المحلي الإجمالي 2 MB."
+  },
+  "jsonvaluespreservenumbers": {
+    "en": "JSON values preserve numbers and arrays. Use {{form.field_name}} for a selected value, {{twk.full_name}} for Tawakkalna data, {{var.variable_name}} for a saved variable, {{api.requestId.data.status}} for an API response, or {{self.content}} for the element that triggered the action.",
+    "ar": "القيم JSON تحتفظ بأرقامها ومصفوفاتها. استخدم {{form.field_name}} للقيمة المختارة أو {{twk.full_name}} لبيانات توكلنا أو {{var.variable_name}} لمتغير محفوظ أو {{api.requestId.data.status}} من استجابة API أو {{self.content}} للعنصر الذي شغّل الحدث."
+  },
+  "ElementID": {
+    "en": "Element ID",
+    "ar": "معرّف العنصر"
+  },
+  "HideElementInApp": {
+    "en": "Hide element in app",
+    "ar": "إخفاء العنصر من التطبيق"
+  },
+  "ElementPositionInCard": {
+    "en": "Element position in card",
+    "ar": "موضع العنصر داخل البطاقة"
+  },
+  "Content": {
+    "en": "Content",
+    "ar": "المحتوى"
+  },
+  "Footer": {
+    "en": "Footer",
+    "ar": "التذييل"
+  },
+  "TextColor": {
+    "en": "Text color",
+    "ar": "لون النص"
+  },
+  "BackgroundColor": {
+    "en": "Background color",
+    "ar": "لون الخلفية"
+  },
+  "TransparentBackground": {
+    "en": "Transparent background",
+    "ar": "خلفية شفافة"
+  },
+  "FontSize": {
+    "en": "Font size",
+    "ar": "حجم الخط"
+  },
+  "Width": {
+    "en": "Width",
+    "ar": "العرض"
+  },
+  "Height": {
+    "en": "Height",
+    "ar": "الارتفاع"
+  },
+  "TextAlignment": {
+    "en": "Text alignment",
+    "ar": "محاذاة النص"
+  },
+  "CSSClasses": {
+    "en": "CSS classes",
+    "ar": "فئات CSS"
+  },
+  "ItemDirection": {
+    "en": "Item direction",
+    "ar": "اتجاه العناصر"
+  },
+  "Columns": {
+    "en": "Columns",
+    "ar": "عدد الأعمدة"
+  },
+  "ScrollDirection": {
+    "en": "Scroll direction",
+    "ar": "اتجاه التمرير"
+  },
+  "ElementProperties": {
+    "en": "Element properties",
+    "ar": "خصائص العنصر"
+  },
+  "EventsAndActions": {
+    "en": "Events and actions",
+    "ar": "الأحداث والإجراءات"
+  },
+  "ManageEventsActions": {
+    "en": "Manage Events & Actions",
+    "ar": "إدارة الأحداث والإجراءات"
+  },
+  "ManageAppLoadEvents": {
+    "en": "Manage App Load Events",
+    "ar": "إدارة أحداث تحميل التطبيق"
+  },
+  "SaveAndClose": {
+    "en": "Save and close",
+    "ar": "حفظ وإغلاق"
+  },
+  "changessaveautomaticallypress": {
+    "en": "Changes save automatically. Press Ctrl/Cmd + S to save now, or Esc to close.",
+    "ar": "يُحفظ التعديل تلقائياً. Ctrl/Cmd + S للحفظ يدوياً، وEsc للإغلاق."
+  },
+  "ReadyToEmbed": {
+    "en": "Ready to embed",
+    "ar": "جاهز للتضمين"
+  },
+  "AppFiles": {
+    "en": "App files",
+    "ar": "ملفات التطبيق"
+  },
+  "CopyCode": {
+    "en": "Copy code",
+    "ar": "نسخ الشيفرة"
+  },
+  "DownloadApp": {
+    "en": "Download app",
+    "ar": "تنزيل التطبيق"
+  },
+  "zipincludesfontawesome": {
+    "en": "The ZIP includes Font Awesome and custom.css. The app also loads the TWK helper; do not put secrets in this file.",
+    "ar": "تتضمن حزمة ZIP مكتبة Font Awesome وملف custom.css المرتبط من index.html. يحمّل التطبيق كذلك مساعد TWK؛ لا تضع مفاتيح سرية في هذا الملف."
+  },
+  "DataSources": {
+    "en": "Data sources",
+    "ar": "مصادر البيانات"
+  },
+  "ManageVariables": {
+    "en": "Manage variables",
+    "ar": "إدارة المتغيرات"
+  },
+  "definevalueoncecontent": {
+    "en": "Define a value once and use {{var.name}} in content, API requests, and component actions.",
+    "ar": "عرّف قيمة مرة واحدة واستخدمها بصيغة {{var.name}} في المحتوى وطلبات API وإجراءات المكونات."
+  },
+  "NewVariable": {
+    "en": "New variable",
+    "ar": "متغير جديد"
+  },
+  "AddAVariableToGetStarted": {
+    "en": "Add a variable to get started",
+    "ar": "أضف متغيراً للبدء"
+  },
+  "VariableName": {
+    "en": "Variable name",
+    "ar": "اسم المتغير"
+  },
+  "englishlettersnumbersundersco": {
+    "en": "Use English letters, numbers, and underscores; names must start with a letter or _.",
+    "ar": "استخدم أحرفاً إنجليزية وأرقاماً وشرطة سفلية، ويبدأ الاسم بحرف أو _."
+  },
+  "ValueSource": {
+    "en": "Value source",
+    "ar": "مصدر القيمة"
+  },
+  "FormField": {
+    "en": "Form field",
+    "ar": "حقل النموذج"
+  },
+  "TawakkalnaData": {
+    "en": "Tawakkalna data",
+    "ar": "بيانات توكلنا"
+  },
+  "APIResponse": {
+    "en": "API response",
+    "ar": "استجابة API"
+  },
+  "ValueJSON": {
+    "en": "Value (JSON)",
+    "ar": "القيمة (JSON)"
+  },
+  "FormFieldOnCurrentPage": {
+    "en": "Form field on current page",
+    "ar": "حقل نموذج في الصفحة الحالية"
+  },
+  "TawakkalnaField": {
+    "en": "Tawakkalna field",
+    "ar": "حقل توكلنا"
+  },
+  "ResponsePath": {
+    "en": "Response path",
+    "ar": "مسار الاستجابة"
+  },
+  "Delete": {
+    "en": "Delete",
+    "ar": "حذف"
+  },
+  "Save": {
+    "en": "Save",
+    "ar": "حفظ"
+  },
+  "SaveVariable": {
+    "en": "Save variable",
+    "ar": "حفظ المتغير"
+  },
+  "AddRequest": {
+    "en": "Add request",
+    "ar": "إضافة طلب"
+  },
+  "NewRequest": {
+    "en": "New request",
+    "ar": "طلب جديد"
+  },
+  "APIRequests": {
+    "en": "API requests",
+    "ar": "طلبات API"
+  },
+  "RequestName": {
+    "en": "Request name",
+    "ar": "اسم الطلب"
+  },
+  "RequestMethod": {
+    "en": "Request method",
+    "ar": "طريقة الطلب"
+  },
+  "AllowRunningWhenTheAppOpens": {
+    "en": "Allow running when the app opens",
+    "ar": "السماح بالتشغيل عند فتح التطبيق"
+  },
+  "LinkedButton": {
+    "en": "Linked button",
+    "ar": "الزر المرتبط"
+  },
+  "HeadersJSON": {
+    "en": "Headers (JSON)",
+    "ar": "الترويسات (JSON)"
+  },
+  "RequestBodyJSON": {
+    "en": "Request body (JSON)",
+    "ar": "جسم الطلب (JSON)"
+  },
+  "DeleteRequest": {
+    "en": "Delete request",
+    "ar": "حذف الطلب"
+  },
+  "TestRequest": {
+    "en": "Test request",
+    "ar": "تجربة الطلب"
+  },
+  "TheRequestHasNotBeenSent": {
+    "en": "The request has not been sent.",
+    "ar": "لم يتم إرسال الطلب."
+  },
+  "ChangeThePreviewAndExportedAppColors": {
+    "en": "Change the preview and exported app colors.",
+    "ar": "غيّر ألوان المعاينة والتطبيق المصدّر."
+  },
+  "AccentColor": {
+    "en": "Accent color",
+    "ar": "لون التمييز"
+  },
+  "CardColor": {
+    "en": "Card color",
+    "ar": "لون البطاقات"
+  },
+  "RestoreDefaultColors": {
+    "en": "Restore default colors",
+    "ar": "استعادة الألوان الافتراضية"
+  },
+  "Done": {
+    "en": "Done",
+    "ar": "تم"
+  },
+  "ReusableComponents": {
+    "en": "Reusable components",
+    "ar": "مكونات قابلة لإعادة الاستخدام"
+  },
+  "GlobalActions": {
+    "en": "Global actions",
+    "ar": "الإجراءات العامة"
+  },
+  "ReusableActions": {
+    "en": "Reusable actions",
+    "ar": "إجراءات قابلة لإعادة الاستخدام"
+  },
+  "AddGlobalAction": {
+    "en": "Add global action",
+    "ar": "إضافة إجراء عام"
+  },
+  "GlobalAction": {
+    "en": "Global action",
+    "ar": "الإجراء العام"
+  },
+  "createglobalactionedit": {
+    "en": "Create a global action, edit its steps in the workflow editor, then call it from any action list.",
+    "ar": "أنشئ إجراءً عاماً، وحرّر خطواته في محرر سير العمل، ثم استدعه من أي قائمة إجراءات."
+  },
+  "EditWorkflow": {
+    "en": "Edit workflow",
+    "ar": "تحرير سير العمل"
+  },
+  "AddStep": {
+    "en": "Add step",
+    "ar": "إضافة خطوة"
+  },
+  "GlobalActionAlternative": {
+    "en": "Global action:",
+    "ar": "الإجراء العام:"
+  },
+  "stepsrunorderglobal": {
+    "en": "Steps run in order when this global action is called.",
+    "ar": "تُنفذ الخطوات بالترتيب عند استدعاء هذا الإجراء العام."
+  },
+  "ComponentName": {
+    "en": "Component name",
+    "ar": "اسم المكون"
+  },
+  "Cancel": {
+    "en": "Cancel",
+    "ar": "إلغاء"
+  },
+  "CustomComponent": {
+    "en": "Custom component",
+    "ar": "مكون مخصص"
+  },
+  "Close": {
+    "en": "Close",
+    "ar": "إغلاق"
+  },
+  "ProjectSettings": {
+    "en": "Project settings",
+    "ar": "إعدادات المشروع"
+  },
+  "ImportProject": {
+    "en": "Import project",
+    "ar": "استيراد المشروع"
+  },
+  "IAgreeToTheTerms": {
+    "en": "I agree to the terms",
+    "ar": "أوافق على الشروط"
+  },
+  "NewTitle": {
+    "en": "New title",
+    "ar": "عنوان جديد"
+  },
+  "EnterTextHere": {
+    "en": "Enter text here",
+    "ar": "اكتب النص هنا"
+  },
+  "ClickHere": {
+    "en": "Click here",
+    "ar": "اضغط هنا"
+  },
+  "EnterCardContent": {
+    "en": "Enter card content",
+    "ar": "اكتب محتوى البطاقة"
+  },
+  "Standard": {
+    "en": "standard",
+    "ar": "قياسي"
+  },
+  "None": {
+    "en": "None",
+    "ar": "بدون"
+  },
+  "Download": {
+    "en": "Download",
+    "ar": "تنزيل"
+  },
+  "NoText": {
+    "en": "No text",
+    "ar": "بدون نص"
+  },
+  "NoURLSet": {
+    "en": "No URL set",
+    "ar": "رابط غير محدد"
+  },
+  "UnknownFileType": {
+    "en": "Unknown file type",
+    "ar": "نوع الملف غير معروف"
+  },
+  "UnsupportedRequestMethod": {
+    "en": "Unsupported request method.",
+    "ar": "طريقة الطلب غير مدعومة."
+  },
+  "ImageURLIsNotSet": {
+    "en": "Image URL is not set",
+    "ar": "رابط الصورة غير مضبوط"
+  },
+  "AddAnImageURLInProperties": {
+    "en": "Add an image URL in properties",
+    "ar": "أضف رابط الصورة من الخصائص"
+  },
+  "AddAButtonToThePageFirst": {
+    "en": "Add a button to the page first",
+    "ar": "أضف زرّاً إلى الصفحة أولاً"
+  },
+  "UnableToRunRequest": {
+    "en": "Unable to run request “",
+    "ar": "تعذر تنفيذ الطلب «"
+  },
+  "ChooseAnOption": {
+    "en": "Choose an option",
+    "ar": "اختر أحد الخيارات"
+  },
+  "ValuesJSON": {
+    "en": "Values (JSON)",
+    "ar": "القيم (JSON)"
+  },
+  "AddAStaticVariable": {
+    "en": "Add a static variable",
+    "ar": "أضف متغيراً ثابتاً"
+  },
+  "EnterAComponentName": {
+    "en": "Enter a component name.",
+    "ar": "أدخل اسماً للمكون."
+  },
+  "UnnamedRequest": {
+    "en": "Unnamed request",
+    "ar": "طلب بدون اسم"
+  },
+  "BindElementFieldsInProperties": {
+    "en": "Bind element fields in Properties",
+    "ar": "اربط حقول العنصر من الخصائص"
+  },
+  "TheActionCouldNotBeCompleted": {
+    "en": "The action could not be completed.",
+    "ar": "تعذر تنفيذ الإجراء."
+  },
+  "SendingRequest": {
+    "en": "Sending request...",
+    "ar": "جارٍ إرسال الطلب..."
+  },
+  "RunningRequest": {
+    "en": "Running request...",
+    "ar": "جارٍ تنفيذ الطلب..."
+  },
+  "RequestSentSuccessfully": {
+    "en": "Request sent successfully.",
+    "ar": "تم إرسال الطلب بنجاح."
+  },
+  "UnableToLoadTawakkalnaData": {
+    "en": "Unable to load Tawakkalna data.",
+    "ar": "تعذر تحميل بيانات توكلنا."
+  },
+  "UnableToCollectFormValues": {
+    "en": "Unable to collect form values:",
+    "ar": "تعذر جمع قيم النموذج:"
+  },
+  "UnableToSetVariable": {
+    "en": "Unable to set variable:",
+    "ar": "تعذر تعيين المتغير:"
+  },
+  "UnableToOpenTawakkalnaService": {
+    "en": "Unable to open Tawakkalna service:",
+    "ar": "تعذر فتح خدمة توكلنا:"
+  },
+  "UnableToChangeElementProperty": {
+    "en": "Unable to change element property:",
+    "ar": "تعذر تغيير خاصية العنصر:"
+  },
+  "UnableToRunElementAction": {
+    "en": "Unable to run element action:",
+    "ar": "تعذر تنفيذ إجراء العنصر:"
+  },
+  "UnableToNavigateToPage": {
+    "en": "Unable to navigate to page:",
+    "ar": "تعذر الانتقال إلى الصفحة:"
+  },
+  "UnableToLoadTawakkalnaListOptions": {
+    "en": "Unable to load Tawakkalna list options:",
+    "ar": "تعذر تحميل خيارات قائمة توكلنا:"
+  },
+  "EnterAValidJSONValueSuchAsTrueOrAString": {
+    "en": "Enter a valid JSON value, such as true, 12, or a string.",
+    "ar": "أدخل قيمة JSON صالحة، مثل true أو 12 أو true."
+  },
+  "EnterAValidJSONValueSuchAsAStringOrTrue": {
+    "en": "Enter a valid JSON value, such as a string or true.",
+    "ar": "أدخل قيمة JSON صالحة، مثل أو true."
+  },
+  "ChangeElementProperty": {
+    "en": "Change element property",
+    "ar": "تغيير خاصية عنصر"
+  },
+  "HideElement": {
+    "en": "Hide element",
+    "ar": "إخفاء العنصر"
+  },
+  "ShowElement": {
+    "en": "Show element",
+    "ar": "إظهار العنصر"
+  },
+  "RemoveAction": {
+    "en": "Remove action",
+    "ar": "حذف الإجراء"
+  },
+  "HiddenElement": {
+    "en": "Hidden element",
+    "ar": "عنصر مخفي"
+  },
+  "DeleteElement": {
+    "en": "Delete element",
+    "ar": "حذف العنصر"
+  },
+  "DuplicateElement": {
+    "en": "Duplicate element",
+    "ar": "نسخ العنصر"
+  },
+  "EditComponentInPreview": {
+    "en": "Edit component in preview",
+    "ar": "تعديل المكون في المعاينة"
+  },
+  "ElementActions": {
+    "en": "Element actions",
+    "ar": "إجراءات العنصر"
+  },
+  "NewPage": {
+    "en": "New page",
+    "ar": "صفحة جديدة"
+  },
+  "UntitledButton": {
+    "en": "Untitled button",
+    "ar": "زر بدون عنوان"
+  },
+  "SampleElement": {
+    "en": "Sample element",
+    "ar": "عنصر تجريبي"
+  },
+  "SingleChoice": {
+    "en": "Single choice",
+    "ar": "اختيار مفرد"
+  },
+  "ScrollArea": {
+    "en": "Scroll area",
+    "ar": "منطقة تمرير"
+  },
+  "LayoutGroup": {
+    "en": "Layout group",
+    "ar": "مجموعة تخطيط"
+  },
+  "WhenConditionIsTrue": {
+    "en": "When condition is true",
+    "ar": "عند تحقق الشرط"
+  },
+  "WhenConditionIsFalseElse": {
+    "en": "When condition is false (Else)",
+    "ar": "عند عدم تحقق الشرط (Else)"
+  },
+  "ContentSource": {
+    "en": "Content source",
+    "ar": "مصدر المحتوى"
+  },
+  "StaticOptions": {
+    "en": "Static options",
+    "ar": "خيارات ثابتة"
+  },
+  "DataBinding": {
+    "en": "Data binding",
+    "ar": "ربط البيانات"
+  },
+  "StaticContent": {
+    "en": "Static content",
+    "ar": "محتوى ثابت"
+  },
+  "AdvancedCustomization": {
+    "en": "Advanced customization",
+    "ar": "تخصيص متقدم"
+  },
+  "AddAnAPIRequestFirst": {
+    "en": "Add an API request first",
+    "ar": "أضف طلب API أولاً"
+  },
+  "AddAVariableFirst": {
+    "en": "Add a variable first",
+    "ar": "أضف متغيراً أولاً"
+  },
+  "CheckedByDefault": {
+    "en": "Checked by default",
+    "ar": "محدد افتراضياً"
+  },
+  "AllowMultipleSelectionsSendsAnArray": {
+    "en": "Allow multiple selections (sends an array)",
+    "ar": "السماح باختيار عدة عناصر (يرسل مصفوفة)"
+  },
+  "ListOptions": {
+    "en": "List options",
+    "ar": "خيارات القائمة"
+  },
+  "RadioOptions": {
+    "en": "Radio options",
+    "ar": "خيارات أزرار الاختيار"
+  },
+  "ProjectAppearance": {
+    "en": "Project appearance",
+    "ar": "مظهر المشروع"
+  },
+  "ThemeColors": {
+    "en": "Theme colors",
+    "ar": "ألوان السمة"
+  },
+  "ColorPalette": {
+    "en": "Color palette",
+    "ar": "لوحة الألوان"
+  },
+  "chooselightdarkpalette": {
+    "en": "Choose the light or dark palette to edit its colors independently.",
+    "ar": "اختر ألوان الوضع الفاتح أو الداكن لتعديلها بشكل مستقل."
+  },
+  "LightMode": {
+    "en": "Light mode",
+    "ar": "الوضع الفاتح"
+  },
+  "DarkMode": {
+    "en": "Dark mode",
+    "ar": "الوضع الداكن"
+  },
+  "CardBackground": {
+    "en": "Card background",
+    "ar": "خلفية البطاقة"
+  },
+  "CardTextColor": {
+    "en": "Card text color",
+    "ar": "لون نص البطاقة"
+  },
+  "PopoverBackground": {
+    "en": "Popover background",
+    "ar": "خلفية القوائم المنبثقة"
+  },
+  "PopoverTextColor": {
+    "en": "Popover text color",
+    "ar": "لون نص القوائم المنبثقة"
+  },
+  "PrimaryTextColor": {
+    "en": "Primary text color",
+    "ar": "لون النص الأساسي"
+  },
+  "SecondaryColor": {
+    "en": "Secondary color",
+    "ar": "اللون الثانوي"
+  },
+  "SecondaryTextColor": {
+    "en": "Secondary text color",
+    "ar": "لون النص الثانوي"
+  },
+  "MutedBackground": {
+    "en": "Muted background",
+    "ar": "الخلفية الهادئة"
+  },
+  "MutedTextColor": {
+    "en": "Muted text color",
+    "ar": "لون النص الهادئ"
+  },
+  "AccentTextColor": {
+    "en": "Accent text color",
+    "ar": "لون نص التمييز"
+  },
+  "DestructiveActionColor": {
+    "en": "Destructive action color",
+    "ar": "لون الإجراءات المدمرة"
+  },
+  "FieldColor": {
+    "en": "Field color",
+    "ar": "لون الحقول"
+  },
+  "FocusColor": {
+    "en": "Focus color",
+    "ar": "لون التركيز"
+  },
+  "backgroundtextcolorused": {
+    "en": "App background and default text color. Used for the page structure and sections.",
+    "ar": "خلفية التطبيق والنص الافتراضي. يُستخدم لهيكل الصفحة وأقسامها."
+  },
+  "textcolorusedprimary": {
+    "en": "Default text color used as the primary text throughout the app.",
+    "ar": "لون النص الافتراضي. يُستخدم كنص أساسي في التطبيق."
+  },
+  "backgroundelevatedsurfacescar": {
+    "en": "Background for elevated surfaces such as cards, panels, and settings.",
+    "ar": "خلفية الأسطح المرتفعة. تُستخدم للبطاقات ولوحات المعلومات والإعدادات."
+  },
+  "ContentColorOnElevatedSurfaces": {
+    "en": "Content color on elevated surfaces.",
+    "ar": "لون المحتوى داخل الأسطح المرتفعة."
+  },
+  "BackgroundForMenusAndFloatingLayers": {
+    "en": "Background for menus and floating layers.",
+    "ar": "خلفية القوائم والطبقات العائمة."
+  },
+  "ContentColorInMenusAndFloatingLayers": {
+    "en": "Content color in menus and floating layers.",
+    "ar": "لون المحتوى داخل القوائم والطبقات العائمة."
+  },
+  "brandprominentactioncolor": {
+    "en": "Brand and prominent action color. Used for primary buttons and selected states.",
+    "ar": "لون العلامة التجارية والإجراءات البارزة. يُستخدم للأزرار الأساسية والحالات المحددة."
+  },
+  "TextColorOnPrimarySurfaces": {
+    "en": "Text color on primary surfaces.",
+    "ar": "لون النص فوق الأسطح الأساسية."
+  },
+  "subtlesupportingsurfaceused": {
+    "en": "Subtle supporting surface used for secondary buttons and badges.",
+    "ar": "سطح مساعد منخفض التركيز. يُستخدم للأزرار والشارات الثانوية."
+  },
+  "ContentColorOnSecondarySurfaces": {
+    "en": "Content color on secondary surfaces.",
+    "ar": "لون المحتوى فوق الأسطح الثانوية."
+  },
+  "subtlebackgroundusedsecondary": {
+    "en": "Subtle background used for secondary surfaces and empty states.",
+    "ar": "خلفية هادئة. تُستخدم للأسطح الثانوية والحالات الفارغة."
+  },
+  "subtletextcolorused": {
+    "en": "Subtle text color used for descriptions, helper text, and placeholders.",
+    "ar": "لون النص منخفض التركيز. يُستخدم للوصف والنصوص المساعدة والعناصر النائبة."
+  },
+  "interactivesurfaceusedhover": {
+    "en": "Interactive surface used for hover, focus, and selected menu items.",
+    "ar": "سطح التفاعل. يُستخدم للتحويم والتركيز والعناصر المحددة في القوائم."
+  },
+  "ContentColorOnInteractiveSurfaces": {
+    "en": "Content color on interactive surfaces.",
+    "ar": "لون المحتوى فوق أسطح التفاعل."
+  },
+  "ColorForDestructiveActionsAndErrorStates": {
+    "en": "Color for destructive actions and error states.",
+    "ar": "لون الإجراءات المدمرة وحالات الخطأ."
+  },
+  "colorbordersdividerscards": {
+    "en": "Color for borders and dividers in cards, menus, and tables.",
+    "ar": "لون الحدود والفواصل في البطاقات والقوائم والجداول."
+  },
+  "ColorForFormFieldBordersAndSurfaces": {
+    "en": "Color for form-field borders and surfaces.",
+    "ar": "لون حدود ومساحة عناصر النماذج والحقول."
+  },
+  "colorfocusringsoutlines": {
+    "en": "Color for focus rings and outlines around interactive elements.",
+    "ar": "لون حلقات التركيز ومخططاته حول العناصر القابلة للتفاعل."
+  },
+  "RestoreDefaultDarkModeColors": {
+    "en": "Restore default dark-mode colors",
+    "ar": "استعادة ألوان الوضع الداكن الافتراضية"
+  },
+  "trueselectoptionmultiple": {
+    "en": "Add \"selected\":true to select an option by default. Multiple defaults are allowed when multi-select is enabled.",
+    "ar": "أضف \"selected\":true لتحديد خيار افتراضياً. يمكن تحديد عدة خيارات افتراضية عند تفعيل الاختيار المتعدد."
+  },
+  "trueoptionoptionmarked": {
+    "en": "Add \"selected\":true to the default option. If more than one option is marked, only the first is used.",
+    "ar": "أضف \"selected\":true إلى الخيار الافتراضي. إذا حُدد أكثر من خيار، يُستخدم أول خيار فقط."
+  },
+  "ListOptionsSource": {
+    "en": "List options source",
+    "ar": "مصدر خيارات القائمة"
+  },
+  "ArrayPath": {
+    "en": "Array path",
+    "ar": "مسار المصفوفة"
+  },
+  "OptionLabelPath": {
+    "en": "Option label path",
+    "ar": "مسار نص الخيار"
+  },
+  "ValuePath": {
+    "en": "Value path",
+    "ar": "مسار القيمة"
+  },
+  "JSONPropertyPathOptional": {
+    "en": "JSON property path (optional)",
+    "ar": "مسار خاصية JSON (اختياري)"
+  },
+  "textitemsleavepaths": {
+    "en": "For text items, leave both paths empty. If the value path is empty, the entire item is used.",
+    "ar": "للعناصر النصية اترك المسارين فارغين. عند ترك مسار القيمة فارغاً يُستخدم العنصر كاملاً."
+  },
+  "CheckboxValueJSON": {
+    "en": "Checkbox value (JSON)",
+    "ar": "قيمة مربع الاختيار (JSON)"
+  },
+  "valueusedcollectingcheckboxes": {
+    "en": "This value is used when collecting checkboxes with the same name.",
+    "ar": "تُستخدم القيمة عند جمع عدة مربعات اختيار بالاسم نفسه."
+  },
+  "BindItemLabelAndValue": {
+    "en": "Bind item label and value",
+    "ar": "ربط تسمية وقيمة العنصر"
+  },
+  "ItemLabelPath": {
+    "en": "Item label path",
+    "ar": "مسار التسمية داخل العنصر"
+  },
+  "ServiceID": {
+    "en": "Service ID",
+    "ar": "معرّف الخدمة"
+  },
+  "TargetPage": {
+    "en": "Target page",
+    "ar": "الصفحة المستهدفة"
+  },
+  "SourcePage": {
+    "en": "Source page",
+    "ar": "صفحة المصدر"
+  },
+  "ValueJSONFormNameOrTwkField": {
+    "en": "Value (JSON, {{form.name}}, or {{twk.field}})",
+    "ar": "القيمة (JSON أو {{form.name}} أو {{twk.field}})"
+  },
+  "completetokenwithoutquotes": {
+    "en": "Use a complete token without quotes to get a value from a form field, Tawakkalna, a variable, or an API response, or enter a static JSON value.",
+    "ar": "استخدم رمزاً كاملاً بدون علامات اقتباس لجلب القيمة من حقل النموذج أو توكلنا أو متغير أو استجابة API، أو أدخل قيمة JSON ثابتة."
+  },
+  "TargetElement": {
+    "en": "Target element",
+    "ar": "العنصر المستهدف"
+  },
+  "ContentText": {
+    "en": "Content / text",
+    "ar": "المحتوى / النص"
+  },
+  "Visibility": {
+    "en": "Visibility",
+    "ar": "الظهور"
+  },
+  "ValueTextOrToken": {
+    "en": "Value (text or token)",
+    "ar": "القيمة (نص أو رمز)"
+  },
+  "State": {
+    "en": "State",
+    "ar": "الحالة"
+  },
+  "MessageDialogTitle": {
+    "en": "Message dialog title",
+    "ar": "عنوان مربع الرسالة"
+  },
+  "MessageText": {
+    "en": "Message text",
+    "ar": "نص الرسالة"
+  },
+  "Message": {
+    "en": "Message",
+    "ar": "رسالة"
+  },
+  "supportsplaintexttokens": {
+    "en": "Supports plain text and {{twk.field}}, {{form.name}}, {{var.name}}, and {{api.requestId.path}} tokens.",
+    "ar": "يدعم النصوص الثابتة والرموز {{twk.field}} و{{form.name}} و{{var.name}} و{{api.requestId.path}}."
+  },
+  "Condition": {
+    "en": "Condition",
+    "ar": "شرط"
+  },
+  "Comparison": {
+    "en": "Comparison",
+    "ar": "المقارنة"
+  },
+  "Equals": {
+    "en": "Equals",
+    "ar": "يساوي"
+  },
+  "DoesNotEqual": {
+    "en": "Does not equal",
+    "ar": "لا يساوي"
+  },
+  "GreaterThan": {
+    "en": "Greater than",
+    "ar": "أكبر من"
+  },
+  "LessThan": {
+    "en": "Less than",
+    "ar": "أقل من"
+  },
+  "Contains": {
+    "en": "Contains",
+    "ar": "يحتوي على"
+  },
+  "IsNotEmpty": {
+    "en": "Is not empty",
+    "ar": "غير فارغ"
+  },
+  "ComparisonValueJSON": {
+    "en": "Comparison value (JSON)",
+    "ar": "قيمة المقارنة (JSON)"
+  },
+  "ComparisonValue": {
+    "en": "Comparison value",
+    "ar": "قيمة المقارنة"
+  },
+  "ExpectedValue": {
+    "en": "Expected value",
+    "ar": "القيمة المتوقعة"
+  },
+  "SavedVariableValue": {
+    "en": "Saved variable value",
+    "ar": "قيمة متغير محفوظ"
+  },
+  "StaticData": {
+    "en": "Static data",
+    "ar": "بيانات ثابتة"
+  },
+  "DataPath": {
+    "en": "Data path",
+    "ar": "مسار البيانات"
+  },
+  "AddAFieldToThePageFirst": {
+    "en": "Add a field to the page first",
+    "ar": "أضف حقلاً إلى الصفحة أولاً"
+  },
+  "AddAPageFieldToUseAsASource": {
+    "en": "Add a page field to use as a source.",
+    "ar": "أضف حقلاً إلى الصفحة لاستخدامه كمصدر."
+  },
+  "InvalidVariableSource": {
+    "en": "Invalid variable source.",
+    "ar": "مصدر المتغير غير صالح."
+  },
+  "UnknownVariableName": {
+    "en": "Unknown variable: ${name}",
+    "ar": "متغير غير معروف: ${name}"
+  },
+  "invalidvariablenameenglish": {
+    "en": "Invalid variable name. Use English letters, numbers, and underscores.",
+    "ar": "اسم المتغير غير صالح. استخدم أحرفاً إنجليزية وأرقاماً وشرطة سفلية."
+  },
+  "AnotherVariableAlreadyUsesThisName": {
+    "en": "Another variable already uses this name.",
+    "ar": "يوجد متغير آخر بالاسم نفسه."
+  },
+  "UnableToSaveChangesInThisBrowser": {
+    "en": "Unable to save changes in this browser.",
+    "ar": "تعذر حفظ التغييرات في هذا المتصفح."
+  },
+  "SavedLocally": {
+    "en": "Saved locally",
+    "ar": "تم الحفظ محلياً"
+  },
+  "Saving": {
+    "en": "Saving...",
+    "ar": "جارٍ الحفظ..."
+  },
+  "UnableToSave": {
+    "en": "Unable to save",
+    "ar": "تعذر الحفظ"
+  },
+  "ProjectJSONDownloaded": {
+    "en": "Project JSON downloaded.",
+    "ar": "تم تنزيل ملف المشروع بصيغة JSON."
+  },
+  "ThePageAndItsElementsWereDeleted": {
+    "en": "The page and its elements were deleted.",
+    "ar": "تم حذف الصفحة والعناصر التابعة لها."
+  },
+  "ProjectImportedReloadingTheEditor": {
+    "en": "Project imported. Reloading the editor...",
+    "ar": "تم استيراد المشروع. جارٍ إعادة تحميل المحرر..."
+  },
+  "EnterAComponentNameAndValidHTML": {
+    "en": "Enter a component name and valid HTML.",
+    "ar": "أدخل اسم المكون وHTML صالحاً."
+  },
+  "ComponentCSSIsInvalid": {
+    "en": "Component CSS is invalid.",
+    "ar": "قواعد CSS للمكون غير صالحة."
+  },
+  "CustomCSSSaved": {
+    "en": "Custom CSS saved.",
+    "ar": "تم حفظ CSS المخصص."
+  },
+  "CodeCopied": {
+    "en": "Code copied.",
+    "ar": "تم نسخ الشيفرة."
+  },
+  "unablecopyselectcode": {
+    "en": "Unable to copy; select the code and copy it manually.",
+    "ar": "تعذر النسخ؛ حدد الشيفرة وانسخها يدوياً."
+  },
+  "AppZIPDownloadedSuccessfully": {
+    "en": "App ZIP downloaded successfully.",
+    "ar": "تم تنزيل حزمة التطبيق بصيغة ZIP بنجاح."
+  },
+  "AnErrorOccurredWhileCreatingTheZIPFile": {
+    "en": "An error occurred while creating the ZIP file.",
+    "ar": "حدث خطأ أثناء إنشاء ملف الـ ZIP."
+  },
+  "TheZIPLibraryJSZipIsUnavailable": {
+    "en": "The ZIP library (JSZip) is unavailable.",
+    "ar": "مكتبة الضغط (JSZip) غير متوفرة."
+  },
+  "EnterAValidJSONArrayOfItemObjects": {
+    "en": "Enter a valid JSON array of item objects.",
+    "ar": "أدخل مصفوفة JSON صالحة من كائنات العناصر."
+  },
+  "InvalidJSONOptionsEnterAnArrayOfOptions": {
+    "en": "Invalid JSON options. Enter an array of options.",
+    "ar": "خيارات JSON غير صالحة. أدخل مصفوفة من الخيارات."
+  },
+  "EnterAFontAwesomeIconNameSuchAsFaStar": {
+    "en": "Enter a Font Awesome icon name, such as fa-star.",
+    "ar": "أدخل اسم أيقونة Font Awesome مثل fa-star."
+  },
+  "UseValidCSSClassNamesSeparatedBySpaces": {
+    "en": "Use valid CSS class names separated by spaces.",
+    "ar": "استخدم أسماء CSS صالحة، وافصل بينها بمسافة."
+  },
+  "AddAnAPIRequestFirstToPopulateTheList": {
+    "en": "Add an API request first to populate the list.",
+    "ar": "أضف طلب API أولاً لتغذية القائمة."
+  },
+  "apirequestpopulatecollection": {
+    "en": "Add an API request first to populate the collection.",
+    "ar": "أضف طلب API أولاً لتغذية القائمة المرئية."
+  },
+  "AddAnAPIRequestFirstToBindItsResponse": {
+    "en": "Add an API request first to bind its response.",
+    "ar": "أضف طلب API أولاً لربط الاستجابة."
+  },
+  "AddARequestInAPISettings": {
+    "en": "Add a request in API settings",
+    "ar": "أضف طلباً من إعدادات API"
+  },
+  "RequestURL": {
+    "en": "Request URL",
+    "ar": "رابط الطلب"
+  },
+  "OrChooseAnImageFromAssets": {
+    "en": "Or choose an image from assets",
+    "ar": "أو اختر صورة من الأصول"
+  },
+  "NoSavedAsset": {
+    "en": "No saved asset",
+    "ar": "بدون أصل محفوظ"
+  },
+  "ImageFit": {
+    "en": "Image fit",
+    "ar": "طريقة الملاءمة"
+  },
+  "Cover": {
+    "en": "Cover",
+    "ar": "ملء الإطار"
+  },
+  "Contain": {
+    "en": "Contain",
+    "ar": "احتواء الصورة"
+  },
+  "AddFiles": {
+    "en": "Add files",
+    "ar": "إضافة ملفات"
+  },
+  "ManageAssets": {
+    "en": "Manage assets",
+    "ar": "إدارة الأصول"
+  },
+  "TheRequestURLIsInvalid": {
+    "en": "The request URL is invalid.",
+    "ar": "رابط الطلب غير صالح."
+  },
+  "EnterTheRequestURLFirst": {
+    "en": "Enter the request URL first.",
+    "ar": "أدخل رابط الطلب أولاً."
+  },
+  "filedoescontainvalid": {
+    "en": "The project file does not contain a valid project structure.",
+    "ar": "ملف المشروع لا يحتوي بنية مشروع صالحة."
+  },
+  "apirequestlistfile": {
+    "en": "The API request list in the project file is invalid.",
+    "ar": "قائمة طلبات API في ملف المشروع غير صالحة."
+  },
+  "UnableToImportProjectErrorMessage": {
+    "en": "Unable to import project: ${error.message}",
+    "ar": "تعذر استيراد المشروع: ${error.message}"
+  },
+  "UnableToAddFileErrorMessage": {
+    "en": "Unable to add file: ${error.message}",
+    "ar": "تعذر إضافة الملف: ${error.message}"
+  },
+  "UnableToReadFileFileName": {
+    "en": "Unable to read file ${file.name}.",
+    "ar": "تعذرت قراءة الملف ${file.name}."
+  },
+  "ChangeVariableValue": {
+    "en": "Change variable value",
+    "ar": "تغيير قيمة متغير"
+  },
+  "SendAPIRequest": {
+    "en": "Send API request",
+    "ar": "إرسال طلب API"
+  },
+  "NavigateToPage": {
+    "en": "Navigate to page",
+    "ar": "الانتقال إلى صفحة"
+  },
+  "OpenTawakkalnaService": {
+    "en": "Open Tawakkalna service",
+    "ar": "فتح خدمة توكلنا"
+  },
+  "ShowMessageDialog": {
+    "en": "Show message dialog",
+    "ar": "إظهار مربع رسالة"
+  },
+  "ShowSheet": {
+    "en": "Show sheet",
+    "ar": "إظهار نافذة سفلية"
+  },
+  "ElementTree": {
+    "en": "Element tree",
+    "ar": "شجرة العناصر"
+  },
+  "PopupSheet": {
+    "en": "Popup sheet",
+    "ar": "نافذة سفلية منبثقة"
+  },
+  "RunActionBasedOnCondition": {
+    "en": "Run action based on condition",
+    "ar": "تنفيذ إجراء حسب شرط"
+  },
+  "NoAction": {
+    "en": "No action",
+    "ar": "بدون إجراء"
+  },
+  "ActionType": {
+    "en": "Action type",
+    "ar": "نوع الإجراء"
+  },
+  "Event": {
+    "en": "Event",
+    "ar": "الحدث"
+  },
+  "APIRequest": {
+    "en": "API request",
+    "ar": "طلب API"
+  },
+  "Element": {
+    "en": "Element",
+    "ar": "العنصر"
+  },
+  "Value": {
+    "en": "Value",
+    "ar": "القيمة"
+  },
+  "RemoveEventHandler": {
+    "en": "Remove event handler",
+    "ar": "حذف الحدث"
+  },
+  "EventHandlerIndex": {
+    "en": "Event handler ${index + 1}",
+    "ar": "حدث ${index + 1}"
+  },
+  "ChangeEditorLanguage": {
+    "en": "Change editor language",
+    "ar": "تغيير لغة المحرر"
+  },
+  "ProjectFile": {
+    "en": "Project file",
+    "ar": "ملف المشروع"
+  },
+  "TheStarterProjectHasBeenRestored": {
+    "en": "The starter project has been restored.",
+    "ar": "تمت استعادة نموذج البداية."
+  },
+  "starterrestoredsavedchanges": {
+    "en": "The starter project will be restored and saved changes deleted. Continue?",
+    "ar": "سيتم استعادة نموذج البداية وحذف التعديلات المحفوظة. هل تريد المتابعة؟"
+  },
+  "ChangeAppLanguage": {
+    "en": "Change app language",
+    "ar": "تغيير لغة التطبيق"
+  },
+  "CurrentContentLanguageArabic": {
+    "en": "Current content language: Arabic",
+    "ar": "لغة النص الحالية: العربية"
+  },
+  "GlobalActionName": {
+    "en": "Global action name",
+    "ar": "اسم الإجراء العام"
+  },
+  "DefineAGlobalActionFirst": {
+    "en": "Define a global action first",
+    "ar": "أضف إجراءً عاماً أولاً"
+  },
+  "CallGlobalAction": {
+    "en": "Call Global Action",
+    "ar": "استدعاء إجراء عام"
+  },
+  "GlobalActionNamesMustBeUniqueAndNonEmpty": {
+    "en": "Global action names must be unique and non-empty.",
+    "ar": "تأكد من أن أسماء الإجراءات العامة غير فارغة وفريدة."
+  },
+  "CurrentContentLanguageEnglish": {
+    "en": "Current content language: English",
+    "ar": "لغة النص الحالية: الإنجليزية"
+  },
+  "ParameterKey": {
+    "en": "Parameter key",
+    "ar": "مفتاح المعلمة"
+  },
+  "ValueType": {
+    "en": "Value type",
+    "ar": "نوع القيمة"
+  },
+  "StaticValue": {
+    "en": "Static Value",
+    "ar": "قيمة ثابتة"
+  },
+  "TokenType": {
+    "en": "Token Type",
+    "ar": "نوع الرمز"
+  },
+  "ParameterValue": {
+    "en": "Parameter value",
+    "ar": "قيمة المعلمة"
+  },
+  "RemoveParameter": {
+    "en": "Remove parameter",
+    "ar": "إزالة المعلمة"
+  },
+  "Token": {
+    "en": "Token",
+    "ar": "رمز"
+  },
+  "Trigger": {
+    "en": "Trigger",
+    "ar": "المُشغّل"
+  },
+  "Action": {
+    "en": "Action",
+    "ar": "إجراء"
+  },
+  "TrueBranch": {
+    "en": "True branch",
+    "ar": "فرع صحيح"
+  },
+  "FalseBranch": {
+    "en": "False branch",
+    "ar": "فرع غير صحيح"
+  },
+  "ElementContext": {
+    "en": "Element context",
+    "ar": "سياق العنصر"
+  },
+  "Tawakkalna": {
+    "en": "Tawakkalna",
+    "ar": "توكلنا"
+  },
+  "CurrentItem": {
+    "en": "Current item",
+    "ar": "العنصر الحالي"
+  },
+  "FitView": {
+    "en": "Fit view",
+    "ar": "ملاءمة العرض"
+  },
+  "Minimap": {
+    "en": "Minimap",
+    "ar": "خريطة مصغرة"
+  },
+  "Expand": {
+    "en": "Expand",
+    "ar": "توسيع"
+  },
+  "RunsBeforeItemBindings": {
+    "en": "Runs before item bindings.",
+    "ar": "يعمل قبل ربط بيانات العنصر."
+  },
+  "RunsAfterItemBindings": {
+    "en": "Runs after item bindings.",
+    "ar": "يعمل بعد ربط بيانات العنصر."
+  },
+  "CustomItemPropertyPath": {
+    "en": "Custom item property path",
+    "ar": "مسار خاصية العنصر"
+  },
+  "TriggerOutput": {
+    "en": "Trigger output",
+    "ar": "مخرج المشغل"
+  },
+  "ActionInput": {
+    "en": "Action input",
+    "ar": "مدخل الإجراء"
+  },
+  "ActionOutput": {
+    "en": "Action output",
+    "ar": "مخرج الإجراء"
+  },
+  "ConnectATokenToThisParameter": {
+    "en": "Connect a token to this parameter",
+    "ar": "اربط رمزاً بهذا المعامل"
+  },
+  "Click": {
+    "en": "Click",
+    "ar": "نقر"
+  },
+  "Change": {
+    "en": "Change",
+    "ar": "تغيير"
+  },
+  "Input": {
+    "en": "Input",
+    "ar": "إدخال"
+  },
+  "OnItemRender": {
+    "en": "On item render",
+    "ar": "عند عرض العنصر"
+  },
+  "OnItemDidRender": {
+    "en": "On item did render",
+    "ar": "بعد عرض العنصر"
+  },
+  "SpaceDragToPanDragHandlesToConnect": {
+    "en": "Space + drag to pan · drag handles to connect",
+    "ar": "اضغط مسافة واسحب للتحريك · اسحب المقابض للربط"
+  },
+  "AppearanceAlternativeA": {
+    "en": "Appearance",
+    "ar": "المظهر"
+  },
+  "PageAlternativeA": {
+    "en": "Page",
+    "ar": "الصفحة"
+  },
+  "CustomizeAlternativeA": {
+    "en": "Customize",
+    "ar": "تخصيص"
+  },
+  "IconAlternativeA": {
+    "en": "Icon",
+    "ar": "أيقونة"
+  },
+  "LayoutAlternativeA": {
+    "en": "Layout",
+    "ar": "تخطيط"
+  },
+  "TextAlternativeA": {
+    "en": "Text",
+    "ar": "نص"
+  },
+  "FamilyMembersAlternativeA": {
+    "en": "Family members",
+    "ar": "أفراد الأسرة"
+  },
+  "CenterAlternativeA": {
+    "en": "Center",
+    "ar": "وسط"
+  },
+  "StartAlternativeA": {
+    "en": "Start",
+    "ar": "بداية"
+  },
+  "EndAlternativeA": {
+    "en": "End",
+    "ar": "نهاية"
+  },
+  "StaticValueJSONAlternativeA": {
+    "en": "Static value (JSON)",
+    "ar": "القيمة الثابتة (JSON)"
+  },
+  "BorderColorAlternativeA": {
+    "en": "Border color",
+    "ar": "لون الحد"
+  },
+  "appearsactioncannotcompletedalt": {
+    "en": "This page appears when an action cannot be completed.",
+    "ar": "تظهر هذه الصفحة عند تعذر تنفيذ إجراء."
+  },
+  "VariableAlternativeA": {
+    "en": "Variable",
+    "ar": "متغير"
+  },
+  "StaticItemsJSONAlternativeA": {
+    "en": "Static items (JSON)",
+    "ar": "عناصر ثابتة (JSON)"
+  },
+  "downloadstandalonehtmlfilealt": {
+    "en": "Download a standalone HTML file or copy the code into your project.",
+    "ar": "نزّل ملف HTML مستقلاً أو انسخ الشيفرة لدمجها في مشروعك."
+  },
+  "FormFieldAlternativeA": {
+    "en": "Form field",
+    "ar": "حقل نموذج"
+  },
+  "UnknownFileTypeAlternativeA": {
+    "en": "Unknown file type",
+    "ar": "نوع ملف غير معروف"
+  },
+  "HideElementAlternativeA": {
+    "en": "Hide element",
+    "ar": "إخفاء عنصر"
+  },
+  "ShowElementAlternativeA": {
+    "en": "Show element",
+    "ar": "إظهار عنصر"
+  },
+  "ConditionAlternativeA": {
+    "en": "Condition",
+    "ar": "الشرط"
+  },
+  "AssetTotalSizeLimitReached": {
+    "en": "The total asset size limit (2 MB) has been reached. Delete some files first.",
+    "ar": "وصلت إلى الحد الإجمالي للأصول (2 MB). احذف بعض الملفات أولاً."
+  },
+  "EnterValidVariableJSONValue": {
+    "en": "Enter a valid JSON value, such as \"text\", 12, or true.",
+    "ar": "أدخل قيمة JSON صالحة، مثل \"text\" أو 12 أو true."
+  },
+  "AddValidAPIRequestForResponseSource": {
+    "en": "Add a valid API request to use its response as a source.",
+    "ar": "أضف طلب API صالحاً لاستخدام استجابته كمصدر."
+  },
+  "ChooseValidSourceVariable": {
+    "en": "Choose a valid source variable.",
+    "ar": "اختر متغيراً مصدراً صالحاً."
+  },
+  "ChooseValidAdditionalData": {
+    "en": "Choose valid additional data.",
+    "ar": "اختر معلومة إضافية صالحة."
+  },
+  "EnterListItemFieldPath": {
+    "en": "Enter the field path in the list item.",
+    "ar": "أدخل مسار الحقل في عنصر القائمة."
+  },
+  "ChooseValidElementAndProperty": {
+    "en": "Choose a valid element and property.",
+    "ar": "اختر عنصراً وخاصية صالحين."
+  },
+  "choosecontainerinsidecomponen": {
+    "en": "Choose a container inside the component to add an element.",
+    "ar": "اختر حاوية داخل المكون لإضافة عنصر."
+  },
+  "componentrootcannotdeleted": {
+    "en": "The component root cannot be deleted while editing its definition.",
+    "ar": "لا يمكن حذف جذر المكون أثناء تحرير تعريفه."
+  },
+  "CopyOnlyComponentElementsWhileEditing": {
+    "en": "While editing a component, copy only its elements.",
+    "ar": "أثناء تحرير المكون، انسخ عناصره فقط."
+  },
+  "SelectLayoutGroupOrGridToSaveAsComponent": {
+    "en": "Select a layout group or grid to save as a component.",
+    "ar": "حدد مجموعة تخطيط أو شبكة لحفظها كمكون."
+  },
+  "EditableComponentDefinitionNotFound": {
+    "en": "The editable component definition could not be found.",
+    "ar": "تعذر العثور على تعريف المكون القابل للتحرير."
+  },
+  "ComponentDefinitionNotFound": {
+    "en": "The component definition could not be found.",
+    "ar": "تعذر العثور على تعريف المكون."
+  },
+  "EnterUniqueElementID": {
+    "en": "Enter a unique ID starting with a letter or _ and containing only letters, numbers, -, ., or :.",
+    "ar": "أدخل معرّفاً فريداً يبدأ بحرف أو _ ويحتوي أحرفاً أو أرقاماً أو - . :"
+  },
+  "UseUniqueNameWithoutDots": {
+    "en": "Use a unique name starting with a letter or _ and without dots.",
+    "ar": "استخدم اسماً فريداً يبدأ بحرف أو _ ولا يحتوي نقاطاً."
+  },
+  "EnterValidElementJSONValue": {
+    "en": "Enter a valid JSON value, such as true, \"accepted\", or 1.",
+    "ar": "أدخل قيمة JSON صالحة، مثل true أو \"accepted\" أو 1."
+  },
+  "ChooseValidDataBindingSource": {
+    "en": "Choose a valid data binding source.",
+    "ar": "حدد مصدراً صالحاً لربط البيانات."
+  },
+  "ChangeFunctionFilesBeforeDeletingAsset": {
+    "en": "Change the function files linked to this asset before deleting it.",
+    "ar": "غيّر ملفات الدوال المرتبطة بهذا الأصل قبل حذفه."
+  },
+  "RemoveVariableReferencesBeforeDeleting": {
+    "en": "Remove references to the variable from elements and API requests before deleting it.",
+    "ar": "أزل مراجع المتغير من العناصر وطلبات API قبل حذفه."
+  },
+  "changesourcevariableslinked": {
+    "en": "Change the source of variables linked to this request before deleting it.",
+    "ar": "غيّر مصدر المتغيرات المرتبطة بهذا الطلب قبل حذفه."
+  },
+  "UnableToLoadBundledPlugins": {
+    "en": "Unable to load bundled plugins. Check the plugin folder.",
+    "ar": "تعذر تحميل الإضافات المضمنة. تحقق من مجلد plugin."
+  },
+  "FileExceedsSizeLimit": {
+    "en": "File {fileName} exceeds the 2 MB size limit.",
+    "ar": "حجم {fileName} أكبر من الحد المسموح (2 MB)."
+  },
+  "VariableSaved": {
+    "en": "Variable {name} saved.",
+    "ar": "تم حفظ المتغير {name}."
+  },
+  "ComponentSaved": {
+    "en": "Component “{name}” saved.",
+    "ar": "تم حفظ المكون «{name}»."
+  },
+  "SavedComponentChangesApplied": {
+    "en": "Changes were applied to all “{name}” instances.",
+    "ar": "تم تطبيق التغييرات على جميع نسخ «{name}»."
+  },
+  "SavedComponentChangesCancelled": {
+    "en": "Component changes were cancelled.",
+    "ar": "تم إلغاء تعديلات المكون."
+  },
+  "PluginImportedForThisSession": {
+    "en": "Imported “{title}” for this session. Add it to public/plugin to keep it.",
+    "ar": "تم استيراد الإضافة «{title}» لهذه الجلسة. أضفها إلى public/plugin للاحتفاظ بها."
+  },
+  "PluginSavedToAppFolder": {
+    "en": "Imported “{title}” to the Electron app’s plugin folder.",
+    "ar": "تم استيراد الإضافة «{title}» إلى مجلد الإضافات في تطبيق Electron."
+  },
+  "UnableToImportPluginErrorMessage": {
+    "en": "Unable to import plugin: {error}",
+    "ar": "تعذر استيراد الإضافة: {error}"
+  },
+  "AssetDeleted": {
+    "en": "Asset {name} deleted.",
+    "ar": "تم حذف الأصل {name}."
+  },
+  "UnableToLoadProjectErrorMessage": {
+    "en": "Unable to load project: {error}",
+    "ar": "تعذر تحميل المشروع: {error}"
+  },
+  "InvalidCSS": {
+    "en": "Invalid CSS: {error}",
+    "ar": "CSS غير صالح: {error}"
+  },
+  "previouslysavedpluginfiles": {
+    "en": "Previously saved plugin files are no longer loaded from browser storage. Add them to public/plugin to keep using them.",
+    "ar": "لم تعد الإضافات المحفوظة سابقاً تُحمّل من تخزين المتصفح. أضف ملفاتها إلى public/plugin لمتابعة استخدامها."
+  },
+  "InvalidJSONParameterValue": {
+    "en": "Enter a valid JSON value or change the type to Text.",
+    "ar": "أدخل قيمة JSON صحيحة أو غيّر النوع إلى نص."
+  },
+  "ParametersMustBeJSONArray": {
+    "en": "Parameters must be a JSON array. Add a parameter to replace the invalid value.",
+    "ar": "يجب أن تكون المعاملات مصفوفة JSON. أضف معاملاً لاستبدال القيمة غير الصالحة."
+  },
+  "SelfContentTokenHelp": {
+    "en": "Tokens such as {{self.content}} refer to the element that triggered this action.",
+    "ar": "تشير الرموز مثل {{self.content}} إلى العنصر الذي شغّل هذا الإجراء."
+  },
+  "TriggerEvent": {
+    "en": "Trigger event",
+    "ar": "حدث التشغيل"
+  },
+  "JSONValues": {
+    "en": "JSON values",
+    "ar": "القيم JSON"
+  },
+  "ValueJSONOrToken": {
+    "en": "Value, JSON, or token",
+    "ar": "القيمة JSON أو رمز"
+  },
+  "FontAwesomeIconClass": {
+    "en": "Font Awesome icon class",
+    "ar": "فئة أيقونة Font Awesome"
+  },
+  "ImageFromAssets": {
+    "en": "Image from assets",
+    "ar": "صورة من الأصول"
+  },
+  "MessageTitle": {
+    "en": "Message title",
+    "ar": "عنوان الرسالة"
+  },
+  "SheetWindow": {
+    "en": "Sheet window",
+    "ar": "نافذة Sheet"
+  },
+  "ToastNotification": {
+    "en": "Toast notification",
+    "ar": "إشعار Toast"
+  },
+  "FunctionSource": {
+    "en": "Function source",
+    "ar": "مصدر الدالة"
+  },
+  "JavaScriptFile": {
+    "en": "JavaScript file",
+    "ar": "ملف JavaScript"
+  },
+  "PluginElement": {
+    "en": "Plugin element",
+    "ar": "عنصر الإضافة"
+  },
+  "FunctionName": {
+    "en": "Function name",
+    "ar": "اسم الدالة"
+  },
+  "Parameters": {
+    "en": "Parameters",
+    "ar": "المعاملات"
+  },
+  "StoreResultInVariable": {
+    "en": "Store result in variable",
+    "ar": "تخزين النتيجة في متغير"
+  },
+  "Enabled": {
+    "en": "Enabled",
+    "ar": "مفعّل"
+  },
+  "GlobalFunction": {
+    "en": "Global function",
+    "ar": "دالة عامة (Global)"
+  },
+  "JavaScriptAsset": {
+    "en": "JavaScript asset",
+    "ar": "ملف JavaScript من الأصول"
+  },
+  "PluginScriptExport": {
+    "en": "Plugin script export",
+    "ar": "دالة مصدّرة من إضافة"
+  },
+  "AddJavaScriptAssetFirst": {
+    "en": "Add a JavaScript asset first",
+    "ar": "أضف ملف JavaScript إلى الأصول"
+  },
+  "AddPluginElementFirst": {
+    "en": "Add a plugin element first",
+    "ar": "أضف عنصراً من إضافة أولاً"
+  },
+  "DoNotStoreResult": {
+    "en": "Do not store result",
+    "ar": "عدم تخزين النتيجة"
+  },
+  "FunctionArgumentsHelp": {
+    "en": "Add one argument per row. Insert data tokens into text arguments as needed.",
+    "ar": "أضف معاملاً في كل صف، ويمكنك إدراج رموز البيانات في القيم النصية."
+  },
+  "ConditionIsMet": {
+    "en": "When condition is met",
+    "ar": "عند تحقق الشرط"
+  },
+  "ConditionIsNotMet": {
+    "en": "When condition is not met (Else)",
+    "ar": "عند عدم تحقق الشرط (Else)"
+  },
+  "ReturnToPreviousPageOrStayOnFirstPage": {
+    "en": "Return to the previous page, staying on the first page.",
+    "ar": "العودة إلى آخر صفحة سابقة، والبقاء في الصفحة الأولى."
+  },
+  "OfflineAssetsFunctionHelp": {
+    "en": "Asset files are loaded offline. Use a JSON array for parameters and data tokens for dynamic values.",
+    "ar": "تُحمّل ملفات الأصول دون اتصال. استخدم مصفوفة JSON للمعاملات ورموز مصادر البيانات للقيم الديناميكية."
+  },
+  "JSONValueOrFormToken": {
+    "en": "JSON value or {{form.name}}",
+    "ar": "قيمة JSON أو {{form.name}}"
+  },
+  "TextOrFormToken": {
+    "en": "Text or {{form.name}}",
+    "ar": "نص أو {{form.name}}"
+  },
+  "ValueOrFormToken": {
+    "en": "Value or {{form.name}}",
+    "ar": "قيمة أو {{form.name}}"
+  },
+  "FunctionParametersJSON": {
+    "en": "Parameters (JSON array)",
+    "ar": "المعاملات (مصفوفة JSON)"
+  },
+  "GlobalActionNameLabel": {
+    "en": "Global action",
+    "ar": "الإجراء العام"
+  },
+  "AddAnImageAssetFirst": {
+    "en": "Add an image asset first",
+    "ar": "أضف أصلاً للصورة أولاً"
+  },
+  "AddToastElementFirst": {
+    "en": "Add a Toast element first",
+    "ar": "أضف عنصر إشعار أولاً"
+  },
+  "AddAdditionalInfoFirst": {
+    "en": "Add additional data first",
+    "ar": "أضف معلومة إضافية أولاً"
+  },
+  "Values": {
+    "en": "Values",
+    "ar": "القيم"
+  },
+  "OnFilesSelected": {
+    "en": "On files selected",
+    "ar": "عند اختيار الملفات"
+  },
+  "ElementEvent": {
+    "en": "Element event",
+    "ar": "حدث العنصر"
+  },
+  "SendAPIRequestAction": {
+    "en": "Send API request",
+    "ar": "إرسال طلب API"
+  },
+  "OpenTawakkalnaServiceAction": {
+    "en": "Open Tawakkalna service",
+    "ar": "فتح خدمة توكلنا"
+  },
+  "NavigateToPageAction": {
+    "en": "Navigate to page",
+    "ar": "الانتقال إلى صفحة"
+  },
+  "GoBackAction": {
+    "en": "Go back",
+    "ar": "الرجوع"
+  },
+  "SetVariableAction": {
+    "en": "Set variable",
+    "ar": "تغيير قيمة متغير"
+  },
+  "ChangeElementPropertyAction": {
+    "en": "Change element property",
+    "ar": "تغيير خاصية العنصر"
+  },
+  "RunConditionalActionsAction": {
+    "en": "Run conditional actions",
+    "ar": "تنفيذ إجراء حسب شرط"
+  },
+  "ShowMessageAction": {
+    "en": "Show message",
+    "ar": "إظهار مربع رسالة"
+  },
+  "ShowSheetAction": {
+    "en": "Show sheet",
+    "ar": "إظهار نافذة سفلية"
+  },
+  "HideSheetAction": {
+    "en": "Hide sheet",
+    "ar": "إخفاء نافذة سفلية"
+  },
+  "ShowToastAction": {
+    "en": "Show toast",
+    "ar": "إظهار إشعار"
+  },
+  "CallJavaScriptFunctionAction": {
+    "en": "Call JavaScript function",
+    "ar": "استدعاء دالة JavaScript"
+  },
+  "Granted": {
+    "en": "Granted",
+    "ar": "مسموح"
+  },
+  "Denied": {
+    "en": "Denied",
+    "ar": "مرفوض"
+  },
+  "True": {
+    "en": "True",
+    "ar": "صحيح"
+  },
+  "False": {
+    "en": "False",
+    "ar": "غير صحيح"
+  },
+  "ArabicLanguage": {
+    "en": "Arabic",
+    "ar": "العربية"
+  },
+  "CollapseChildElements": {
+    "en": "Collapse child elements",
+    "ar": "طي العناصر الفرعية"
+  },
+  "ExpandChildElements": {
+    "en": "Expand child elements",
+    "ar": "توسيع العناصر الفرعية"
+  },
+  "PageErrorIndicator": {
+    "en": "Error",
+    "ar": "خطأ"
+  },
+  "SplashScreenIndicator": {
+    "en": "Splash screen",
+    "ar": "شاشة البداية"
+  },
+  "ConfirmDeletePage": {
+    "en": "Do you want to delete page \"{name}\"?",
+    "ar": "هل تريد حذف الصفحة \"{name}\"؟"
+  },
+  "RequiredPluginUnavailable": {
+    "en": "Required plugin \"{id}\" is not available in this version. Install the matching plugin and try again.",
+    "ar": "الإضافة المطلوبة \"{id}\" غير متاحة في هذا الإصدار. ثبّت الإضافة المطابقة ثم أعد المحاولة."
+  },
+  "RequiredComponentUnavailable": {
+    "en": "Plugin or custom component \"{id}\" required by this project is unavailable. Install the plugin from the bundled catalog or include the custom component definition.",
+    "ar": "الإضافة أو المكوّن المخصص \"{id}\" المطلوب للمشروع غير متاح. ثبّت الإضافة من قائمة الإضافات المضمنة أو أرفق تعريف المكوّن المخصص."
+  },
+  "UnableToVerifyRequiredPlugins": {
+    "en": "Unable to verify required plugins because the plugin catalog could not be loaded.",
+    "ar": "تعذّر التحقق من الإضافات المطلوبة لتعذّر تحميل قائمة الإضافات."
+  },
+  "AdditionalDataName": {
+    "en": "Additional data {index}: name",
+    "ar": "المعلومة الإضافية {index}: الاسم"
+  },
+  "AdditionalDataValue": {
+    "en": "Additional data {index}: value",
+    "ar": "المعلومة الإضافية {index}: القيمة"
+  },
+  "ValueOrItemToken": {
+    "en": "Value or {{item.id}}",
+    "ar": "value أو {{item.id}}"
+  },
+  "AddAdditionalInfoToElementFirst": {
+    "en": "Add additional data to an element first",
+    "ar": "أضف معلومة إضافية إلى عنصر أولاً"
+  },
+  "AddSourceElementFirst": {
+    "en": "Add a source element first",
+    "ar": "أضف عنصراً مصدراً أولاً"
+  },
+  "ListItemField": {
+    "en": "List item field",
+    "ar": "حقل عنصر القائمة"
+  },
+  "AdditionalData": {
+    "en": "Additional data",
+    "ar": "معلومة إضافية"
+  },
+  "ElementProperty": {
+    "en": "Element property",
+    "ar": "خاصية عنصر"
+  },
+  "AddAnotherVariableFirst": {
+    "en": "Add another variable first",
+    "ar": "أضف متغيراً آخر أولاً"
+  },
+  "PluginPickerIntroduction": {
+    "en": "Choose plugins to show in the element library. Plugins used by this project cannot be hidden.",
+    "ar": "اختر الإضافات التي تريد عرضها في مكتبة العناصر. الإضافات المستخدمة في المشروع لا يمكن إخفاؤها."
+  },
+  "NoPluginsAvailable": {
+    "en": "No plugins are currently available.",
+    "ar": "لا توجد إضافات متاحة حالياً."
+  },
+  "EditHTMLAndCSSComponent": {
+    "en": "Edit HTML and CSS component",
+    "ar": "تعديل مكون HTML وCSS"
+  },
+  "UseHTTPOrHTTPS": {
+    "en": "The URL must use HTTP or HTTPS.",
+    "ar": "يجب أن يستخدم الرابط HTTP أو HTTPS."
+  },
+  "InvalidJSONHeaders": {
+    "en": "Headers must be valid JSON.",
+    "ar": "الترويسات ليست بتنسيق JSON صالح."
+  },
+  "HeadersMustBeJSONObject": {
+    "en": "Headers must be a JSON object.",
+    "ar": "يجب أن تكون الترويسات كائن JSON."
+  },
+  "InvalidJSONRequestBody": {
+    "en": "The request body must be valid JSON.",
+    "ar": "جسم الطلب ليس بتنسيق JSON صالح."
+  },
+  "SendingTestRequest": {
+    "en": "Sending request...",
+    "ar": "جارٍ إرسال الطلب ..."
+  },
+  "TrustedPluginWarning": {
+    "en": "Plugin JavaScript runs with access to this application and browser data. Import only plugins you trust. Continue?",
+    "ar": "تعمل JavaScript الخاصة بالإضافة بصلاحية الوصول إلى التطبيق وبيانات المتصفح. استورد الإضافات الموثوقة فقط. هل تريد المتابعة؟"
+  },
+  "DeleteComponentUsedInstancesWarning": {
+    "en": "Deleting “{name}” will also delete its instances on pages. Continue?",
+    "ar": "سيؤدي حذف «{name}» إلى حذف نسخه الموضوعة في الصفحات. هل تريد المتابعة؟"
+  },
+  "MoveRequestUp": {
+    "en": "Move {name} up",
+    "ar": "تحريك {name} للأعلى"
+  },
+  "MoveRequestDown": {
+    "en": "Move {name} down",
+    "ar": "تحريك {name} للأسفل"
+  },
+  "ServerRequestFailed": {
+    "en": "Request failed (HTTP {status}){detail}",
+    "ar": "فشل الطلب (HTTP {status}){detail}"
+  },
+  "TruncatedResponse": {
+    "en": "\n... (response truncated)",
+    "ar": "\n... (تم اختصار الاستجابة)"
+  },
+  "UnableToLoadPackageAsset": {
+    "en": "Unable to load package asset {path} ({status}).",
+    "ar": "تعذر تحميل مورد الحزمة {path} ({status})."
+  },
+  "AssetNotEmbeddable": {
+    "en": "Asset {name} is not in an embeddable format.",
+    "ar": "بيانات الأصل {name} ليست بصيغة قابلة للتضمين."
+  },
+  "HiddenElementWithType": {
+    "en": "Hidden element ({type})",
+    "ar": "عنصر مخفي ({type})"
+  },
+  "MissingGlobalAction": {
+    "en": "Missing global action ({id})",
+    "ar": "إجراء عام غير موجود ({id})"
+  },
+  "DeleteComponentNamed": {
+    "en": "Delete component {name}",
+    "ar": "حذف المكون {name}"
+  },
+  "EditComponentNamed": {
+    "en": "Edit component {name}",
+    "ar": "تعديل المكون {name}"
+  },
+  "ReadFileFailed": {
+    "en": "Unable to read file {name}.",
+    "ar": "تعذرت قراءة الملف {name}."
+  },
+  "PluginAlreadyInstalled": {
+    "en": "Plugin id \"{id}\" is already installed.",
+    "ar": "معرّف الإضافة \"{id}\" مثبت بالفعل."
+  },
+  "UnknownTWKField": {
+    "en": "Unknown TWK field: {field}",
+    "ar": "حقل TWK غير معروف: {field}"
+  },
+  "TWKHelperUnavailable": {
+    "en": "TWK.{method} is unavailable. Ensure the Tawakkalna helper is loaded in the app.",
+    "ar": "دالة TWK.{method} غير متاحة. تأكد من تحميل مساعد توكلنا داخل التطبيق."
+  },
+  "UnknownVariable": {
+    "en": "Unknown variable: {name}",
+    "ar": "متغير غير معروف: {name}"
+  },
+  "CircularVariableReference": {
+    "en": "Circular variable reference: {name}",
+    "ar": "يوجد مرجع دائري بين المتغيرات: {name}"
+  },
+  "FormFieldUnavailable": {
+    "en": "Form field is unavailable: {field}",
+    "ar": "حقل النموذج غير متاح: {field}"
+  },
+  "VariableSourceUnavailable": {
+    "en": "Variable source is unavailable: {name}",
+    "ar": "مصدر المتغير غير متاح: {name}"
+  },
+  "ListItemDataUnavailable": {
+    "en": "List item data is unavailable for variable {name}.",
+    "ar": "بيانات عنصر القائمة غير متاحة للمتغير {name}."
+  },
+  "APIResponseUnavailable": {
+    "en": "API response is unavailable for variable {name}.",
+    "ar": "استجابة API غير متاحة للمتغير {name}."
+  },
+  "APIResponsePathUnavailable": {
+    "en": "API response path is unavailable for variable {name}.",
+    "ar": "مسار الاستجابة غير متاح للمتغير {name}."
+  },
+  "VariablePathUnavailable": {
+    "en": "Variable is unavailable: {path}",
+    "ar": "متغير غير متاح: {path}"
+  },
+  "FormFieldKeyUnavailable": {
+    "en": "Form field is unavailable: {key}",
+    "ar": "حقل النموذج غير متاح: {key}"
+  },
+  "EnglishLanguage": {
+    "en": "English",
+    "ar": "الإنجليزية"
+  },
+  "Key": {
+    "en": "Key",
+    "ar": "المفتاح"
+  },
+  "ImageAsset": {
+    "en": "Image asset",
+    "ar": "أصل صورة"
+  },
+  "PluginProperties": {
+    "en": "Plugin properties",
+    "ar": "خصائص الإضافة"
+  },
+  "RemovePlugin": {
+    "en": "Remove plugin",
+    "ar": "إزالة الإضافة"
+  },
+  "ImageSource": {
+    "en": "Image source",
+    "ar": "مصدر الصورة"
+  },
+  "OpenOption": {
+    "en": "Open",
+    "ar": "مفتوح"
+  },
+  "SelectedState": {
+    "en": "Selected",
+    "ar": "مختار"
+  },
+  "Visible": {
+    "en": "Visible",
+    "ar": "مرئي"
+  },
+  "Success": {
+    "en": "Success",
+    "ar": "نجاح"
+  },
+  "Warning": {
+    "en": "Warning",
+    "ar": "تحذير"
+  },
+  "Destructive": {
+    "en": "Destructive",
+    "ar": "خطر"
+  },
+  "InvalidJSONError": {
+    "en": "Invalid JSON: {error}",
+    "ar": "JSON غير صالح: {error}"
+  },
+  "ParametersMustBeJSONObject": {
+    "en": "Parameters must be a JSON object. Use the advanced JSON editor for arrays or primitive values.",
+    "ar": "يجب أن تكون المعلمات كائن JSON. استخدم محرر JSON المتقدم للمصفوفات أو القيم الأساسية."
+  },
+  "EachParameterNeedsKey": {
+    "en": "Each parameter needs a key.",
+    "ar": "يجب أن يكون لكل معلمة مفتاح."
+  },
+  "DuplicateParameterKey": {
+    "en": "Duplicate parameter key: {key}",
+    "ar": "مفتاح المعلمة مكرر: {key}"
+  },
+  "Files": {
+    "en": "Files",
+    "ar": "الملفات"
+  },
+  "Mode": {
+    "en": "Mode",
+    "ar": "الوضع"
+  },
+  "Minimum": {
+    "en": "Minimum",
+    "ar": "الحد الأدنى"
+  },
+  "IsValid": {
+    "en": "Is valid",
+    "ar": "صالح"
+  },
+  "CharacterCount": {
+    "en": "Character count",
+    "ar": "عدد الأحرف"
+  },
+  "Checked": {
+    "en": "Checked",
+    "ar": "مؤشر عليه"
+  },
+  "SelectedLabel": {
+    "en": "Selected label",
+    "ar": "تسمية الخيار المحدد"
+  },
+  "Options": {
+    "en": "Options",
+    "ar": "الخيارات"
+  },
+  "ShareScreenshot": {
+    "en": "Share screenshot",
+    "ar": "مشاركة لقطة الشاشة"
+  },
+  "RequestCameraPermission": {
+    "en": "Request camera permission",
+    "ar": "طلب إذن الكاميرا"
+  },
+  "RequestGalleryPermission": {
+    "en": "Request gallery permission",
+    "ar": "طلب إذن المعرض"
+  },
+  "RequestLocationPermission": {
+    "en": "Request location permission",
+    "ar": "طلب إذن الموقع"
+  },
+  "RequestPushNotificationPermission": {
+    "en": "Request push notification permission",
+    "ar": "طلب إذن الإشعارات"
+  },
+  "RequestPreciseLocationPermission": {
+    "en": "Request precise location permission",
+    "ar": "طلب إذن الموقع الدقيق"
+  },
+  "ZoomOut": {
+    "en": "Zoom out",
+    "ar": "تصغير"
+  },
+  "ZoomIn": {
+    "en": "Zoom in",
+    "ar": "تكبير"
+  },
+  "PreviewZoom": {
+    "en": "Preview zoom",
+    "ar": "تكبير المعاينة"
+  },
+  "DragTokenIntoField": {
+    "en": "Drag {token} token into a field",
+    "ar": "اسحب الرمز {token} إلى حقل"
+  },
+  "IndexedAction": {
+    "en": "Action {index}",
+    "ar": "الإجراء {index}"
+  },
+  "IndexedGlobalAction": {
+    "en": "Global action {index}",
+    "ar": "الإجراء العام {index}"
+  },
+  "MissingStaticVariable": {
+    "en": "Missing static variable ({id})",
+    "ar": "المتغير الثابت غير موجود ({id})"
+  },
+  "PageStatus": {
+    "en": "{name} · {status}",
+    "ar": "{name} · {status}"
+  },
+  "ConditionActionTitle": {
+    "en": "{condition} · {action}",
+    "ar": "{condition} · {action}"
+  },
+  "BranchOutput": {
+    "en": "{branch} output",
+    "ar": "مخرج {branch}"
+  },
+  "TokenValueField": {
+    "en": "{token} value",
+    "ar": "قيمة {token}"
+  },
+  "IndexedField": {
+    "en": "{field} {index}",
+    "ar": "{field} {index}"
+  },
+  "IndexedFieldType": {
+    "en": "{field} {index} type",
+    "ar": "نوع {field} {index}"
+  },
+  "WorkflowToolbarHint": {
+    "en": "Scroll to pan · Ctrl/⌘ + scroll or pinch to zoom · drag nodes to move",
+    "ar": "مرّر للتحريك · Ctrl/⌘ مع التمرير أو القرص للتكبير · اسحب العقد لتحريكها"
+  },
+  "WhenGranted": {
+    "en": "When Granted",
+    "ar": "عند السماح"
+  },
+  "WhenDenied": {
+    "en": "When Denied",
+    "ar": "عند الرفض"
+  },
+  "BranchHeading": {
+    "en": "{branch} branch",
+    "ar": "فرع {branch}"
+  },
+  "AddActionToBranch": {
+    "en": "Add action to {branch} branch",
+    "ar": "إضافة إجراء إلى فرع {branch}"
+  },
+  "CollapsibleSectionDescription": {
+    "en": "Collapsible section",
+    "ar": "قسم قابل للطي"
+  },
+  "TabContentPanelDescription": {
+    "en": "Content panel for a tab",
+    "ar": "لوحة محتوى لعلامة تبويب"
+  },
+  "TabsWithSeparateContentDescription": {
+    "en": "Tabs with separate content",
+    "ar": "علامات تبويب بمحتوى منفصل"
+  },
+  "ShortBadgeDescription": {
+    "en": "Short label",
+    "ar": "شارة قصيرة"
+  },
+  "ToggleSwitchDescription": {
+    "en": "Toggle switch",
+    "ar": "مفتاح تشغيل"
+  },
+  "InteractiveTagDescription": {
+    "en": "Interactive tag",
+    "ar": "وسم تفاعلي"
+  },
+  "FloatingActionDescription": {
+    "en": "Floating action button",
+    "ar": "إجراء عائم"
+  },
+  "LoadingIndicatorDescription": {
+    "en": "Loading indicator",
+    "ar": "مؤشر تحميل"
+  },
+  "ProgressBarDescription": {
+    "en": "Progress bar",
+    "ar": "شريط تقدم"
+  },
+  "DismissibleNotificationDescription": {
+    "en": "Dismissible notification",
+    "ar": "إشعار قابل للإغلاق"
+  },
+  "NavigationBreadcrumbDescription": {
+    "en": "Navigation path",
+    "ar": "مسار تنقل"
+  },
+  "EditingComponentPrefix": {
+    "en": "Editing component:",
+    "ar": "تحرير مكون:"
+  },
+  "ApplyToAllInstances": {
+    "en": "Apply to all instances",
+    "ar": "تطبيق على كل النسخ"
+  },
+  "SingleImageOption": {
+    "en": "Single image",
+    "ar": "صورة واحدة"
+  },
+  "MultipleImagesOption": {
+    "en": "Multiple images",
+    "ar": "عدة صور"
+  },
+  "ButtonAppearanceOption": {
+    "en": "Button",
+    "ar": "زر"
+  },
+  "DragAndDropUploadArea": {
+    "en": "Drag-and-drop upload area",
+    "ar": "منطقة رفع وسحب"
+  },
+  "AddVerb": {
+    "en": "Add",
+    "ar": "أضف"
+  },
+  "SelectOptionsDefaultHelp": {
+    "en": "to mark an option as selected by default. Multiple default options can be selected when multi-select is enabled.",
+    "ar": "لتحديد خيار افتراضياً. يمكن تحديد عدة خيارات افتراضية عند تفعيل الاختيار المتعدد."
+  },
+  "RadioDefaultOptionHelp": {
+    "en": "to the default option. If more than one option is selected, only the first is used.",
+    "ar": "إلى الخيار الافتراضي. إذا حُدد أكثر من خيار، يُستخدم أول خيار فقط."
+  },
+  "ExtraDataBindingHelpBeforeToken": {
+    "en": "You can bind elements inside or outside the collection to extra data; when the value uses",
+    "ar": "يمكن ربط العناصر داخل القائمة أو خارجها بمعلومة إضافية؛ إذا كانت القيمة تستخدم"
+  },
+  "ExtraDataBindingHelpAfterToken": {
+    "en": "the element outside the collection will use the last row you clicked.",
+    "ar": "فسيستخدم العنصر خارج القائمة آخر صف نقر عليه."
+  },
+  "CollectionItemPathsHeading": {
+    "en": "Collection item paths",
+    "ar": "مسارات العنصر داخل المجموعة"
+  },
+  "JSONActionValuesHelp": {
+    "en": "JSON values preserve their numbers and arrays. Use {{form.field_name}} for the selected value, {{twk.full_name}} for Tawakkalna data, {{var.variable_name}} for a saved variable, or {{api.requestId.data.status}} from an API response.",
+    "ar": "القيم JSON تحتفظ بأرقامها ومصفوفاتها. استخدم {{form.field_name}} للقيمة المختارة أو {{twk.full_name}} لبيانات توكلنا أو {{var.variable_name}} لمتغير محفوظ أو {{api.requestId.data.status}} من استجابة API."
+  },
+  "AssetsLibraryDescription": {
+    "en": "Add images, audio, video, and JavaScript files for offline functions. Assets are included in the project and ZIP package; total local storage is limited to 2 MB.",
+    "ar": "أضف الصور والصوت والفيديو وملفات JavaScript للدوال دون اتصال. تُضمّن الأصول في المشروع وحزمة ZIP؛ حد التخزين المحلي الإجمالي 2 MB."
+  },
+  "AppLoadActionHelp": {
+    "en": "Actions for this event run once after the app's initial data has loaded.",
+    "ar": "تُنفذ إجراءات هذا الحدث مرة واحدة بعد تحميل بيانات التطبيق الأولية."
+  },
+  "ElementLibraryAriaLabel": {
+    "en": "Element library",
+    "ar": "مكتبة العناصر"
+  },
+  "PageElementTreeAriaLabel": {
+    "en": "Page element tree",
+    "ar": "شجرة عناصر الصفحة"
+  },
+  "SavedComponentToolbarAriaLabel": {
+    "en": "Edit saved component",
+    "ar": "تحرير المكون المحفوظ"
+  },
+  "AppPreviewAriaLabel": {
+    "en": "App content",
+    "ar": "محتوى التطبيق"
+  },
+  "ItemPropertyPathPlaceholder": {
+    "en": "title or user.name",
+    "ar": "title أو user.name"
+  },
+  "SavedMessagePlaceholder": {
+    "en": "Saved successfully or {{var.message}}",
+    "ar": "تم الحفظ بنجاح أو {{var.message}}"
+  },
+  "ItemFieldPlaceholder": {
+    "en": "name or user.id",
+    "ar": "name أو user.id"
+  },
+  "InformationCardPlaceholder": {
+    "en": "Information card",
+    "ar": "بطاقة معلومات"
+  }
+}

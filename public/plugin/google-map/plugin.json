@@ -1,0 +1,32 @@
+{
+  "id": "google-map",
+  "title": "Google Map",
+  "group": "Maps",
+  "description": "Interactive Google Map with marker and workflow events.",
+  "icon": "fa-map-location-dot",
+  "version": "1.0.0",
+  "properties": [
+    { "key": "apiKey", "label": "Google Maps JavaScript API key", "type": "text", "default": "" },
+    { "key": "latitude", "label": "Latitude", "type": "number", "default": 24.7136 },
+    { "key": "longitude", "label": "Longitude", "type": "number", "default": 46.6753 },
+    { "key": "zoom", "label": "Zoom", "type": "number", "default": 12 },
+    { "key": "markerTitle", "label": "Marker title", "type": "text", "default": "Riyadh" },
+    { "key": "draggableMarker", "label": "Allow marker dragging", "type": "boolean", "default": true }
+  ],
+  "events": ["onMapClick", "onMarkerDragEnd"],
+  "localizations": {
+    "ar": {
+      "title": "خرائط Google",
+      "group": "الخرائط",
+      "description": "خريطة Google تفاعلية مع علامة وأحداث لسير العمل.",
+      "properties": {
+        "apiKey": { "label": "مفتاح Google Maps JavaScript API" },
+        "latitude": { "label": "خط العرض" },
+        "longitude": { "label": "خط الطول" },
+        "zoom": { "label": "مستوى التكبير" },
+        "markerTitle": { "label": "عنوان العلامة" },
+        "draggableMarker": { "label": "السماح بسحب العلامة" }
+      }
+    }
+  }
+}

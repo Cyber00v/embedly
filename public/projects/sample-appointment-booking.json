@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    { "id": "page-home", "name": "home", "kind": "page" },
+    { "id": "page-splash", "name": "splash", "kind": "splash" },
+    { "id": "page-error", "name": "error", "kind": "error" }
+  ],
+  "elements": [
+    {
+      "id": "booking-title",
+      "type": "heading",
+      "pageId": "page-home",
+      "content": "احجز موعدك",
+      "localizations": { "en": "Book an appointment" },
+      "styles": { "fontSize": 24 }
+    },
+    {
+      "id": "booking-description",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "اختر الخدمة والوقت المناسبين.",
+      "localizations": { "en": "Choose a service and a convenient time." },
+      "styles": {}
+    },
+    {
+      "id": "open-booking-sheet",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "بدء الحجز",
+      "localizations": { "en": "Start booking" },
+      "action": { "type": "showSheet", "event": "click", "sheetId": "booking-sheet" },
+      "styles": { "variant": "primary" }
+    },
+    {
+      "id": "booking-sheet",
+      "type": "sheet",
+      "pageId": "page-home",
+      "content": "تفاصيل الموعد",
+      "localizations": { "en": "Appointment details" },
+      "styles": {}
+    },
+    {
+      "id": "booking-name",
+      "type": "input",
+      "pageId": "page-home",
+      "parentId": "booking-sheet",
+      "content": "الاسم الكامل",
+      "localizations": { "en": "Full name" },
+      "fieldName": "booking_name",
+      "styles": {}
+    },
+    {
+      "id": "booking-date",
+      "type": "input",
+      "pageId": "page-home",
+      "parentId": "booking-sheet",
+      "content": "تاريخ الموعد",
+      "localizations": { "en": "Appointment date" },
+      "fieldName": "booking_date",
+      "inputType": "date",
+      "styles": {}
+    },
+    {
+      "id": "booking-service",
+      "type": "list",
+      "pageId": "page-home",
+      "parentId": "booking-sheet",
+      "content": "نوع الخدمة",
+      "localizations": { "en": "Service type" },
+      "fieldName": "booking_service",
+      "options": [
+        { "label": "استشارة", "value": "consultation" },
+        { "label": "متابعة", "value": "follow_up" },
+        { "label": "خدمة أخرى", "value": "other" }
+      ],
+      "listSource": { "type": "static" },
+      "styles": {}
+    },
+    {
+      "id": "booking-summary",
+      "type": "text",
+      "pageId": "page-home",
+      "parentId": "booking-sheet",
+      "content": "سيظهر اسمك هنا",
+      "localizations": { "en": "Your name will appear here" },
+      "binding": { "source": "form", "path": "booking_name" },
+      "styles": {}
+    },
+    {
+      "id": "submit-booking",
+      "type": "button",
+      "pageId": "page-home",
+      "parentId": "booking-sheet",
+      "content": "تأكيد الموعد",
+      "localizations": { "en": "Confirm appointment" },
+      "action": {
+        "type": "condition",
+        "event": "click",
+        "condition": {
+          "source": "form",
+          "operator": "empty",
+          "fieldName": "booking_name"
+        },
+        "actions": [
+          {
+            "type": "message",
+            "title": "بيانات ناقصة",
+            "message": "يرجى إدخال الاسم قبل تأكيد الموعد."
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "message",
+            "title": "تم استلام الطلب",
+            "message": "شكراً {{form.booking_name}}. تم تسجيل طلبك ليوم {{form.booking_date}}."
+          },
+          { "type": "hideSheet", "sheetId": "booking-sheet" }
+        ]
+      },
+      "styles": { "variant": "primary" }
+    }
+  ],
+  "requests": [],
+  "components": [],
+  "userComponents": [],
+  "variables": [],
+  "assets": [],
+  "customCss": "",
+  "settings": {
+    "title": "حجز موعد",
+    "orgnization": "الخدمات الإلكترونية",
+    "appTopBarType": "standard",
+    "appLanguage": "ar"
+  }
+}

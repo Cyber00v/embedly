@@ -1,0 +1,1780 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Embedly developed by Cyber00v - Muhammad Alharbi" />
+  <title>Embedly</title>
+  <link rel="stylesheet" href="%BASE_URL%assets/lib/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="%BASE_URL%assets/lib/jszip.min.js"></script>
+  <script type="module" src="./src/app.ts"></script>
+  <script type="module" src="./src/electron-window-controls.ts"></script>
+</head>
+
+<body>
+  <div id="loading-screen">
+    <div class="spinner"></div>
+  </div>
+  <header class="desktop-titlebar" id="desktop-titlebar" hidden>
+    <div class="desktop-titlebar-brand">
+      <span class="desktop-titlebar-mark" aria-hidden="true">
+        <i class="fa-solid fa-shapes"></i>
+      </span>
+      <span>Embedly</span>
+    </div>
+    <div class="desktop-window-controls" aria-label="Window controls">
+      <button id="window-minimize" type="button" aria-label="Minimize window" title="Minimize">
+        <i class="fa-solid fa-minus" aria-hidden="true"></i>
+      </button>
+      <button id="window-maximize" type="button" aria-label="Maximize window" title="Maximize">
+        <i class="fa-regular fa-square" aria-hidden="true"></i>
+      </button>
+      <button id="window-close" class="window-close" type="button" aria-label="Close window" title="Close" data-i18n-title="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+  </header>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Embedly">
+      <span class="brand-mark" aria-hidden="true"><i class="fa-solid fa-shapes"></i></span>
+      <span>
+        <strong>Embedly</strong>
+      </span>
+    </a>
+    <div class="project-name">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span id="save-status" role="status" data-i18n="SavedLocally">Saved locally</span>
+      <span class="project-divider" aria-hidden="true"></span>
+    </div>
+    <div class="topbar-actions">
+      <nav class="toolbar-menubar" aria-label="Main menu" data-i18n-aria-label="MainMenu">
+        <details class="toolbar-menu">
+          <summary data-i18n="File">File</summary>
+          <div class="toolbar-menu-items">
+            <button id="project-gallery-button" type="button" data-i18n="ProjectGallery">Project gallery</button>
+            <button id="import-project-json" type="button" data-i18n="ImportJSON">
+              Import JSON
+            </button>
+            <button id="export-project-json" type="button" data-i18n="ExportJSON">Export JSON</button>
+            <button id="export-button" type="button" data-i18n="ExportApp">Export app</button>
+            <button id="reset-button" type="button" data-i18n="Reset">Reset</button>
+            <input id="import-project-json-file" type="file" accept=".json,application/json" hidden />
+          </div>
+        </details>
+        <details class="toolbar-menu">
+          <summary data-i18n="Project">Project</summary>
+          <div class="toolbar-menu-items">
+            <button id="api-button" type="button" data-i18n="APISettings">API settings</button>
+            <button id="variables-button" type="button" data-i18n="Variables">Variables</button>
+            <button id="global-actions-button" type="button" data-i18n="GlobalActions">Global actions</button>
+            <button id="assets-button" type="button" data-i18n="Assets">Assets</button>
+            <button id="theme-button" type="button" data-i18n="Colors">Colors</button>
+            <button id="custom-css-button" type="button" data-i18n="CustomCSS">Custom CSS</button>
+          </div>
+        </details>
+        <details class="toolbar-menu">
+          <summary data-i18n="Language">language</summary>
+          <div class="toolbar-menu-items">
+            <button id="editor-language-toggle" type="button" data-i18n="EnglishLanguage">English</button>
+          </div>
+        </details>
+      </nav>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="panel left-panel" aria-label="Page elements" data-i18n-aria-label="PageElements">
+      <div class="panel-heading">
+        <div>
+          <span class="eyebrow" data-i18n="Library">Library</span>
+          <h1 data-i18n="PageElements">Page elements</h1>
+        </div>
+        <span class="count-badge" id="element-count">29</span>
+      </div>
+      <label class="element-search">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input id="element-search" type="search" autocomplete="off"
+          aria-label="Search elements" placeholder="Search for an element" data-i18n-aria-label="SearchElements" data-i18n-placeholder="SearchForAnElement">
+      </label>
+      <nav class="element-list" id="element-palette" aria-label="Element library" data-i18n-aria-label="ElementLibraryAriaLabel">
+        <details class="element-category" open>
+          <summary class="eyebrow" id="element-category-layout" data-i18n="LayoutContainers">Layout & containers</summary>
+          <button class="element-card" type="button" draggable="true" data-type="absoluteLayout">
+            <span class="element-icon icon-layout" aria-hidden="true"><i class="fa-solid fa-arrows-to-circle"></i></span>
+            <span><strong>Absolute Layout</strong><small>Align children within a positioned canvas</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="accordion">
+            <span class="element-icon icon-layout" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>
+            <span><strong>Accordion</strong><small data-i18n="CollapsibleSectionDescription">Collapsible section</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="card">
+            <span class="element-icon icon-card" aria-hidden="true"><i class="fa-solid fa-address-card"></i></span>
+            <span><strong>Card</strong><small>Displays a card with header, content, and footer.</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="grid">
+            <span class="element-icon icon-layout" aria-hidden="true"><i class="fa-solid fa-table-cells-large"></i></span>
+            <span><strong data-i18n="Grid">Grid</strong><small>Place multiple inputs side by side</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="layout">
+            <span class="element-icon icon-layout" aria-hidden="true"><i class="fa-solid fa-layer-group"></i></span>
+            <span><strong data-i18n="Layout">Layout</strong><small>Group elements vertical or horizontal</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="scrollView">
+            <span class="element-icon icon-layout" aria-hidden="true"><i class="fa-solid fa-arrows-up-down"></i></span>
+            <span><strong>ScrollView</strong><small></small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="sheet">
+            <span class="element-icon icon-layout" aria-hidden="true"><i class="fa-solid fa-window-restore"></i></span>
+            <span><strong>Sheet</strong><small data-i18n="PopupSheet">Popup sheet</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="tab">
+            <span class="element-icon icon-layout" aria-hidden="true"><i class="fa-solid fa-folder"></i></span>
+            <span><strong data-i18n="Tab">Tab</strong><small data-i18n="TabContentPanelDescription">Content panel for a tab</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="tabs">
+            <span class="element-icon icon-layout" aria-hidden="true"><i class="fa-solid fa-folder"></i></span>
+            <span><strong data-i18n="Tabs">Tabs</strong><small data-i18n="TabsWithSeparateContentDescription">Tabs with separate content</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+        </details>
+        <details class="element-category">
+          <summary class="eyebrow" id="element-category-display" data-i18n="TextDisplay">Text & display</summary>
+          <button class="element-card" type="button" draggable="true" data-type="badge">
+            <span class="element-icon icon-card" aria-hidden="true"><i class="fa-solid fa-certificate"></i></span>
+            <span><strong>Badge</strong><small data-i18n="ShortBadgeDescription">Short label</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="divider">
+            <span class="element-icon icon-divider" aria-hidden="true"><i class="fa-solid fa-minus"></i></span>
+            <span><strong data-i18n="Divider">Divider</strong><small data-i18n="DividerBetweenSections">Divider between sections</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="icon">
+            <span class="element-icon icon-text" aria-hidden="true"><i class="fa-solid fa-star"></i></span>
+            <span><strong data-i18n="Icon">Icon</strong><small data-i18n="FontAwesomeIcon">Font Awesome icon</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="image">
+            <span class="element-icon icon-image" aria-hidden="true"><i class="fa-solid fa-image"></i></span>
+            <span><strong data-i18n="Image">Image</strong><small data-i18n="ImageFromURL">Image from URL</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="text">
+            <span class="element-icon icon-text" aria-hidden="true"><i class="fa-solid fa-paragraph"></i></span>
+            <span><strong>Label</strong><small></small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="heading">
+            <span class="element-icon icon-heading" aria-hidden="true"><i class="fa-solid fa-heading"></i></span>
+            <span><strong data-i18n="Title">Title</strong><small>For title and subtitle</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+        </details>
+        <details class="element-category">
+          <summary class="eyebrow" id="element-category-forms" data-i18n="FormElements">Form elements</summary>
+          <button class="element-card" type="button" draggable="true" data-type="checkbox">
+            <span class="element-icon icon-checkbox" aria-hidden="true"><i class="fa-solid fa-square-check"></i></span>
+            <span><strong>Checkbox</strong><small data-i18n="ChooseYesOrNo">Choose yes or no</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="filePicker">
+            <span class="element-icon icon-input" aria-hidden="true"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+            <span><strong data-i18n="FilePicker">File Picker</strong><small>Choose images from Tawakkalna</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="input">
+            <span class="element-icon icon-input" aria-hidden="true"><i class="fa-solid fa-keyboard"></i></span>
+            <span><strong data-i18n="Input">Input</strong><small>A text input</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="radio">
+            <span class="element-icon icon-radio" aria-hidden="true"><i class="fa-solid fa-circle-dot"></i></span>
+            <span><strong>Radio Button</strong><small>Collection of radio buttons</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="switch">
+            <span class="element-icon icon-button" aria-hidden="true"><i class="fa-solid fa-toggle-on"></i></span>
+            <span><strong>Switch</strong><small data-i18n="ToggleSwitchDescription">Toggle switch</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+        </details>
+        <details class="element-category">
+          <summary class="eyebrow" id="element-category-actions" data-i18n="ActionsFeedback">Actions & feedback</summary>
+          <button class="element-card" type="button" draggable="true" data-type="button">
+            <span class="element-icon icon-button" aria-hidden="true"><i
+                class="fa-solid fa-arrow-up-right-from-square"></i></span>
+            <span><strong data-i18n="ButtonAppearanceOption">Button</strong><small></small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="chip">
+            <span class="element-icon icon-button" aria-hidden="true"><i class="fa-solid fa-tag"></i></span>
+            <span><strong>Chip</strong><small data-i18n="InteractiveTagDescription">Interactive tag</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="fab">
+            <span class="element-icon icon-button" aria-hidden="true"><i class="fa-solid fa-circle-plus"></i></span>
+            <span><strong>Floating Action Button</strong><small data-i18n="FloatingActionDescription">Floating action button</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="loading">
+            <span class="element-icon icon-layout" aria-hidden="true"><i class="fa-solid fa-spinner"></i></span>
+            <span><strong>Loading</strong><small data-i18n="LoadingIndicatorDescription">Loading indicator</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="progress">
+            <span class="element-icon icon-layout" aria-hidden="true"><i class="fa-solid fa-bars-progress"></i></span>
+            <span><strong>Progress</strong><small data-i18n="ProgressBarDescription">Progress bar</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="toast">
+            <span class="element-icon icon-layout" aria-hidden="true"><i class="fa-solid fa-bell"></i></span>
+            <span><strong>Toast</strong><small data-i18n="DismissibleNotificationDescription">Dismissible notification</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+        </details>
+        <details class="element-category">
+          <summary class="eyebrow" id="element-category-data" data-i18n="DataNavigation">Data & navigation</summary>
+          <button class="element-card" type="button" draggable="true" data-type="breadcrumbs">
+            <span class="element-icon icon-text" aria-hidden="true"><i class="fa-solid fa-route"></i></span>
+            <span><strong>Breadcrumbs</strong><small data-i18n="NavigationBreadcrumbDescription">Navigation path</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="collection">
+            <span class="element-icon icon-list" aria-hidden="true"><i class="fa-solid fa-repeat"></i></span>
+            <span><strong data-i18n="Collection">Collection</strong><small data-i18n="RepeatingDataBoundItemTemplate">Repeating data-bound item template</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+          <button class="element-card" type="button" draggable="true" data-type="list">
+            <span class="element-icon icon-list" aria-hidden="true"><i class="fa-solid fa-list"></i></span>
+            <span><strong>List View</strong><small></small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
+        </details>
+        <div class="plugin-catalog-heading">
+          <span class="eyebrow" data-i18n="Plugins">Plugins</span>
+          <button class="icon-button" id="manage-plugins" type="button" aria-label="Choose plugins"
+            title="Choose plugins" data-i18n-aria-label="ChoosePlugins" data-i18n-title="ChoosePlugins">
+            <i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div id="plugin-categories"></div>
+        <p id="element-search-empty" class="element-search-empty" role="status" hidden data-i18n="NoMatchingElements">
+          No matching elements
+        </p>
+      </nav>
+      <details class="element-tree-section" open>
+        <summary class="eyebrow" data-i18n="ElementTree">Element tree</summary>
+        <div id="element-tree" role="tree" aria-label="Page element tree" data-i18n-aria-label="PageElementTreeAriaLabel"></div>
+      </details>
+      <div class="custom-components">
+        <div class="custom-components-heading">
+          <span class="eyebrow" data-i18n="YourComponents">Your components</span>
+        </div>
+
+        <div class="element-list" id="custom-component-list"></div>
+        <div class="custom-components-heading custom-markup-heading">
+          <span class="eyebrow" data-i18n="HTMLAndCSSComponents">HTML and CSS components</span>
+          <button class="icon-button" id="add-custom-markup" type="button" aria-label="Add HTML and CSS component"
+            title="Add HTML and CSS component" data-i18n-aria-label="AddHTMLAndCSSComponent" data-i18n-title="AddHTMLAndCSSComponent">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="element-list" id="user-component-list"></div>
+      </div>
+    </aside>
+
+    <section class="canvas-area" aria-label="App preview" data-i18n-aria-label="AppPreview">
+      <div class="canvas-toolbar">
+        <div class="view-switcher" role="group" aria-label="Preview size" data-i18n-aria-label="PreviewSize">
+          <button class="view-button active" type="button" data-width="390" aria-pressed="true" data-i18n="Mobile" data-i18n-node="2">
+            <i class="fa-solid fa-mobile-screen" aria-hidden="true"></i> Mobile
+          </button>
+          <button class="view-button" type="button" data-width="600" aria-pressed="false" data-i18n="Tablet" data-i18n-node="2">
+            <i class="fa-solid fa-tablet-screen-button" aria-hidden="true"></i>
+            Tablet
+          </button>
+          <button class="view-button" type="button" data-width="100%" aria-pressed="false" data-i18n="Full" data-i18n-node="2">
+            <i class="fa-solid fa-desktop" aria-hidden="true"></i> Full
+          </button>
+        </div>
+        <div class="canvas-edit-actions preview-zoom-controls" role="group" aria-label="Preview zoom" data-i18n-aria-label="PreviewZoom">
+          <button class="canvas-edit-action preview-zoom-button" id="preview-zoom-out" type="button" aria-label="Zoom out" title="Zoom out" data-i18n-aria-label="ZoomOut" data-i18n-title="ZoomOut" disabled>
+            <i class="fa-solid fa-minus" aria-hidden="true"></i>
+          </button>
+          <span id="preview-zoom-level" aria-live="polite">100%</span>
+          <button class="canvas-edit-action preview-zoom-button" id="preview-zoom-in" type="button" aria-label="Zoom in" title="Zoom in" data-i18n-aria-label="ZoomIn" data-i18n-title="ZoomIn">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="canvas-edit-actions" role="group" aria-label="Edit elements" data-i18n-aria-label="EditElements">
+          <button class="canvas-edit-action" id="undo-action" type="button" aria-label="Undo"
+            title="Undo (Ctrl+Z)" data-i18n-aria-label="Undo" data-i18n-title="UndoCtrlZ">
+            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+          </button>
+          <button class="canvas-edit-action" id="redo-action" type="button" aria-label="Redo"
+            title="Redo (Ctrl+Shift+Z)" data-i18n-aria-label="Redo" data-i18n-title="RedoCtrlShiftZ">
+            <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+          </button>
+          <button class="canvas-edit-action" id="copy-action" type="button" aria-label="Copy elements"
+            title="Copy (Ctrl+C)" data-i18n-aria-label="CopyElements" data-i18n-title="CopyCtrlC">
+            <i class="fa-solid fa-copy" aria-hidden="true"></i>
+          </button>
+          <button class="canvas-edit-action" id="paste-action" type="button" aria-label="Paste elements"
+            title="Paste (Ctrl+V)" data-i18n-aria-label="PasteElements" data-i18n-title="PasteCtrlV">
+            <i class="fa-solid fa-paste" aria-hidden="true"></i>
+          </button>
+          <button class="canvas-edit-action" id="select-all-action" type="button" aria-label="Select all"
+            title="Select all (Ctrl+A)" data-i18n-aria-label="SelectAll" data-i18n-title="SelectAllCtrlA">
+            <i class="fa-solid fa-object-group" aria-hidden="true"></i>
+          </button>
+        </div>
+        <button class="button button-quiet" id="app-language-toggle" type="button" aria-label="Change app language"
+          title="Change app language" data-i18n-aria-label="ChangeAppLanguage" data-i18n-title="ChangeAppLanguage" data-i18n="EnglishLanguage">
+          English
+        </button>
+        <button class="button button-quiet" id="app-theme-toggle" type="button" aria-pressed="false">
+          <i class="fa-solid fa-moon" aria-hidden="true"></i>
+          <span data-i18n="DarkMode">Dark mode</span>
+        </button>
+        
+      </div>
+      <div class="page-toolbar">
+        <label class="field-label" for="page-select" data-i18n="PageAlternativeA">Page</label>
+        <select id="page-select" aria-label="Page being edited" data-i18n-aria-label="PageBeingEdited"></select>
+        <input id="page-name" type="text" maxlength="40" aria-label="Page name"  data-i18n-aria-label="PageName"/>
+        <button class="button button-quiet" id="add-page" type="button" data-i18n="Page" data-i18n-node="2">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i> Page
+        </button>
+        <button class="icon-button" id="delete-page" type="button" aria-label="Delete page" title="Delete page" data-i18n-aria-label="DeletePage" data-i18n-title="DeletePage">
+          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="saved-component-edit-bar" id="saved-component-edit-bar" role="toolbar"
+        aria-label="Edit saved component" hidden data-i18n-aria-label="SavedComponentToolbarAriaLabel">
+        <span data-i18n="EditingComponentPrefix">Editing component: <strong id="saved-component-edit-name"></strong></span>
+        <button class="button button-primary" id="apply-saved-component-edits" type="button" data-i18n="ApplyToAllInstances">Apply to all instances</button>
+        <button class="button button-quiet" id="cancel-saved-component-edits" type="button" data-i18n="Cancel">Cancel</button>
+      </div>
+      <div class="canvas-scroll">
+        <div class="device-frame is-phone" id="device-frame">
+          <div class="device-status" aria-hidden="true">
+            <span>9:41</span><span class="device-status-icons"><i class="fa-solid fa-signal"></i><i
+                class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></span>
+          </div>
+          <div class="app-preview" id="app-preview" aria-label="App preview" data-i18n-aria-label="AppPreview"></div>
+          <div class="device-home" aria-hidden="true"><span></span></div>
+        </div>
+      </div>
+      <div class="canvas-footer">
+        <span><span style="color: var(--primary);">@Cyber00v</span>- Muhammad Hellal Alharbi</span>
+      </div>
+    </section>
+
+    <aside class="panel right-panel" aria-label="Element properties" data-i18n-aria-label="ElementProperties">
+      <div class="panel-heading properties-heading">
+        <div>
+          <span class="eyebrow" data-i18n="Customize">Customize</span>
+          <h2 data-i18n="Properties">Properties</h2>
+        </div>
+      </div>
+      <div class="application-properties" id="application-properties">
+        <span class="eyebrow" data-i18n="AppProperties">App properties</span>
+        <label class="field-label" for="application-title" data-i18n="AppTitle">App title</label>
+        <input id="application-title" type="text" maxlength="80" />
+        <label class="field-label" for="application-organization" data-i18n="Organization">Organization</label>
+        <input id="application-organization" type="text" maxlength="80" />
+        <label class="field-label" for="application-element-size" data-i18n="ElementSize">Element size</label>
+        <select id="application-element-size">
+          <option value="small" data-i18n="Small">Small</option>
+          <option value="normal" selected data-i18n="Normal">Normal</option>
+          <option value="large" data-i18n="Large">Large</option>
+        </select>
+        <label class="check-option" for="application-api-progress-indicator">
+          <input id="application-api-progress-indicator" type="checkbox" />
+          <span data-i18n="ShowAProgressIndicatorDuringAPIRequests">Show a progress indicator during API requests</span>
+        </label>
+        <label class="check-option" for="application-api-progress-label">
+          <input id="application-api-progress-label" type="checkbox" />
+          <span data-i18n="ShowLoadingIndicatorLabel">Show loading indicator label</span>
+        </label>
+        <label class="check-option" for="application-show-error-message">
+          <input id="application-show-error-message" type="checkbox" />
+          <span data-i18n="ShowErrorMessage">Show error message</span>
+        </label>
+        <span class="binding-heading" data-i18n="PageMarginsPx">Page margins (px)</span>
+        <div class="spacing-grid" id="application-margins">
+          <label data-i18n="Top">Top<input type="number" min="0" max="100" data-app-spacing="marginTop" /></label>
+          <label data-i18n="Right">Right<input type="number" min="0" max="100" data-app-spacing="marginRight" /></label>
+          <label data-i18n="Bottom">Bottom<input type="number" min="0" max="100" data-app-spacing="marginBottom" /></label>
+          <label data-i18n="Left">Left<input type="number" min="0" max="100" data-app-spacing="marginLeft" /></label>
+        </div>
+        <span class="binding-heading" data-i18n="PagePaddingPx">Page padding (px)</span>
+        <div class="spacing-grid" id="application-paddings">
+          <label data-i18n="Top">Top<input type="number" min="0" max="100" data-app-spacing="paddingTop" /></label>
+          <label data-i18n="Right">Right<input type="number" min="0" max="100" data-app-spacing="paddingRight" /></label>
+          <label data-i18n="Bottom">Bottom<input type="number" min="0" max="100" data-app-spacing="paddingBottom" /></label>
+          <label data-i18n="Left">Left<input type="number" min="0" max="100" data-app-spacing="paddingLeft" /></label>
+        </div>
+        <label data-i18n="HeaderType"> Header type </label>
+        <select id="application-topbar-type">
+          <option value="title" data-i18n="Title">Title</option>
+          <option value="standard" selected data-i18n="Standard">standard</option>
+          <option value="none" data-i18n="None">None</option>
+        </select>
+        <label class="field-label" for="application-logo-asset" data-i18n="AppLogoImage">App logo image</label>
+        <select id="application-logo-asset">
+          <option value="" data-i18n="NoImage">No image</option>
+        </select>
+        <button class="button button-quiet" id="application-theme" type="button" data-i18n="AppColors">
+          App colors
+        </button>
+        <div class="property-section app-load-events">
+          <span class="field-help" data-i18n="actionsrunonceinitial">Actions run once after the app's initial data has loaded.</span>
+          <button class="button button-primary workflow-launch-button" type="button"
+            data-open-workflow-manager="app-load" data-i18n="ManageAppLoadEvents" data-i18n-node="2">
+            <i class="fa-solid fa-diagram-project" aria-hidden="true"></i>
+            Manage app load events
+          </button>
+        </div>
+        <p class="field-help" data-i18n="clickareapreviewreturn">
+          Click an empty area in the preview to return to app properties.
+        </p>
+      </div>
+      <form class="properties-form" id="properties-form" hidden>
+        <label class="field-label" for="property-element-id" data-i18n="ElementID">Element ID</label>
+        <input id="property-element-id" type="text" maxlength="100" dir="ltr" />
+        <span class="field-help" data-i18n="uniqueidstartingletter">Unique ID starting with a letter or _; may contain letters, numbers, _, ., :, or -.</span>
+        <label class="check-option" id="hidden-field">
+          <input id="property-hidden" type="checkbox" />
+          <span data-i18n="HideElementInApp">Hide element in app</span>
+        </label>
+        <label class="check-option" id="disabled-field" hidden>
+          <input id="property-disabled" type="checkbox" />
+          <span data-i18n="DisableElement">Disable element</span>
+        </label>
+        <label class="field-label" id="property-content-label" for="property-content" data-i18n="Text">Text</label>
+        <input id="property-content" type="text" />
+        <span class="field-help" id="property-content-language"></span>
+        <div class="plugin-properties" id="plugin-properties" hidden></div>
+        <div id="card-fields" hidden>
+          <label class="field-label" for="property-card-header" data-i18n="CardHeader">Card header</label>
+          <input id="property-card-header" type="text" />
+          <label class="field-label" for="property-card-footer" data-i18n="CardFooter">Card footer</label>
+          <textarea id="property-card-footer" rows="2"></textarea>
+        </div>
+        <div id="card-slot-field" hidden>
+          <label class="field-label" for="property-card-slot" data-i18n="ElementPositionInCard">Element position in card</label>
+          <select id="property-card-slot">
+            <option value="content" data-i18n="Content">Content</option>
+            <option value="footer" data-i18n="Footer">Footer</option>
+          </select>
+        </div>
+
+        <div id="icon-fields" hidden>
+          <label class="field-label" for="property-icon-class" data-i18n="FontAwesomeIcon">Font Awesome icon</label>
+          <input id="property-icon-class" type="text" maxlength="60" dir="ltr" placeholder="fa-star" />
+          <span class="field-help" data-i18n="ExampleFaStarFaHeartOrFaHouse">Example: fa-star, fa-heart, or fa-house.</span>
+        </div>
+        <div id="image-fields" hidden>
+          <label class="field-label" for="property-image-url" data-i18n="ImageURL">Image URL</label>
+          <input id="property-image-url" type="url" dir="ltr" placeholder="https://example.com/image.jpg" />
+          <label class="field-label" for="property-image-asset" data-i18n="OrChooseAnImageFromAssets">Or choose an image from assets</label>
+          <select id="property-image-asset">
+            <option value="" data-i18n="NoSavedAsset">No saved asset</option>
+          </select>
+          <label class="field-label" for="property-image-fit" data-i18n="ImageFit">Image fit</label>
+          <select id="property-image-fit">
+            <option value="cover" data-i18n="Cover">Cover</option>
+            <option value="contain" data-i18n="Contain">Contain</option>
+          </select>
+        </div>
+
+        <details class="property-section">
+          <summary data-i18n="AppearanceAlternativeA">Appearance</summary>
+          <label class="field-label" for="property-color" data-i18n="TextColor">Text color</label>
+          <div class="color-field">
+            <input id="property-color" type="color" value="#183b35" />
+            <span id="color-value">#183B35</span>
+          </div>
+          <div id="background-color-field">
+            <label class="field-label" for="property-background" data-i18n="BackgroundColor">Background color</label>
+            <div class="color-field">
+              <input id="property-background" type="color" value="#ffffff" />
+              <span id="background-value">#FFFFFF</span>
+            </div>
+          </div>
+          <div id="background-transparent-field">
+            <label class="check-option">
+              <input id="property-background-transparent" type="checkbox" />
+              <span data-i18n="TransparentBackground">Transparent background</span>
+            </label>
+          </div>
+          <div id="ripple-effect-field">
+            <label class="check-option">
+              <input id="property-ripple-effect" type="checkbox" />
+              <span data-i18n="RippleEffect">Ripple effect</span>
+            </label>
+          </div>
+          <div id="button-variant-fields" hidden>
+            <label class="field-label" for="property-variant" data-i18n="ButtonVariant">Button variant</label>
+            <select id="property-variant">
+              <option value="primary" data-i18n="Primary">Primary</option>
+              <option value="secondary" data-i18n="Secondary">Secondary</option>
+              <option value="success" data-i18n="Success">Success</option>
+              <option value="warning" data-i18n="Warning">Warning</option>
+              <option value="destructive" data-i18n="Destructive">Destructive</option>
+              <option value="ghost" data-i18n="Ghost">Ghost</option>
+              <option value="outline" data-i18n="Outline">Outline</option>
+              <option value="custom" data-i18n="Custom">Custom</option>
+            </select>
+          </div>
+          <div class="field-row">
+
+            <label class="field-label" for="property-font-size" data-i18n="FontSize">Font size</label>
+            <div class="number-field">
+              <input id="property-font-size" type="number" min="14" max="36" value="16" />
+              <span>px</span>
+            </div>
+          </div>
+
+            <div class="field-row">
+              <div>
+                <label class="field-label" for="property-width" data-i18n="Width">Width</label>
+                <input id="property-width" type="text" dir="ltr" maxlength="20" placeholder="auto, 100%, or 240px"
+                  aria-describedby="property-size-help"  data-i18n-placeholder="AutoOrPx"/>
+              </div>
+              <div>
+                <label class="field-label" for="property-height" data-i18n="Height">Height</label>
+                <input id="property-height" type="text" dir="ltr" maxlength="20" placeholder="auto, 100%, or 120px"
+                  aria-describedby="property-size-help"  data-i18n-placeholder="AutoOrPxAlternative"/>
+              </div>
+            </div>
+
+              <span class="binding-heading" data-i18n="MarginPx">Margin (px)</span>
+              <div class="spacing-grid">
+                <label data-i18n="Top">Top<input type="number" min="0" max="100" data-element-spacing="marginTop" /></label>
+                <label data-i18n="Right">Right<input type="number" min="0" max="100" data-element-spacing="marginRight" /></label>
+                <label data-i18n="Bottom">Bottom<input type="number" min="0" max="100" data-element-spacing="marginBottom" /></label>
+                <label data-i18n="Left">Left<input type="number" min="0" max="100" data-element-spacing="marginLeft" /></label>
+              </div>
+            </div>
+
+              <span class="binding-heading" data-i18n="PaddingPx">Padding (px)</span>
+              <div class="spacing-grid">
+                <label data-i18n="Top">Top<input type="number" min="0" max="48" data-element-spacing="paddingTop" /></label>
+                <label data-i18n="Right">Right<input type="number" min="0" max="48" data-element-spacing="paddingRight" /></label>
+                <label data-i18n="Bottom">Bottom<input type="number" min="0" max="48" data-element-spacing="paddingBottom" /></label>
+                <label data-i18n="Left">Left<input type="number" min="0" max="48" data-element-spacing="paddingLeft" /></label>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div>
+                <label class="field-label" for="property-border-width" data-i18n="BorderWidthPx">Border width (px)</label>
+                <input id="property-border-width" type="number" min="0" max="12" />
+              </div>
+              <div>
+                <label class="field-label" for="property-border-color" data-i18n="BorderColorAlternativeA">Border color</label>
+                <input id="property-border-color" type="color" value="#dbe5e1" />
+              </div>
+              <div>
+                <label class="field-label" for="property-border-radius" data-i18n="BorderRadiusPx">Border radius (px)</label>
+                <input id="property-border-radius" type="number" min="0" max="100" />
+              </div>
+            </div>
+
+            <label class="field-label" for="property-align" data-i18n="TextAlignment">Text alignment</label>
+            <select id="property-align">
+              <option value="start" data-i18n="StartAlternativeA">Start</option>
+              <option value="center" data-i18n="CenterAlternativeA">Center</option>
+              <option value="end" data-i18n="EndAlternativeA">End</option>
+            </select>
+
+            <label class="field-label" for="property-class-name" data-i18n="CSSClasses">CSS classes</label>
+            <input id="property-class-name" type="text" maxlength="200" dir="ltr"
+              placeholder="my-component highlighted" />
+            <span class="field-help" data-i18n="spaceseparatedclassnames">Space-separated class names; use them in custom CSS.</span>
+          </div>
+
+        </details>
+        
+        <details class="property-section">
+          <summary data-i18n="Layout">Layout</summary>
+          <div id="absolute-child-alignment-fields" hidden>
+            <span class="binding-heading" data-i18n="AlignElementWithinAbsoluteLayout">Align element within Absolute Layout</span>
+            <span class="field-label" data-i18n="HorizontalAlignment">Horizontal alignment</span>
+            <div id="property-horizontal-alignment-buttons"
+              class="layout-alignment-buttons layout-alignment-three"
+              data-layout-control="property-horizontal-alignment" role="group"
+              aria-label="Horizontal alignment" data-i18n-aria-label="HorizontalAlignment">
+              <button class="icon-button" type="button" data-layout-value="start" aria-label="Start"
+                title="Start" aria-pressed="false" data-i18n-aria-label="Start" data-i18n-title="Start">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 5v14M9 7h10M7 12h12M9 17h10" />
+                </svg>
+              </button>
+              <button class="icon-button" type="button" data-layout-value="center" aria-label="Center"
+                title="Center" aria-pressed="false" data-i18n-aria-label="Center" data-i18n-title="Center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M6 7h12M4 12h16M6 17h12" />
+                </svg>
+              </button>
+              <button class="icon-button" type="button" data-layout-value="end" aria-label="End"
+                title="End" aria-pressed="false" data-i18n-aria-label="End" data-i18n-title="End">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 4v16M9 7h10M9 12h7M9 17h10" />
+                </svg>
+              </button>
+            </div>
+            <select id="property-horizontal-alignment" hidden>
+              <option value="start" data-i18n="Start">Start</option>
+              <option value="center" data-i18n="Center">Center</option>
+              <option value="end" data-i18n="End">End</option>
+            </select>
+            <span class="field-label" data-i18n="VerticalAlignment">Vertical alignment</span>
+            <div id="property-vertical-alignment-buttons"
+              class="layout-alignment-buttons layout-alignment-three"
+              data-layout-control="property-vertical-alignment" role="group"
+              aria-label="Vertical alignment" data-i18n-aria-label="VerticalAlignment">
+              <button class="icon-button" type="button" data-layout-value="top" aria-label="Top"
+                title="Top" aria-pressed="false" data-i18n-aria-label="Top" data-i18n-title="Top">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 5h14M7 9v10M12 7v12M17 9v10" />
+                </svg>
+              </button>
+              <button class="icon-button" type="button" data-layout-value="center" aria-label="Center"
+                title="Center" aria-pressed="false" data-i18n-aria-label="Center" data-i18n-title="Center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M7 5v14M12 3v18M17 5v14" />
+                </svg>
+              </button>
+              <button class="icon-button" type="button" data-layout-value="bottom" aria-label="Bottom"
+                title="Bottom" aria-pressed="false" data-i18n-aria-label="Bottom" data-i18n-title="Bottom">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 19h14M7 5v10M12 5v12M17 5v10" />
+                </svg>
+              </button>
+            </div>
+            <select id="property-vertical-alignment" hidden>
+              <option value="top" data-i18n="Top">Top</option>
+              <option value="center" data-i18n="Center">Center</option>
+              <option value="bottom" data-i18n="Bottom">Bottom</option>
+            </select>
+          </div>
+          <div id="layout-fields" hidden>
+            <span class="binding-heading" data-i18n="GroupLayout">Group layout</span>
+            <div id="flow-layout-fields">
+            <div id="grid-columns-field" hidden>
+              <label class="field-label" for="property-grid-columns" data-i18n="Columns">Columns</label>
+              <div class="number-field">
+                <input id="property-grid-columns" type="number" min="1" max="12" value="2" />
+                <span data-i18n="Column">Column</span>
+              </div>
+            </div>
+            <label class="field-label" for="property-layout-direction" data-i18n="ItemDirection">Item direction</label>
+            <select id="property-layout-direction">
+              <option value="column" data-i18n="Vertical">Vertical</option>
+              <option value="row" data-i18n="Horizontal">Horizontal</option>
+            </select>
+            <span class="field-label" data-i18n="ItemAlignment">Item alignment</span>
+            <div id="property-layout-align-buttons" class="layout-alignment-buttons" role="group"
+              data-layout-control="property-layout-align" aria-label="Item alignment" data-i18n-aria-label="ItemAlignment">
+              <button class="icon-button" type="button" data-layout-value="start" aria-label="Start"
+                title="Start" aria-pressed="false" data-i18n-aria-label="Start" data-i18n-title="Start">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 4v16M9 7h10M9 12h7M9 17h10" />
+                </svg>
+              </button>
+              <button class="icon-button" type="button" data-layout-value="center" aria-label="Center"
+                title="Center" aria-pressed="false" data-i18n-aria-label="Center" data-i18n-title="Center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M6 7h12M4 12h16M6 17h12" />
+                </svg>
+              </button>
+              <button class="icon-button" type="button" data-layout-value="end" aria-label="End"
+                title="End" aria-pressed="false" data-i18n-aria-label="End" data-i18n-title="End">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M19 4v16M5 7h10M8 12h8M5 17h10" />
+                </svg>
+              </button>
+              <button class="icon-button" type="button" data-layout-value="stretch" aria-label="Stretch"
+                title="Stretch" aria-pressed="false" data-i18n-aria-label="Stretch" data-i18n-title="Stretch">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 6h14M5 12h14M5 18h14M3 6l2-2 2 2M21 6l-2-2-2 2M3 18l2 2 2-2M21 18l-2 2-2-2" />
+                </svg>
+              </button>
+            </div>
+            <select id="property-layout-align" hidden>
+              <option value="stretch" data-i18n="Stretch">Stretch</option>
+              <option value="start" data-i18n="StartAlternativeA">Start</option>
+              <option value="center" data-i18n="CenterAlternativeA">Center</option>
+              <option value="end" data-i18n="EndAlternativeA">End</option>
+            </select>
+            <span class="field-label" data-i18n="ItemDistribution">Item distribution</span>
+            <div id="property-layout-justify-buttons" class="layout-alignment-buttons"
+              data-layout-control="property-layout-justify" role="group" aria-label="Item distribution" data-i18n-aria-label="ItemDistribution">
+              <button class="icon-button" type="button" data-layout-value="start" aria-label="Start"
+                title="Start" aria-pressed="false" data-i18n-aria-label="Start" data-i18n-title="Start">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 6v12M7 7h4M7 12h3M7 17h4" />
+                </svg>
+              </button>
+              <button class="icon-button" type="button" data-layout-value="center" aria-label="Center"
+                title="Center" aria-pressed="false" data-i18n-aria-label="Center" data-i18n-title="Center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M9 7h6M7 12h10M9 17h6" />
+                </svg>
+              </button>
+              <button class="icon-button" type="button" data-layout-value="end" aria-label="End"
+                title="End" aria-pressed="false" data-i18n-aria-label="End" data-i18n-title="End">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20 6v12M13 7h4M14 12h3M13 17h4" />
+                </svg>
+              </button>
+              <button class="icon-button" type="button" data-layout-value="space-between"
+                aria-label="Space between" title="Space between" aria-pressed="false" data-i18n-aria-label="SpaceBetween" data-i18n-title="SpaceBetween">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M5 6v12M12 6v12M19 6v12M3 8l2-2 2 2M21 16l-2 2-2-2" />
+                </svg>
+              </button>
+            </div>
+            <select id="property-layout-justify" hidden>
+              <option value="start" data-i18n="StartAlternativeA">Start</option>
+              <option value="center" data-i18n="CenterAlternativeA">Center</option>
+              <option value="end" data-i18n="EndAlternativeA">End</option>
+              <option value="space-between" data-i18n="SpaceBetween">Space between</option>
+            </select>
+            <label class="field-label" for="property-layout-gap" data-i18n="ItemSpacing">Item spacing</label>
+            <div class="number-field">
+              <input id="property-layout-gap" type="number" min="0" max="48" value="8" />
+              <span>px</span>
+            </div>
+            <div id="scroll-view-fields" hidden>
+              <span class="binding-heading" data-i18n="ScrollSettings">Scroll settings</span>
+              <label class="field-label" for="property-scroll-axis" data-i18n="ScrollDirection">Scroll direction</label>
+              <select id="property-scroll-axis">
+                <option value="vertical" data-i18n="Vertical">Vertical</option>
+                <option value="horizontal" data-i18n="Horizontal">Horizontal</option>
+                <option value="both" data-i18n="Both">Both</option>
+              </select>
+            </div>
+            </div>
+            <span class="field-help" data-i18n="dragelementscollectionthem">Drag elements into the collection to add them, or drag them out to remove them.</span>
+          </div>
+        </details>
+        <details class="property-section">
+          <summary data-i18n="FieldSettings">Field settings</summary>
+          <div id="field-name-field" hidden>
+            <label class="field-label" for="property-field-name" data-i18n="ValuesFieldName">Values field name</label>
+            <input id="property-field-name" type="text" maxlength="40" dir="ltr" placeholder="selected_items" />
+            <span class="field-help" data-i18n="namebuttonvalues">Use this name in button values: {{form.selected_items}}</span>
+            <div id="input-type-field" hidden>
+              <label class="field-label" for="property-input-type" data-i18n="InputFieldType">Input field type</label>
+              <select id="property-input-type">
+                <option value="text" data-i18n="TextAlternativeA">Text</option>
+                <option value="number" data-i18n="Number">Number</option>
+                <option value="email" data-i18n="Email">Email</option>
+                <option value="tel" data-i18n="Phone">Phone</option>
+                <option value="url" data-i18n="URL">URL</option>
+                <option value="password" data-i18n="Password">Password</option>
+                <option value="search" data-i18n="Search">Search</option>
+                <option value="date" data-i18n="Date">Date</option>
+                <option value="time" data-i18n="Time">Time</option>
+                <option value="datetime-local" data-i18n="DateAndTime">Date and time</option>
+                <option value="month" data-i18n="Month">Month</option>
+                <option value="week" data-i18n="Week">Week</option>
+                <option value="color" data-i18n="Color">Color</option>
+                <option value="range" data-i18n="Range">Range</option>
+              </select>
+              <div class="field-row">
+                <div>
+                  <label class="field-label" for="property-input-min" data-i18n="MinimumValue">Minimum value</label>
+                  <input id="property-input-min" type="text" dir="ltr" />
+                </div>
+                <div>
+                  <label class="field-label" for="property-input-max" data-i18n="MaximumValue">Maximum value</label>
+                  <input id="property-input-max" type="text" dir="ltr" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="progress-fields" hidden>
+            <label class="field-label" for="property-progress-mode" data-i18n="ProgressMode">Progress mode</label>
+            <select id="property-progress-mode">
+              <option value="indeterminate" data-i18n="Indeterminate">Indeterminate</option>
+              <option value="determinate" data-i18n="Determinate">Determinate</option>
+            </select>
+            <div id="progress-value-fields" hidden>
+              <div class="field-row">
+                <div>
+                  <label class="field-label" for="property-progress-value" data-i18n="Value">Value</label>
+                  <input id="property-progress-value" type="number" min="0" value="0" />
+                </div>
+                <div>
+                  <label class="field-label" for="property-progress-max" data-i18n="Maximum">Maximum</label>
+                  <input id="property-progress-max" type="number" min="1" value="100" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <label class="check-option" id="multiple-field" hidden>
+            <input id="property-multiple" type="checkbox" />
+            <span data-i18n="AllowMultipleSelectionsSendsAnArray">Allow multiple selections (sends an array)</span>
+          </label>
+          <div id="file-picker-fields" hidden>
+            <label class="field-label" for="property-file-picker-mode" data-i18n="SelectionCount">Selection count</label>
+            <select id="property-file-picker-mode">
+              <option value="single" data-i18n="SingleImageOption">Single image</option>
+              <option value="multiple" data-i18n="MultipleImagesOption">Multiple images</option>
+            </select>
+            <label class="field-label" for="property-file-picker-appearance" data-i18n="Appearance">Appearance</label>
+            <select id="property-file-picker-appearance">
+              <option value="button" data-i18n="ButtonAppearanceOption">Button</option>
+              <option value="dropzone" data-i18n="DragAndDropUploadArea">Drag-and-drop upload area</option>
+            </select>
+            <span class="field-help" data-i18n="openstawakkalnanativeimage">Opens Tawakkalna's native image picker; the value is a JSON array for reading and data binding.</span>
+          </div>
+          <div id="checked-field" hidden>
+            <label class="check-option">
+              <input id="property-checked" type="checkbox" />
+              <span data-i18n="CheckedByDefault">Checked by default</span>
+            </label>
+          </div>
+          <div id="checkbox-value-field" hidden>
+            <label class="field-label" for="property-checkbox-value" data-i18n="CheckboxValueJSON">Checkbox value (JSON)</label>
+            <input id="property-checkbox-value" type="text" dir="ltr" spellcheck="false" value="true" />
+            <span class="field-help" data-i18n="valueusedcollectingcheckboxes">This value is used when collecting checkboxes with the same name.</span>
+          </div>
+        </details>
+        <details class="property-section">
+          <summary data-i18n="ExtraElementData">Extra element data</summary>
+          <span class="field-help" data-i18n="namedvaluesactionselement">Add named values to use in actions or element bindings. Values can be plain text or tokens such as {{item.id}}, {{twk.user_id}}, {{var.name}}, {{api.requestId.data.id}}, and {{form.field_name}}.</span>
+          <div id="element-extra-data-list"></div>
+          <button class="button button-quiet" type="button" id="add-element-extra-data" data-i18n="AddDataItem">
+            Add data item
+          </button>
+        </details>
+          <details class="property-section">
+          <summary data-i18n="DataSources">Data sources</summary>
+          <div id="collection-source-fields" hidden>
+            <label class="field-label" for="property-collection-source" data-i18n="CollectionItemSource">Collection item source</label>
+            <select id="property-collection-source">
+              <option value="static" data-i18n="StaticItemsJSONAlternativeA">Static items (JSON)</option>
+              <option value="endpoint" data-i18n="APIResponse">API response</option>
+              <option value="twk" data-i18n="TawakkalnaData">Tawakkalna data</option>
+            </select>
+            <div id="collection-endpoint-fields" hidden>
+              <label class="field-label" for="property-collection-endpoint" data-i18n="APIRequest">API request</label>
+              <select id="property-collection-endpoint"></select>
+              <label class="field-label" for="property-collection-path" data-i18n="ArrayPath">Array path</label>
+              <input id="property-collection-path" type="text" dir="ltr" placeholder="data.items" />
+            </div>
+            <div id="collection-twk-fields" hidden>
+              <label class="field-label" for="property-collection-twk-field" data-i18n="TawakkalnaField">Tawakkalna field</label>
+              <select id="property-collection-twk-field"></select>
+            </div>
+            <span class="field-help" data-i18n="elementscollectionchildelemen">Add elements to this collection; its child elements repeat for each record.</span>
+          </div>
+          <div id="collection-item-fields" hidden>
+            <label class="field-label" for="property-collection-items" data-i18n="StaticItemsJSON">Static items (JSON)</label>
+            <textarea id="property-collection-items" rows="5" dir="ltr" spellcheck="false"></textarea>
+          </div>
+          <div id="list-source-fields" hidden>
+            <span class="binding-heading" data-i18n="ListOptionsSource">List options source</span>
+            <label class="field-label" for="property-list-source" data-i18n="OptionsSource">Options source</label>
+            <select id="property-list-source">
+              <option value="static" data-i18n="StaticOptions">Static options</option>
+              <option value="endpoint" data-i18n="APIResponse">API response</option>
+              <option value="twk" data-i18n="TawakkalnaData">Tawakkalna data</option>
+            </select>
+            <div id="list-endpoint-fields" hidden>
+              <label class="field-label" for="property-list-endpoint" data-i18n="APIRequest">API request</label>
+              <select id="property-list-endpoint"></select>
+              <label class="field-label" for="property-list-path" data-i18n="ArrayPath">Array path</label>
+              <input id="property-list-path" type="text" dir="ltr" placeholder="data.items" />
+            </div>
+            <div id="list-twk-fields" hidden>
+              <label class="field-label" for="property-list-twk-field" data-i18n="TawakkalnaField">Tawakkalna field</label>
+              <select id="property-list-twk-field"></select>
+            </div>
+            <label class="field-label" for="property-list-label-path" data-i18n="ItemLabelPath">Item label path</label>
+            <input id="property-list-label-path" type="text" dir="ltr" placeholder="name" />
+            <label class="field-label" for="property-list-value-path" data-i18n="ValuePathInItem">Value path in item</label>
+            <input id="property-list-value-path" type="text" dir="ltr" placeholder="id" />
+            <span class="field-help" data-i18n="textitemsleavepaths">For text items, leave both paths empty. If the value path is empty, the entire item is used.</span>
+          </div>
+          <div id="data-source-static-options" hidden>
+            <span class="binding-heading" data-i18n="StaticOptions">Static options</span>
+            <div id="list-static-options" hidden>
+              <label class="field-label" for="property-list-options" data-i18n="ListOptions">List options</label>
+              <textarea id="property-list-options" rows="5" dir="ltr" spellcheck="false"></textarea>
+              <span class="field-help"><span data-i18n="AddVerb">Add </span><code>"selected":true</code><span data-i18n="SelectOptionsDefaultHelp"> to mark an option as selected by default. Multiple default options can be selected when multi-select is enabled.</span></span>
+            </div>
+          </div>
+          <div class="binding-section">
+            <span class="binding-heading" data-i18n="DataBinding">Data binding</span>
+            <label class="field-label" for="property-binding-source" data-i18n="ContentSource">Content source</label>
+            <select id="property-binding-source">
+              <option value="static" data-i18n="StaticContent">Static content</option>
+              <option value="form" data-i18n="FormFieldAlternativeA">Form field</option>
+              <option value="twk" data-i18n="TawakkalnaData">Tawakkalna data</option>
+              <option value="endpoint" data-i18n="APIResponse">API response</option>
+              <option value="variable" data-i18n="SavedVariable">Saved variable</option>
+              <option value="item" data-i18n="FieldFromTheCurrentListItem">Field from the current list item</option>
+              <option value="extra" data-i18n="ElementExtraData">Element extra data</option>
+              <option value="element" data-i18n="PropertyFromAnotherElement">Property from another element</option>
+            </select>
+            <div id="radio-static-options" hidden>
+              <span class="binding-heading" data-i18n="StaticContent">Static content</span>
+              <label class="field-label" for="property-options" data-i18n="RadioOptions">Radio options</label>
+              <textarea id="property-options" rows="5" dir="ltr" spellcheck="false"></textarea>
+              <span class="field-help"><span data-i18n="AddVerb">Add </span><code>"selected":true</code><span data-i18n="RadioDefaultOptionHelp"> to the default option. If more than one option is selected, only the first is used.</span></span>
+            </div>
+            <div id="binding-object-path-fields" hidden>
+              <label class="field-label" for="property-binding-object-path" data-i18n="JSONPropertyPathOptional">JSON property path (optional)</label>
+              <input id="property-binding-object-path" type="text" dir="ltr" placeholder="profile.name" />
+            </div>
+            <div id="extra-binding-fields" hidden>
+              <label class="field-label" for="property-binding-extra" data-i18n="ExtraDataItem">Extra data item</label>
+              <select id="property-binding-extra"></select>
+              <span class="field-help"><span data-i18n="ExtraDataBindingHelpBeforeToken">You can bind elements inside or outside the collection to extra data; when the value uses </span><code>{{item.id}}</code><span data-i18n="ExtraDataBindingHelpAfterToken"> the element outside the collection will use the last row you clicked.</span></span>
+            </div>
+            <div id="item-binding-fields" hidden>
+              <label class="field-label" for="property-item-binding-path" data-i18n="FieldPathInItem">Field path in item</label>
+              <input id="property-item-binding-path" type="text" dir="ltr" placeholder="title or user.name"  data-i18n-placeholder="ItemPropertyPathPlaceholder"/>
+            </div>
+            <div id="item-choice-fields" hidden>
+              <span class="binding-heading" data-i18n="CollectionItemPathsHeading">Collection item paths</span>
+              <label class="field-label" for="property-item-label-path" data-i18n="ItemLabelPath">Item label path</label>
+              <input id="property-item-label-path" type="text" dir="ltr" placeholder="name" />
+              <label class="field-label" for="property-item-value-path" data-i18n="ValuePathInItem">Value path in item</label>
+              <input id="property-item-value-path" type="text" dir="ltr" placeholder="id" />
+            </div>
+            <div id="form-binding-fields" hidden>
+              <label class="field-label" for="property-binding-form-field" data-i18n="FormField">Form field</label>
+              <select id="property-binding-form-field"></select>
+            </div>
+            <div id="twk-binding-fields" hidden>
+              <label class="field-label" for="property-twk-field" data-i18n="TawakkalnaField">Tawakkalna field</label>
+              <select id="property-twk-field"></select>
+              <span class="field-help" data-i18n="editorusessamplecalls">The editor uses sample data. The app calls TWK when running inside Tawakkalna.</span>
+            </div>
+            <div id="endpoint-binding-fields" hidden>
+              <label class="field-label" for="property-binding-endpoint" data-i18n="APIRequest">API request</label>
+              <select id="property-binding-endpoint"></select>
+              <label class="field-label" for="property-binding-path" data-i18n="ResponsePath">Response path</label>
+              <input id="property-binding-path" type="text" placeholder="data.profile.full_name" dir="ltr" />
+              <span class="field-help" data-i18n="ExampleDataProfileNameOrResultsTitle">Example: data.profile.name or results.0.title</span>
+            </div>
+            <div id="variable-binding-fields" hidden>
+              <label class="field-label" for="property-binding-variable" data-i18n="Variable">Variable</label>
+              <select id="property-binding-variable"></select>
+            </div>
+            <div id="element-binding-fields" hidden>
+              <label class="field-label" for="property-binding-element" data-i18n="SourceElement">Source element</label>
+              <select id="property-binding-element"></select>
+              <label class="field-label" for="property-binding-element-property" data-i18n="Property">Property</label>
+              <select id="property-binding-element-property"></select>
+            </div>
+          </div>
+        </details>
+        <div class="property-section workflow-launcher-section">
+          <button class="button button-primary workflow-launch-button" type="button"
+            data-open-workflow-manager="element" data-i18n="ManageEventsActions" data-i18n-node="2">
+            <i class="fa-solid fa-diagram-project" aria-hidden="true"></i>
+            Manage Events &amp; Actions
+          </button>
+          <div class="button-action-fields" id="button-action-fields" hidden>
+            <span class="binding-heading" data-i18n="EventsAndActions">Events and actions</span>
+            <div id="action-request-fields">
+              <label class="field-label" for="property-action-request" data-i18n="APIRequest">API request</label>
+              <select id="property-action-request"></select>
+            </div>
+            <div id="service-id-field" hidden>
+              <label class="field-label" for="property-service-id" data-i18n="ServiceID">Service ID</label>
+              <input id="property-service-id" type="text" dir="ltr" placeholder="service_id" />
+            </div>
+            <div id="action-navigation-fields" hidden>
+              <label class="field-label" for="property-action-page" data-i18n="TargetPage">Target page</label>
+              <select id="property-action-page"></select>
+            </div>
+            <div id="action-variable-fields" hidden>
+              <label class="field-label" for="property-action-variable" data-i18n="Variable">Variable</label>
+              <select id="property-action-variable"></select>
+              <label class="field-label" for="property-action-variable-value" data-i18n="ValueJSONFormNameOrTwkField">Value (JSON, {{form.name}}, or {{twk.field}})</label>
+              <textarea id="property-action-variable-value" rows="3" dir="ltr" spellcheck="false"
+                placeholder="{{form.field_name}}"></textarea>
+              <span class="field-help" data-i18n="completetokenwithoutquotes">Use a complete token without quotes to get a value from a form field, Tawakkalna, a variable, or an API response, or enter a static JSON value.</span>
+            </div>
+            <div id="action-change-property-fields" hidden>
+              <label class="field-label" for="property-action-target-element" data-i18n="TargetElement">Target element</label>
+              <select id="property-action-target-element"></select>
+              <label class="field-label" for="property-action-property" data-i18n="Property">Property</label>
+              <select id="property-action-property">
+                <option value="content" data-i18n="ContentText">Content / text</option>
+                <option value="visibility" data-i18n="Visibility">Visibility</option>
+              </select>
+              <div id="action-property-content-field">
+                <label class="field-label" for="property-action-property-value" data-i18n="ValueTextOrToken">Value (text or token)</label>
+                <textarea id="property-action-property-value" rows="3" dir="ltr"
+                  placeholder="{{form.field_name}}"></textarea>
+              </div>
+              <div id="action-property-visibility-field" hidden>
+                <label class="field-label" for="property-action-property-visibility" data-i18n="State">State</label>
+                <select id="property-action-property-visibility">
+                  <option value="show" data-i18n="ShowElement">Show element</option>
+                  <option value="hide" data-i18n="HideElement">Hide element</option>
+                </select>
+              </div>
+            </div>
+            <div id="action-message-fields" hidden>
+              <label class="field-label" for="property-action-message-title" data-i18n="MessageDialogTitle">Message dialog title</label>
+              <input id="property-action-message-title" type="text" maxlength="80" placeholder="Message"  data-i18n-placeholder="Message"/>
+              <label class="field-label" for="property-action-message" data-i18n="MessageText">Message text</label>
+              <textarea id="property-action-message" rows="3" dir="ltr"
+                placeholder="Saved successfully or {{var.message}}" data-i18n-placeholder="SavedMessagePlaceholder"></textarea>
+              <span class="field-help" data-i18n="supportsplaintexttokens">Supports plain text and {{twk.field}}, {{form.name}}, {{var.name}}, and {{api.requestId.path}} tokens.</span>
+            </div>
+            <div id="action-condition-fields" hidden>
+              <span class="binding-heading" data-i18n="ConditionAlternativeA">Condition</span>
+              <label class="field-label" for="property-condition-source" data-i18n="ValueSource">Value source</label>
+              <select id="property-condition-source">
+                <option value="static" data-i18n="StaticContent">Static content</option>
+                <option value="form" data-i18n="FormFieldAlternativeA">Form field</option>
+                <option value="twk" data-i18n="TawakkalnaData">Tawakkalna data</option>
+                <option value="endpoint" data-i18n="APIResponse">API response</option>
+                <option value="variable" data-i18n="SavedVariable">Saved variable</option>
+                <option value="item" data-i18n="FieldFromTheCurrentListItem">Field from the current list item</option>
+                <option value="extra" data-i18n="ElementExtraData">Element extra data</option>
+                <option value="element" data-i18n="PropertyFromAnotherElement">Property from another element</option>
+              </select>
+              <div id="condition-object-path-fields" hidden>
+                <label class="field-label" for="property-condition-object-path" data-i18n="JSONPropertyPathOptional">JSON property path (optional)</label>
+                <input id="property-condition-object-path" type="text" dir="ltr" placeholder="profile.name" />
+              </div>
+              <div id="condition-static-fields" hidden>
+                <label class="field-label" for="property-condition-static-value" data-i18n="StaticValueJSONAlternativeA">Static value (JSON)</label>
+                <textarea id="property-condition-static-value" rows="2" dir="ltr" spellcheck="false">null</textarea>
+              </div>
+              <div id="condition-api-fields" hidden>
+                <label class="field-label" for="property-condition-request" data-i18n="APIRequest">API request</label>
+                <select id="property-condition-request"></select>
+                <label class="field-label" for="property-condition-path" data-i18n="ValuePath">Value path</label>
+                <input id="property-condition-path" type="text" dir="ltr" placeholder="data.status" />
+              </div>
+              <div id="condition-variable-fields" hidden>
+                <label class="field-label" for="property-condition-variable" data-i18n="Variable">Variable</label>
+                <select id="property-condition-variable"></select>
+              </div>
+              <div id="condition-twk-fields" hidden>
+                <label class="field-label" for="property-condition-twk-field" data-i18n="TawakkalnaField">Tawakkalna field</label>
+                <select id="property-condition-twk-field"></select>
+              </div>
+              <div id="condition-form-fields" hidden>
+                <label class="field-label" for="property-condition-form-field" data-i18n="FormFieldName">Form field name</label>
+                <input id="property-condition-form-field" type="text" dir="ltr" placeholder="field_name" />
+              </div>
+              <div id="condition-item-fields" hidden>
+                <label class="field-label" for="property-condition-item-path" data-i18n="FieldPathInTheCurrentItem">Field path in the current item</label>
+                <input id="property-condition-item-path" type="text" dir="ltr" placeholder="name or user.id"  data-i18n-placeholder="ItemFieldPlaceholder"/>
+              </div>
+              <div id="condition-extra-fields" hidden>
+                <label class="field-label" for="property-condition-extra" data-i18n="ExtraDataItem">Extra data item</label>
+                <select id="property-condition-extra"></select>
+              </div>
+              <div id="condition-element-fields" hidden>
+                <label class="field-label" for="property-condition-element-page" data-i18n="SourcePage">Source page</label>
+                <select id="property-condition-element-page"></select>
+                <label class="field-label" for="property-condition-element" data-i18n="SourceElement">Source element</label>
+                <select id="property-condition-element"></select>
+                <label class="field-label" for="property-condition-element-property" data-i18n="Property">Property</label>
+                <select id="property-condition-element-property"></select>
+              </div>
+              <label class="field-label" for="property-condition-operator" data-i18n="Comparison">Comparison</label>
+              <select id="property-condition-operator">
+                <option value="equals" data-i18n="Equals">Equals</option>
+                <option value="notEquals" data-i18n="DoesNotEqual">Does not equal</option>
+                <option value="empty" data-i18n="Empty">Empty</option>
+                <option value="notEmpty" data-i18n="IsNotEmpty">Is not empty</option>
+                <option value="greaterThan" data-i18n="GreaterThan">Greater than</option>
+                <option value="lessThan" data-i18n="LessThan">Less than</option>
+                <option value="contains" data-i18n="Contains">Contains</option>
+              </select>
+              <div id="condition-value-fields">
+                <label class="field-label" for="property-condition-value" data-i18n="ComparisonValueJSONOrToken">Comparison value (JSON or token)</label>
+                <textarea id="property-condition-value" rows="2" dir="ltr" spellcheck="false"
+                  placeholder='"active", 18, or {{var.expected}}'></textarea>
+              </div>
+              <span class="field-help" data-i18n="apiresponsemustload">The API response must load before the condition is evaluated. Compare numeric values using JSON numbers.</span>
+              <span class="binding-heading" data-i18n="ActionsWhenConditionIsTrue">Actions when condition is true</span>
+              <div id="condition-actions"></div>
+              <button class="button button-quiet" type="button" data-add-condition-action="actions" data-i18n="AddAnActionForTheTrueBranch">
+                Add an action for the true branch
+              </button>
+              <span class="binding-heading" data-i18n="ActionsWhenConditionIsFalse">Actions when condition is false</span>
+              <div id="condition-elseActions"></div>
+              <button class="button button-quiet" type="button" data-add-condition-action="elseActions" data-i18n="AddAnActionForElse">
+                Add an action for Else
+              </button>
+            </div>
+            <div id="action-values-fields">
+              <label class="field-label" for="property-action-values" data-i18n="SubmittedValuesJSON">Submitted values (JSON)</label>
+              <textarea id="property-action-values" rows="5" dir="ltr" spellcheck="false"
+                placeholder='{"selected":"{{form.selected_items}}","ids":[1,2]}'></textarea>
+              <span class="field-help" data-i18n="JSONActionValuesHelp">JSON values preserve their numbers and arrays. Use {{form.field_name}} for the selected value, {{twk.full_name}} for Tawakkalna data, {{var.variable_name}} for a saved variable, or {{api.requestId.data.status}} from an API response.</span>
+            </div>
+          </div>
+        </div>
+      
+        <div class="selection-actions" role="group" aria-label="Selected element actions" data-i18n-aria-label="SelectedElementActions">
+          <span class="selection-actions-heading" data-i18n="ElementActions">Element actions</span>
+          <button class="button button-primary selection-action" id="edit-saved-component" type="button" hidden data-i18n="EditComponentInPreview" data-i18n-node="2">
+            <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+            Edit component in preview
+          </button>
+          <button class="button button-secondary selection-action" id="save-selected-component" type="button" hidden data-i18n="SaveGroupAsComponent" data-i18n-node="2">
+            <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+            Save group as component
+          </button>
+          <button class="button button-quiet selection-action" id="duplicate-element" type="button" data-i18n="DuplicateElement" data-i18n-node="2">
+            <i class="fa-solid fa-copy" aria-hidden="true"></i>
+            Duplicate element
+          </button>
+          <button class="button button-danger selection-action" id="delete-element" type="button" disabled data-i18n="DeleteElement" data-i18n-node="2">
+            <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+            Delete element
+          </button>
+        </div>
+      </form>
+      <div class="inspector-note">
+        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        <p data-i18n="changessavedautomaticallybrow">Changes are saved automatically in this browser.</p>
+      </div>
+    </aside>
+  </main>
+
+  <dialog class="export-dialog" id="export-dialog" aria-labelledby="export-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow" data-i18n="ReadyToEmbed">Ready to embed</span>
+        <h2 id="export-title" data-i18n="ExportApp">Export app</h2>
+      </div>
+      <button class="icon-button" id="close-export" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <p class="dialog-intro" data-i18n="downloadstandalonehtmlfilealt">
+      Download a standalone HTML file or copy the code into your project.
+    </p>
+    <div class="export-tabs" role="tablist" aria-label="App files" data-i18n-aria-label="AppFiles">
+      <button class="export-tab active" type="button" role="tab" aria-selected="true" data-tab="html">
+        HTML
+      </button>
+      <button class="export-tab" type="button" role="tab" aria-selected="false" data-tab="css">
+        CSS
+      </button>
+      <button class="export-tab" type="button" role="tab" aria-selected="false" data-tab="js">
+        JavaScript
+      </button>
+    </div>
+    <pre class="code-preview"><code id="export-code"></code></pre>
+    <div class="dialog-actions">
+      <button class="button button-quiet" id="copy-code" type="button" data-i18n="CopyCode">
+        Copy code
+      </button>
+      <button class="button button-primary" id="download-app" type="button" data-i18n="DownloadApp">
+        Download app
+      </button>
+    </div>
+    <p class="integration-note" data-i18n="zipincludesfontawesome">
+      The ZIP includes Font Awesome and custom.css. The app also loads the TWK helper; do not put secrets in this file.
+    </p>
+  </dialog>
+  <dialog class="export-dialog variables-dialog" id="variables-dialog" aria-labelledby="variables-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow" data-i18n="DataSources">Data sources</span>
+        <h2 id="variables-title" data-i18n="ManageVariables">Manage variables</h2>
+      </div>
+      <button class="icon-button" id="close-variables" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <p class="dialog-intro"><span data-i18n="DefineAValueOnceAndUseItAs">
+      Define a value once and use it as </span><code>{{var.name}}</code><span data-i18n="InContentAPIRequestsAndComponentActions"> in content, API requests, and component actions.
+    </span></p>
+    <div class="api-layout variables-layout">
+      <aside class="api-list-panel">
+        <button class="button button-quiet add-request-button" id="add-variable" type="button" data-i18n="NewVariable" data-i18n-node="2">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i> New variable
+        </button>
+        <div class="request-list" id="variable-list"></div>
+      </aside>
+      <section class="api-editor-panel">
+        <div class="api-empty" id="variable-empty">
+          <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>
+          <strong data-i18n="AddAVariableToGetStarted">Add a variable to get started</strong>
+          <p data-i18n="choosestaticvalueform">Choose a static value, form field, TWK data, or API response.</p>
+        </div>
+        <form class="api-form" id="variable-form" hidden>
+          <label class="field-label" for="variable-name" data-i18n="VariableName">Variable name</label>
+          <input id="variable-name" type="text" required maxlength="40" pattern="[A-Za-z_][A-Za-z0-9_]*"
+            placeholder="user_email" dir="ltr" />
+          <span class="field-help" data-i18n="englishlettersnumbersundersco">Use English letters, numbers, and underscores; names must start with a letter or _.</span>
+          <label class="field-label" for="variable-source" data-i18n="ValueSource">Value source</label>
+          <select id="variable-source">
+            <option value="static" data-i18n="StaticContent">Static content</option>
+            <option value="form" data-i18n="FormFieldAlternativeA">Form field</option>
+            <option value="twk" data-i18n="TawakkalnaData">Tawakkalna data</option>
+            <option value="endpoint" data-i18n="APIResponse">API response</option>
+            <option value="variable" data-i18n="SavedVariable">Saved variable</option>
+            <option value="item" data-i18n="FieldFromTheCurrentListItem">Field from the current list item</option>
+            <option value="extra" data-i18n="ElementExtraData">Element extra data</option>
+            <option value="element" data-i18n="PropertyFromAnotherElement">Property from another element</option>
+          </select>
+          <div id="variable-property-path-fields" hidden>
+            <label class="field-label" for="variable-property-path" data-i18n="JSONPropertyPathOptional">JSON property path (optional)</label>
+            <input id="variable-property-path" type="text" dir="ltr" placeholder="profile.name" />
+          </div>
+          <div id="variable-static-fields">
+            <label class="field-label" for="variable-static-value" data-i18n="ValueJSON">Value (JSON)</label>
+            <textarea id="variable-static-value" rows="4" dir="ltr" spellcheck="false"></textarea>
+          </div>
+          <div id="variable-form-fields" hidden>
+            <label class="field-label" for="variable-form-field" data-i18n="FormFieldOnCurrentPage">Form field on current page</label>
+            <select id="variable-form-field"></select>
+          </div>
+          <div id="variable-twk-fields" hidden>
+            <label class="field-label" for="variable-twk-field" data-i18n="TawakkalnaField">Tawakkalna field</label>
+            <select id="variable-twk-field"></select>
+          </div>
+          <div id="variable-endpoint-fields" hidden>
+            <label class="field-label" for="variable-endpoint" data-i18n="APIRequest">API request</label>
+            <select id="variable-endpoint"></select>
+            <label class="field-label" for="variable-endpoint-path" data-i18n="ResponsePath">Response path</label>
+            <input id="variable-endpoint-path" type="text" dir="ltr" placeholder="data.profile.id" />
+          </div>
+          <div id="variable-item-fields" hidden>
+            <label class="field-label" for="variable-item-path" data-i18n="FieldPathInTheCurrentItem">Field path in the current item</label>
+            <input id="variable-item-path" type="text" dir="ltr" placeholder="name or user.id"  data-i18n-placeholder="ItemFieldPlaceholder"/>
+          </div>
+          <div id="variable-extra-fields" hidden>
+            <label class="field-label" for="variable-extra-source" data-i18n="ExtraDataItem">Extra data item</label>
+            <select id="variable-extra-source"></select>
+          </div>
+          <div id="variable-element-fields" hidden>
+            <label class="field-label" for="variable-element-source" data-i18n="SourceElement">Source element</label>
+            <select id="variable-element-source"></select>
+            <label class="field-label" for="variable-element-property" data-i18n="Property">Property</label>
+            <select id="variable-element-property"></select>
+          </div>
+          <div id="variable-variable-fields" hidden>
+            <label class="field-label" for="variable-variable-source" data-i18n="SourceVariable">Source variable</label>
+            <select id="variable-variable-source"></select>
+          </div>
+          <div class="request-actions">
+            <button class="button button-quiet" id="delete-variable" type="button" data-i18n="Delete" data-i18n-node="2">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i> Delete
+            </button>
+            <button class="button button-primary" type="submit" data-i18n="SaveVariable" data-i18n-node="2">
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Save variable
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </dialog>
+  <dialog class="export-dialog project-gallery-dialog" id="project-gallery-dialog"
+    aria-labelledby="project-gallery-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow" data-i18n="ProjectGallery">Project gallery</span>
+        <h2 id="project-gallery-title" data-i18n="SavedSampleProjects">Saved sample projects</h2>
+      </div>
+      <button class="icon-button" id="close-project-gallery" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <p class="dialog-intro" data-i18n="SelectAProjectToLoadIt">Select a project to load it.</p>
+    <p class="project-gallery-status" id="project-gallery-status" role="status" aria-live="polite" data-i18n="LoadingProjects">
+      Loading projects...
+    </p>
+    <div class="project-gallery-list" id="project-gallery-list"></div>
+  </dialog>
+  <dialog class="export-dialog plugin-picker-dialog" id="plugin-picker-dialog"
+    aria-labelledby="plugin-picker-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow" data-i18n="PluginLibrary">Plugin library</span>
+        <h2 id="plugin-picker-title" data-i18n="ChoosePlugins">Choose plugins</h2>
+      </div>
+      <button class="icon-button" id="close-plugin-picker" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <p class="dialog-intro" id="plugin-picker-intro" data-i18n="PluginPickerIntroduction">
+      Choose plugins to show in the element library. Plugins used by this project cannot be hidden.
+    </p>
+    <div class="dialog-body">
+      <button class="button button-primary" id="import-plugin" type="button"
+        aria-label="Import plugin ZIP" title="Import plugin ZIP"
+        data-i18n-aria-label="ImportPluginZIP" data-i18n-title="ImportPluginZIP">
+        <i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i>
+        <span data-i18n="ImportPluginZIP">Import plugin ZIP</span>
+      </button>
+      <input id="import-plugin-file" type="file" accept=".zip,application/zip" hidden />
+    </div>
+    <p class="plugin-picker-empty" id="plugin-picker-empty" role="status" hidden></p>
+    <div class="plugin-picker-list" id="plugin-picker-list"></div>
+  </dialog>
+  <dialog class="export-dialog assets-dialog" id="assets-dialog" aria-labelledby="assets-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow" data-i18n="ProjectLibrary">Project library</span>
+        <h2 id="assets-title" data-i18n="ManageAssets">Manage assets</h2>
+      </div>
+      <button class="icon-button" id="close-assets" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <p class="dialog-intro" data-i18n="AssetsLibraryDescription">
+      Add images, audio, video, and JavaScript files for offline functions. Assets are included in the project and ZIP package; total local storage is limited to 2 MB.
+    </p>
+    <div class="asset-toolbar">
+      <label class="button button-primary" for="asset-files" data-i18n="AddFiles" data-i18n-node="2">
+        <i class="fa-solid fa-upload" aria-hidden="true"></i>
+        Add files
+      </label>
+      <input id="asset-files" type="file" multiple hidden />
+    </div>
+    <p class="asset-empty" id="asset-empty" data-i18n="NoAssetsYet">No assets yet.</p>
+    <div class="asset-list" id="asset-list"></div>
+  </dialog>
+  <dialog class="export-dialog custom-css-dialog" id="custom-css-dialog" aria-labelledby="custom-css-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow" data-i18n="AdvancedCustomization">Advanced customization</span>
+        <h2 id="custom-css-title" data-i18n="CustomCSS">Custom CSS</h2>
+      </div>
+      <button class="icon-button" id="close-custom-css" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <p class="dialog-intro"><span data-i18n="TargetCSSClassesAssignedToElementsSuchAs">
+      Target CSS classes assigned to elements, such as
+      </span><code>.my-component { color: red; }</code><span data-i18n="rulespreviewedsavedcustomalt">. Rules are previewed in the app and saved as custom.css in the ZIP.
+    </span></p>
+    <details class="custom-css-theme-reference">
+      <summary data-i18n="ThemeColorVariables">Theme color variables</summary>
+      <p data-i18n="clickvariableinsertcursor">Click a variable to insert it at the cursor. Values follow the active light or dark theme.</p>
+      <div id="custom-css-theme-variables" class="custom-css-theme-variables"></div>
+    </details>
+    <form id="custom-css-form">
+      <label class="field-label" for="custom-css-source" data-i18n="CSSRules">CSS rules</label>
+      <textarea id="custom-css-source" data-code-language="css" rows="16" spellcheck="false" dir="ltr"></textarea>
+      <div class="dialog-actions">
+        <button class="button button-quiet" id="cancel-custom-css" type="button" data-i18n="Cancel">
+          Cancel
+        </button>
+        <button class="button button-primary" type="submit" data-i18n="SaveCSS">Save CSS</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="export-dialog api-dialog" id="api-dialog" aria-labelledby="api-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow" data-i18n="DataAndIntegrations">Data and integrations</span>
+        <h2 id="api-title" data-i18n="APIRequests">API requests</h2>
+      </div>
+      <button class="icon-button" id="close-api" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <p class="dialog-intro" data-i18n="createhttprequestinclude">
+      Create an HTTP request and include TWK data, form fields, or variables in its URL, headers, and body.
+    </p>
+    <div class="api-layout">
+      <aside class="api-list-panel">
+        <button class="button button-quiet add-request-button" id="add-request" type="button" data-i18n="AddRequest" data-i18n-node="2">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i> Add request
+        </button>
+        <div class="request-list" id="request-list"></div>
+        <div class="api-security-note" data-i18n="putsecretswebbackend">
+          Do not put secrets in a web app; use a backend proxy to protect credentials.
+        </div>
+      </aside>
+      <section class="api-editor-panel">
+        <div class="api-empty" id="api-empty">
+          <span class="empty-icon" aria-hidden="true"><i class="fa-solid fa-code"></i></span>
+          <strong data-i18n="AddAnAPIRequestToGetStarted">Add an API request to get started</strong>
+          <p data-i18n="bindtawakkalnarequestdisplay">
+            Bind Tawakkalna data to a request, then display response fields in page elements.
+          </p>
+        </div>
+        <form class="api-form" id="api-form" hidden>
+          <label class="field-label" for="request-name" data-i18n="RequestName">Request name</label>
+          <input id="request-name" type="text" required maxlength="50" placeholder="User profile"  data-i18n-placeholder="UserProfile"/>
+          <label class="field-label" for="request-url" data-i18n="RequestURL">Request URL</label>
+          <div class="api-token-input">
+            <input id="request-url" type="url" required placeholder="https://api.example.com/profile" dir="ltr" />
+            <button class="button button-quiet token-picker-trigger" type="button" data-token-picker-for="request-url" aria-label="Insert a data token into the request URL">Insert token</button>
+          </div>
+          <div class="field-row">
+            <div>
+              <label class="field-label" for="request-method" data-i18n="RequestMethod">Request method</label>
+              <select id="request-method">
+                <option>GET</option>
+                <option>POST</option>
+                <option>PUT</option>
+                <option>PATCH</option>
+                <option>DELETE</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="request-run-on-load" data-i18n="AllowRunningWhenTheAppOpens">Allow running when the app opens</label>
+              <input id="request-run-on-load" type="checkbox" />
+            </div>
+          </div>
+
+          <section class="api-parameter-section" aria-labelledby="request-headers-title">
+            <div class="api-parameter-section-heading">
+              <h3 id="request-headers-title" data-i18n="Headers">Headers</h3>
+              <button class="button button-quiet" type="button" data-add-request-parameter="headers" data-i18n="AddHeader">Add header</button>
+            </div>
+            <div class="api-parameter-grid" id="request-headers-parameters" data-request-parameter-editor="headers"></div>
+            <p class="api-parameter-error" data-request-parameter-error="headers" role="status" hidden></p>
+            <details class="api-advanced-json">
+              <summary data-i18n="EditHeadersJSON">Edit headers JSON</summary>
+              <textarea id="request-headers" rows="4" dir="ltr" spellcheck="false">{}</textarea>
+            </details>
+          </section>
+          <section class="api-parameter-section" aria-labelledby="request-body-title">
+            <div class="api-parameter-section-heading">
+              <h3 id="request-body-title" data-i18n="RequestBody">Request body</h3>
+              <button class="button button-quiet" type="button" data-add-request-parameter="body" data-i18n="AddParameter">Add parameter</button>
+            </div>
+            <div class="api-parameter-grid" id="request-body-parameters" data-request-parameter-editor="body"></div>
+            <p class="api-parameter-error" data-request-parameter-error="body" role="status" hidden></p>
+            <details class="api-advanced-json">
+              <summary data-i18n="EditRequestBodyJSON">Edit request body JSON</summary>
+              <textarea id="request-body" rows="5" dir="ltr" spellcheck="false"
+                placeholder='{"full_name":"{{twk.full_name}}"}'></textarea>
+            </details>
+          </section>
+          <p class="field-help" data-i18n="tawakkalnavaluessavedvariable">
+            Use {{twk.full_name}} for Tawakkalna data, {{form.field_name}} for current page values, or {{var.variable_name}} for a saved variable.
+          </p>
+          <div class="request-actions">
+            <button class="button button-quiet" id="delete-request" type="button" data-i18n="DeleteRequest">
+              Delete request
+            </button>
+            <button class="button button-primary" id="test-request" type="button" data-i18n="TestRequest">
+              Test request
+            </button>
+          </div>
+          <div class="request-result" id="request-result" role="status" aria-live="polite">
+            No request has been sent.
+          </div>
+        </form>
+      </section>
+    </div>
+    <p class="integration-note"><span data-i18n="TheTestUsesValuesFrom">
+      The test uses values from
+      </span><a href="https://devportal.tawakkalna.sa/media/hlylfjqk/mock_profile102.json" target="_blank" rel="noreferrer" data-i18n="SampleProfileFile">sample profile file</a><span data-i18n="OnExportTheAppLoads">. On export, the app loads
+      </span><a href="https://devportal.tawakkalna.sa/media/sgmogof3/twkhelper.js" target="_blank" rel="noreferrer" data-i18n="OfficialTWKHelper">official TWK helper</a><span data-i18n="requestssentwebviewserveralt">. Requests are sent from the WebView; the server may need appropriate CORS configuration.
+    </span></p>
+  </dialog>
+  <dialog class="export-dialog theme-dialog" id="theme-dialog" aria-labelledby="theme-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow" data-i18n="ProjectAppearance">Project appearance</span>
+        <h2 id="theme-title" data-i18n="ThemeColors">Theme colors</h2>
+      </div>
+      <button class="icon-button" id="close-theme" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <p class="dialog-intro" data-i18n="ChangeThePreviewAndExportedAppColors">Change the preview and exported app colors.</p>
+    <form class="theme-form dialog-body" id="theme-form">
+      <label class="field-label" for="theme-mode-select" data-i18n="ColorPalette">Color palette</label>
+      <span class="field-help" data-i18n="chooselightdarkpalette">Choose the light or dark palette to edit its colors independently.</span>
+      <select id="theme-mode-select" aria-label="Color palette" data-i18n-aria-label="ColorPalette">
+        <option value="light" data-i18n="LightMode">Light mode</option>
+        <option value="dark" data-i18n="DarkMode">Dark mode</option>
+      </select>
+      <label class="field-label" for="theme-background" data-i18n="AppBackground">App background</label>
+      <span class="field-help" data-i18n="backgroundtextcolorused">App background and default text color. Used for the page structure and sections.</span>
+      <div class="color-field">
+        <input id="theme-background" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-foreground" data-i18n="TextColor">Text color</label>
+      <span class="field-help" data-i18n="textcolorusedprimary">Default text color used as the primary text throughout the app.</span>
+      <div class="color-field">
+        <input id="theme-foreground" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-card" data-i18n="CardBackground">Card background</label>
+      <span class="field-help" data-i18n="backgroundelevatedsurfacescar">Background for elevated surfaces such as cards, panels, and settings.</span>
+      <div class="color-field">
+        <input id="theme-card" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-cardForeground" data-i18n="CardTextColor">Card text color</label>
+      <span class="field-help" data-i18n="ContentColorOnElevatedSurfaces">Content color on elevated surfaces.</span>
+      <div class="color-field">
+        <input id="theme-cardForeground" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-popover" data-i18n="PopoverBackground">Popover background</label>
+      <span class="field-help" data-i18n="BackgroundForMenusAndFloatingLayers">Background for menus and floating layers.</span>
+      <div class="color-field">
+        <input id="theme-popover" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-popoverForeground" data-i18n="PopoverTextColor">Popover text color</label>
+      <span class="field-help" data-i18n="ContentColorInMenusAndFloatingLayers">Content color in menus and floating layers.</span>
+      <div class="color-field">
+        <input id="theme-popoverForeground" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-primary" data-i18n="PrimaryColor">Primary color</label>
+      <span class="field-help" data-i18n="brandprominentactioncolor">Brand and prominent action color. Used for primary buttons and selected states.</span>
+      <div class="color-field">
+        <input id="theme-primary" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-primaryForeground" data-i18n="PrimaryTextColor">Primary text color</label>
+      <span class="field-help" data-i18n="TextColorOnPrimarySurfaces">Text color on primary surfaces.</span>
+      <div class="color-field">
+        <input id="theme-primaryForeground" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-secondary" data-i18n="SecondaryColor">Secondary color</label>
+      <span class="field-help" data-i18n="subtlesupportingsurfaceused">Subtle supporting surface used for secondary buttons and badges.</span>
+      <div class="color-field">
+        <input id="theme-secondary" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-secondaryForeground" data-i18n="SecondaryTextColor">Secondary text color</label>
+      <span class="field-help" data-i18n="ContentColorOnSecondarySurfaces">Content color on secondary surfaces.</span>
+      <div class="color-field">
+        <input id="theme-secondaryForeground" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-muted" data-i18n="MutedBackground">Muted background</label>
+      <span class="field-help" data-i18n="subtlebackgroundusedsecondary">Subtle background used for secondary surfaces and empty states.</span>
+      <div class="color-field">
+        <input id="theme-muted" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-mutedForeground" data-i18n="MutedTextColor">Muted text color</label>
+      <span class="field-help" data-i18n="subtletextcolorused">Subtle text color used for descriptions, helper text, and placeholders.</span>
+      <div class="color-field">
+        <input id="theme-mutedForeground" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-accent" data-i18n="AccentColor">Accent color</label>
+      <span class="field-help" data-i18n="interactivesurfaceusedhover">Interactive surface used for hover, focus, and selected menu items.</span>
+      <div class="color-field">
+        <input id="theme-accent" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-accentForeground" data-i18n="AccentTextColor">Accent text color</label>
+      <span class="field-help" data-i18n="ContentColorOnInteractiveSurfaces">Content color on interactive surfaces.</span>
+      <div class="color-field">
+        <input id="theme-accentForeground" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-destructive" data-i18n="DestructiveActionColor">Destructive action color</label>
+      <span class="field-help" data-i18n="ColorForDestructiveActionsAndErrorStates">Color for destructive actions and error states.</span>
+      <div class="color-field">
+        <input id="theme-destructive" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-border" data-i18n="BorderColor">Border color</label>
+      <span class="field-help" data-i18n="colorbordersdividerscards">Color for borders and dividers in cards, menus, and tables.</span>
+      <div class="color-field">
+        <input id="theme-border" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-input" data-i18n="FieldColor">Field color</label>
+      <span class="field-help" data-i18n="ColorForFormFieldBordersAndSurfaces">Color for form-field borders and surfaces.</span>
+      <div class="color-field">
+        <input id="theme-input" type="color" /> <span></span>
+      </div>
+      <label class="field-label" for="theme-ring" data-i18n="FocusColor">Focus color</label>
+      <span class="field-help" data-i18n="colorfocusringsoutlines">Color for focus rings and outlines around interactive elements.</span>
+      <div class="color-field">
+        <input id="theme-ring" type="color" /> <span></span>
+      </div>
+    </form>
+    <div class="dialog-actions">
+      <button class="button button-quiet" id="reset-theme" type="button" data-i18n="RestoreDefaultColors">
+        Restore default colors
+      </button>
+      <button class="button button-primary" id="close-theme-done" type="button" data-i18n="Done">
+        Done
+      </button>
+    </div>
+  </dialog>
+  <dialog class="export-dialog component-dialog" id="component-dialog" aria-labelledby="component-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow" data-i18n="ReusableComponents">Reusable components</span>
+        <h2 id="component-title" data-i18n="SaveGroupAsComponent">Save group as component</h2>
+      </div>
+      <button class="icon-button" id="close-component" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <form id="component-form" class="dialog-body">
+      <label class="field-label" for="component-name" data-i18n="ComponentName">Component name</label>
+      <input id="component-name" type="text" maxlength="40" required placeholder="Information card"  data-i18n-placeholder="InformationCardPlaceholder"/>
+      <div class="dialog-actions">
+        <button class="button button-quiet" id="cancel-component" type="button" data-i18n="Cancel">
+          Cancel
+        </button>
+        <button class="button button-primary" type="submit" data-i18n="SaveComponent">
+          Save component
+        </button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="export-dialog component-dialog custom-markup-dialog" id="custom-markup-dialog"
+    aria-labelledby="custom-markup-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow" data-i18n="CustomComponent">Custom component</span>
+        <h2 id="custom-markup-title" data-i18n="AddHTMLAndCSSComponent">Add HTML and CSS component</h2>
+      </div>
+      <button class="icon-button" id="close-custom-markup" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <form id="custom-markup-form" class="dialog-body">
+      <label class="field-label" for="custom-markup-name" data-i18n="ComponentName">Component name</label>
+      <input id="custom-markup-name" type="text" maxlength="60" required />
+      <label class="field-label" for="custom-markup-html">HTML</label>
+      <textarea id="custom-markup-html" data-code-language="html" rows="10" dir="ltr" spellcheck="false" required
+        placeholder='<iframe title="Map" src="https://www.google.com/maps/embed?pb=..."></iframe>'></textarea>
+      <label class="field-label" for="custom-markup-css">CSS</label>
+      <textarea id="custom-markup-css" data-code-language="css" rows="8" dir="ltr" spellcheck="false"
+        placeholder=".map-frame { width: 100%; min-height: 300px; border: 0; }"></textarea>
+      <p class="field-help" data-i18n="customhtmlembeddedpreview">
+        Custom HTML is embedded as-is in the preview and export. Script tags are not run; use an iframe for external content.
+      </p>
+      <div class="dialog-actions">
+        <button class="button button-quiet" id="cancel-custom-markup" type="button" data-i18n="Cancel">
+          Cancel
+        </button>
+        <button class="button button-primary" type="submit" data-i18n="SaveComponent">
+          Save component
+        </button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="export-dialog component-dialog" id="global-actions-dialog"
+    aria-labelledby="global-actions-title">
+    <div class="dialog-heading">
+      <div>
+        <span class="eyebrow" data-i18n="ReusableActions">Reusable actions</span>
+        <h2 id="global-actions-title" data-i18n="GlobalActions">Global actions</h2>
+      </div>
+      <button class="icon-button" id="close-global-actions" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <p class="dialog-intro" data-i18n="createglobalactionedit">
+        Create a global action, edit its steps in the workflow editor, then call it from any action list.
+      </p>
+      <div id="global-actions-list"></div>
+      <div class="dialog-actions">
+        <button class="button button-quiet" id="add-global-action" type="button" data-i18n="AddGlobalAction">
+          Add global action
+        </button>
+        <button class="button button-primary" id="done-global-actions" type="button" data-i18n="Done">
+          Done
+        </button>
+      </div>
+    </div>
+  </dialog>
+  <dialog class="workflow-dialog" id="workflow-dialog" aria-labelledby="workflow-dialog-title">
+    <div class="workflow-dialog-heading">
+      <div>
+        <span class="eyebrow"></span>
+        <h2 id="workflow-dialog-title" data-i18n="ManageEventsActions">Manage Events & Actions</h2>
+      </div>
+      <button class="icon-button" id="close-workflow-dialog" type="button" aria-label="Close" data-i18n-aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="workflow-dialog-body">
+      <section id="element-workflow-section" class="workflow-dialog-section">
+        <button class="button button-primary" type="button" id="add-event-handler" data-i18n="AddAction">
+          Add Action
+        </button>
+        <div id="event-handlers"></div>
+      </section>
+      <section id="app-load-workflow-section" class="workflow-dialog-section" hidden>
+        <p class="field-help" data-i18n="AppLoadActionHelp">Actions for this event run once after the app's initial data has loaded.</p>
+        <button class="button button-primary" id="add-app-load-handler" type="button" data-i18n="AddAppLoadEvent">
+          Add App Load Event
+        </button>
+        <div id="app-load-event-handlers"></div>
+      </section>
+      <section id="global-action-workflow-section" class="workflow-dialog-section" hidden>
+        <p class="field-help" data-i18n="stepsrunorderglobal">Steps run in order when this global action is called.</p>
+        <button class="button button-primary" id="add-global-action-step" type="button" data-i18n="AddStep">
+          Add step
+        </button>
+        <div id="global-action-event-handlers"></div>
+      </section>
+    </div>
+    <div class="workflow-dialog-actions">
+      <span class="field-help" data-i18n="changessaveautomaticallypress">Changes save automatically. Press Ctrl/Cmd + S to save now, or Esc to close.</span>
+      <button class="button button-primary" id="save-close-workflow-dialog" type="button" data-i18n="SaveAndClose">
+        Save and close
+      </button>
+    </div>
+  </dialog>
+  <dialog class="token-picker-dialog" id="token-picker-dialog" aria-labelledby="token-picker-title">
+    <div class="token-picker-heading">
+      <div>
+        <span class="eyebrow">Dynamic values</span>
+        <h2 id="token-picker-title">Insert a token</h2>
+      </div>
+      <button class="icon-button" id="close-token-picker" type="button" aria-label="Close token picker">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+    <label class="field-label" for="token-picker-search">Search available tokens</label>
+    <input id="token-picker-search" type="search" autocomplete="off" placeholder="Search form fields, TWK, variables..." />
+    <div id="token-picker-options" class="token-picker-options"></div>
+    <p id="token-picker-empty" class="field-help" hidden>No matching tokens.</p>
+  </dialog>
+  <dialog class="export-dialog disclaimer-dialog" id="disclaimer-dialog" aria-labelledby="disclaimer-title">
+    <div class="dialog-heading">
+      <h2 id="disclaimer-title">Disclaimer</h2>
+    </div>
+    <div class="dialog-body disclaimer-dialog-body">
+      <p>This is an unofficial community and is not affiliated with, associated with, or endorsed by the official Tawakkalna team or the Saudi government. This project is maintained by individual contributors as an open-source community initiative.</p>
+      <p>Testing &amp; Code Responsibility Notice: The generated code has primarily been tested within Tawakkalna Developer Test Utility app. Developers are solely responsible for reviewing, auditing, and verifying all generated code and functionality within the official Tawakkalna environment before releasing their mini apps to ensure complete compatibility, security, and proper data handling.</p>
+    </div>
+    <div class="dialog-actions">
+      <button class="button button-primary" id="accept-disclaimer" type="button">Continue</button>
+    </div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+
+</html>

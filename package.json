@@ -1,0 +1,69 @@
+{
+  "name": "embedly",
+  "version": "1.0.0",
+  "description": "Embedly",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "author": {
+    "name": "Muhammad Alharbi",
+    "email": "muhammad.h.aljabri@gmail.com"
+  },
+  "license": "Apache 2.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "desktop:dev": "electron . --dev",
+    "desktop": "npm run build && electron .",
+    "desktop:package": "npm run build && electron-builder",
+    "test": "node --test tests/editor-modules.test.mjs tests/plugin-system.test.mjs tests/template-engine.test.mjs tests/electron-plugin-storage.test.mjs"
+  },
+  "build": {
+    "appId": "com.cyberoov.takween",
+    "productName": "Embedly",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "publish": {
+      "provider": "github"
+    }
+  },
+  "devDependencies": {
+    "electron": "^45.3.3",
+    "electron-builder": "^26.18.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
+  },
+  "allowScripts": {
+    "electron@39.8.10": true,
+    "electron-winstaller@5.4.0": true,
+    "esbuild@0.25.12": true
+  }
+}

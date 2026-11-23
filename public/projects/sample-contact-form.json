@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    {
+      "id": "page-home",
+      "name": "home",
+      "kind": "page"
+    },
+    {
+      "id": "page-loading",
+      "name": "loading",
+      "kind": "loading"
+    },
+    {
+      "id": "page-error",
+      "name": "error",
+      "kind": "error"
+    }
+  ],
+  "elements": [
+    {
+      "id": "contact-title",
+      "type": "heading",
+      "pageId": "page-home",
+      "parentId": null,
+      "content": "تواصل معنا",
+      "styles": {
+        "fontSize": 24,
+        "padding": 8
+      },
+      "localizations": {
+        "en": "Contact Us"
+      }
+    },
+    {
+      "id": "contact-description",
+      "type": "text",
+      "pageId": "page-home",
+      "parentId": null,
+      "content": "أدخل بياناتك وسنتواصل معك.",
+      "styles": {
+        "fontSize": 14,
+        "padding": 8
+      },
+      "localizations": {
+        "en": "Enter your details and we will be in touch"
+      }
+    },
+    {
+      "id": "contact-name",
+      "type": "input",
+      "pageId": "page-home",
+      "parentId": null,
+      "content": "الاسم الكامل",
+      "fieldName": "full_name",
+      "inputType": "text",
+      "styles": {
+        "fontSize": 14,
+        "padding": 8
+      },
+      "localizations": {
+        "en": "Full Name"
+      }
+    },
+    {
+      "id": "contact-email",
+      "type": "input",
+      "pageId": "page-home",
+      "parentId": null,
+      "content": "البريد الإلكتروني",
+      "fieldName": "email",
+      "inputType": "email",
+      "styles": {
+        "fontSize": 14,
+        "padding": 8
+      },
+      "localizations": {
+        "en": "Email"
+      }
+    },
+    {
+      "id": "contact-message",
+      "type": "input",
+      "pageId": "page-home",
+      "parentId": null,
+      "content": "رسالتك",
+      "fieldName": "message",
+      "inputType": "text",
+      "styles": {
+        "fontSize": 14,
+        "padding": 8
+      },
+      "localizations": {
+        "en": "Message"
+      }
+    },
+    {
+      "id": "contact-submit",
+      "type": "button",
+      "pageId": "page-home",
+      "parentId": null,
+      "content": "إرسال",
+      "styles": {
+        "fontSize": 16,
+        "padding": 12
+      },
+      "localizations": {
+        "en": "Send"
+      }
+    }
+  ],
+  "requests": [],
+  "components": [],
+  "userComponents": [],
+  "variables": [],
+  "assets": [],
+  "customCss": "",
+  "settings": {
+    "title": "نموذج تواصل",
+    "orgnization": "الخدمات الإلكترونية",
+    "appTopBarType": "standard",
+    "appLanguage": "ar"
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 5,
+  "pages": [
+    { "id": "page-home", "name": "home", "kind": "page" },
+    { "id": "page-splash", "name": "splash", "kind": "splash" },
+    { "id": "page-error", "name": "error", "kind": "error" }
+  ],
+  "elements": [
+    {
+      "id": "feedback-title",
+      "type": "heading",
+      "pageId": "page-home",
+      "content": "رأيك يهمنا",
+      "localizations": { "en": "We value your feedback" },
+      "styles": { "fontSize": 24 }
+    },
+    {
+      "id": "feedback-description",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "ساعدنا على تحسين خدماتنا بتقييم تجربتك.",
+      "localizations": { "en": "Help us improve by rating your experience." },
+      "styles": {}
+    },
+    {
+      "id": "feedback-rating",
+      "type": "list",
+      "pageId": "page-home",
+      "content": "التقييم",
+      "localizations": { "en": "Rating" },
+      "fieldName": "feedback_rating",
+      "options": [
+        { "label": "ممتاز", "value": "excellent" },
+        { "label": "جيد", "value": "good" },
+        { "label": "مقبول", "value": "average" },
+        { "label": "يحتاج إلى تحسين", "value": "needs_improvement" }
+      ],
+      "listSource": { "type": "static" },
+      "styles": {}
+    },
+    {
+      "id": "feedback-comment",
+      "type": "input",
+      "pageId": "page-home",
+      "content": "ملاحظاتك (اختياري)",
+      "localizations": { "en": "Your comments (optional)" },
+      "fieldName": "feedback_comment",
+      "styles": {}
+    },
+    {
+      "id": "feedback-preview",
+      "type": "text",
+      "pageId": "page-home",
+      "content": "ستظهر ملاحظاتك هنا أثناء الكتابة.",
+      "localizations": { "en": "Your comments will appear here as you type." },
+      "binding": { "source": "form", "path": "feedback_comment" },
+      "styles": {}
+    },
+    {
+      "id": "feedback-submit",
+      "type": "button",
+      "pageId": "page-home",
+      "content": "إرسال التقييم",
+      "localizations": { "en": "Send feedback" },
+      "action": {
+        "type": "condition",
+        "event": "click",
+        "condition": {
+          "source": "form",
+          "operator": "empty",
+          "fieldName": "feedback_rating"
+        },
+        "actions": [
+          {
+            "type": "message",
+            "title": "اختر تقييماً",
+            "message": "يرجى اختيار تقييم قبل الإرسال."
+          }
+        ],
+        "elseActions": [
+          {
+            "type": "message",
+            "title": "شكراً لمشاركتك",
+            "message": "وصلنا تقييمك: {{form.feedback_rating}}. ملاحظاتك: {{form.feedback_comment}}"
+          }
+        ]
+      },
+      "styles": { "variant": "primary" }
+    }
+  ],
+  "requests": [],
+  "components": [],
+  "userComponents": [],
+  "variables": [],
+  "assets": [],
+  "customCss": "",
+  "settings": {
+    "title": "تقييم الخدمة",
+    "orgnization": "الخدمات الإلكترونية",
+    "appTopBarType": "standard",
+    "appLanguage": "ar"
+  }
+}

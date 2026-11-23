@@ -1,0 +1,95 @@
+{
+  "id": "stepper",
+  "title": "Stepper",
+  "group": "Data & navigation",
+  "description": "Theme-aware multi-step progress control with child Step content and workflow events.",
+  "icon": "fa-list-ol",
+  "version": "1.0.0",
+  "acceptsChildren": true,
+  "properties": [
+    {
+      "key": "steps",
+      "label": "Step labels (separated by |)",
+      "type": "text",
+      "default": ""
+    },
+    {
+      "key": "currentStep",
+      "label": "Current step",
+      "type": "number",
+      "default": 1
+    },
+    {
+      "key": "orientation",
+      "label": "Orientation",
+      "type": "select",
+      "options": ["horizontal", "vertical"],
+      "default": "horizontal"
+    },
+    {
+      "key": "locale",
+      "label": "Language",
+      "type": "select",
+      "options": ["app", "en", "ar"],
+      "default": "app"
+    },
+    {
+      "key": "showControls",
+      "label": "Show navigation buttons",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "key": "showStatus",
+      "label": "Show status label",
+      "type": "boolean",
+      "default": true
+    }
+  ],
+  "events": ["onStepChanged", "onCompleted"],
+  "localizations": {
+    "en": {
+      "properties": {
+        "orientation": {
+          "options": {
+            "horizontal": "Horizontal",
+            "vertical": "Vertical"
+          }
+        },
+        "locale": {
+          "options": {
+            "app": "App language",
+            "en": "English",
+            "ar": "Arabic"
+          }
+        }
+      }
+    },
+    "ar": {
+      "title": "متتبع الخطوات",
+      "group": "البيانات والتنقل",
+      "description": "مؤشر تقدم متعدد الخطوات يراعي السمة ويدعم محتوى الخطوات وأحداث سير العمل.",
+      "properties": {
+        "steps": { "label": "عناوين الخطوات (افصل بينها بـ |)" },
+        "currentStep": { "label": "الخطوة الحالية" },
+        "orientation": {
+          "label": "الاتجاه",
+          "options": {
+            "horizontal": "أفقي",
+            "vertical": "عمودي"
+          }
+        },
+        "locale": {
+          "label": "اللغة",
+          "options": {
+            "app": "لغة التطبيق",
+            "en": "الإنجليزية",
+            "ar": "العربية"
+          }
+        },
+        "showControls": { "label": "إظهار أزرار التنقل" },
+        "showStatus": { "label": "إظهار حالة الخطوة" }
+      }
+    }
+  }
+}

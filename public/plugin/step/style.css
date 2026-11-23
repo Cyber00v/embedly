@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+:host([hidden]) {
+  display: none !important;
+}
+
+:host > div {
+  height: 100%;
+  min-height: 0;
+}
+
+.step-content {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
+}

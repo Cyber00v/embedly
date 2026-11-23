@@ -1,0 +1,28 @@
+{
+  "id": "step",
+  "title": "Step",
+  "group": "Data & navigation",
+  "description": "A content container for one Stepper step.",
+  "icon": "fa-list-ol",
+  "version": "1.0.0",
+  "acceptsChildren": true,
+  "properties": [
+    {
+      "key": "label",
+      "label": "Step label",
+      "type": "text",
+      "default": ""
+    }
+  ],
+  "events": [],
+  "localizations": {
+    "ar": {
+      "title": "خطوة",
+      "group": "البيانات والتنقل",
+      "description": "حاوية محتوى لخطوة واحدة ضمن متتبع الخطوات.",
+      "properties": {
+        "label": { "label": "عنوان الخطوة" }
+      }
+    }
+  }
+}
