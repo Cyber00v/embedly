@@ -20,20 +20,20 @@ const configuredLabels = labels.length ? labels : defaultLabels;
 const stepsSlot = root.querySelector("[data-stepper-steps]");
 const stepElements = stepsSlot
   ? stepsSlot
-      .assignedElements()
-      .filter((element) => element.dataset.pluginId === "step")
+    .assignedElements()
+    .filter((element) => element.dataset.pluginId === "step")
   : [];
 const steps = stepElements.length
   ? stepElements.map((element, index) => {
-      const stepProperties = JSON.parse(
-        element.dataset.pluginProperties || "{}",
-      );
-      const label =
-        typeof stepProperties.label === "string"
-          ? stepProperties.label.trim()
-          : "";
-      return label || configuredLabels[index] || `Step ${index + 1}`;
-    })
+    const stepProperties = JSON.parse(
+      element.dataset.pluginProperties || "{}",
+    );
+    const label =
+      typeof stepProperties.label === "string"
+        ? stepProperties.label.trim()
+        : "";
+    return label || configuredLabels[index] || `Step ${index + 1}`;
+  })
   : configuredLabels;
 let currentStep = Math.max(
   1,
@@ -50,9 +50,8 @@ stepper.dataset.orientation =
   properties.orientation === "vertical" ? "vertical" : "horizontal";
 stepper.lang = locale;
 
-controls.hidden = properties.showControls === false;
-status.hidden = properties.showStatus === false;
-
+if (controls) controls.hidden = properties.showControls === false;
+if (status) status.hidden = properties.showStatus === false;
 function render() {
   list.replaceChildren();
   stepElements.forEach((element, index) => {
@@ -94,6 +93,15 @@ function render() {
   backButton.disabled = currentStep === 1;
 }
 
+function emitStepChange(previousStep, currentStep) {
+  pluginContext.setProperty("currentStep", currentStep);
+  pluginContext.emit("onStepChanged", {
+    step: currentStep,
+    previousStep,
+    title: steps[currentStep - 1],
+  });
+}
+
 function onClick(event) {
   const target = event.target;
   if (!(target instanceof Element)) return;
@@ -110,17 +118,10 @@ function onClick(event) {
       return;
     }
     currentStep += 1;
-  } else {
-    return;
   }
 
   render();
-  pluginContext.setProperty("currentStep", currentStep);
-  pluginContext.emit("onStepChanged", {
-    step: currentStep,
-    previousStep,
-    title: steps[currentStep - 1],
-  });
+  emitStepChange(previousStep, currentStep)
 }
 
 function next() {
@@ -131,14 +132,19 @@ function next() {
     });
     return;
   }
+
+  const previousStep = currentStep;
   currentStep += 1;
   render();
+  emitStepChange(previousStep, currentStep)
 }
 
 function previous() {
   if (currentStep <= 1) return;
+  const previousStep = currentStep;
   currentStep -= 1;
   render();
+  emitStepChange(previousStep, currentStep)
 }
 
 pluginContext.exposeFunction("next", next);

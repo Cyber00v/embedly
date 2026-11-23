@@ -1,6 +1,6 @@
 {
   "name": "embedly",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Embedly",
   "type": "module",
   "main": "electron/main.cjs",
@@ -23,7 +23,7 @@
     "test": "node --test tests/editor-modules.test.mjs tests/plugin-system.test.mjs tests/template-engine.test.mjs tests/electron-plugin-storage.test.mjs"
   },
   "build": {
-    "appId": "com.cyberoov.takween",
+    "appId": "com.cyberoov.embedly",
     "productName": "Embedly",
     "directories": {
       "output": "release"

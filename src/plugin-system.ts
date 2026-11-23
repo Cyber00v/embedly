@@ -81,9 +81,9 @@ interface ZipConstructor {
 }
 
 interface PluginHost extends HTMLElement {
-  __takweenPluginCleanup?: () => void;
-  __takweenPluginFunctions?: Map<string, (...args: unknown[]) => unknown>;
-  __takweenPluginPendingUpdate?: boolean;
+  __embedlyPluginCleanup?: () => void;
+  __embedlyPluginFunctions?: Map<string, (...args: unknown[]) => unknown>;
+  __embedlyPluginPendingUpdate?: boolean;
 }
 
 const SAFE_ID = /^[a-z][a-z0-9-]{1,63}$/;
@@ -637,8 +637,8 @@ export function mountPluginElements(
     }
 
     const shadow = host.shadowRoot || host.attachShadow({ mode: "open" });
-    const previousCleanup = host.__takweenPluginCleanup;
-    delete host.__takweenPluginCleanup;
+    const previousCleanup = host.__embedlyPluginCleanup;
+    delete host.__embedlyPluginCleanup;
     if (typeof previousCleanup === "function") {
       try {
         previousCleanup();
@@ -650,7 +650,7 @@ export function mountPluginElements(
       string,
       (...args: unknown[]) => unknown
     >();
-    host.__takweenPluginFunctions = exportedFunctions;
+    host.__embedlyPluginFunctions = exportedFunctions;
 
     try {
       let storedProperties: unknown = {};
@@ -749,10 +749,10 @@ export function mountPluginElements(
       const language = inheritedLanguage.toLowerCase().startsWith("ar")
         ? "ar"
         : "en";
-      host.setAttribute(
-        "aria-label",
-        plugin.localizations?.[language]?.title ?? plugin.title,
-      );
+      // This initializer is serialized into exported apps, so keep localization self-contained.
+      const localizedTitle =
+        plugin.localizations?.[language]?.title ?? plugin.title;
+      host.setAttribute("aria-label", localizedTitle);
       const emit = (event: string, detail?: unknown) => {
         if (
           !["click", "change", "input"].includes(event) &&
@@ -841,10 +841,10 @@ export function mountPluginElements(
           };
           host.dataset.pluginProperties = JSON.stringify(nextProperties);
           onPropertyChange?.(host, key, normalizedValue);
-          if (host.__takweenPluginPendingUpdate) return;
-          host.__takweenPluginPendingUpdate = true;
+          if (host.__embedlyPluginPendingUpdate) return;
+          host.__embedlyPluginPendingUpdate = true;
           queueMicrotask(() => {
-            host.__takweenPluginPendingUpdate = false;
+            host.__embedlyPluginPendingUpdate = false;
             if (!host.isConnected) return;
             mountPluginElements(host, definitions, onPropertyChange);
             emit("change", { property: key, value: normalizedValue });
@@ -868,7 +868,7 @@ export function mountPluginElements(
         plugin.js,
       ).call(host, shadow, pluginContext, pluginWindow);
       if (typeof cleanup === "function")
-        host.__takweenPluginCleanup = cleanup;
+        host.__embedlyPluginCleanup = cleanup;
     } catch (error) {
       exportedFunctions.clear();
       console.error("Plugin initialization failed:", plugin.id, error);
@@ -880,7 +880,7 @@ export function mountPluginElements(
         (error instanceof Error ? error.message : String(error));
       shadow.append(message);
       host.dispatchEvent(
-        new CustomEvent("takween-plugin:error", {
+        new CustomEvent("embedly-plugin:error", {
           bubbles: true,
           composed: true,
           detail: { pluginId: plugin.id, error },
@@ -898,10 +898,10 @@ export function unmountPluginElements(root: ParentNode): void {
     ...root.querySelectorAll<PluginHost>("[data-plugin-id]"),
   ];
   hosts.forEach((host) => {
-    const cleanup = host.__takweenPluginCleanup;
-    delete host.__takweenPluginCleanup;
-    host.__takweenPluginFunctions?.clear();
-    delete host.__takweenPluginFunctions;
+    const cleanup = host.__embedlyPluginCleanup;
+    delete host.__embedlyPluginCleanup;
+    host.__embedlyPluginFunctions?.clear();
+    delete host.__embedlyPluginFunctions;
     if (typeof cleanup !== "function") return;
     try {
       cleanup();

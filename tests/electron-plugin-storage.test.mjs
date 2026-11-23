@@ -9,7 +9,7 @@ const require = createRequire(import.meta.url);
 const { createPluginStorage } = require("../electron/plugin-storage.cjs");
 
 async function createStorage(t) {
-  const root = await mkdtemp(path.join(os.tmpdir(), "takween-plugin-storage-"));
+  const root = await mkdtemp(path.join(os.tmpdir(), "embedly-plugin-storage-"));
   const bundledRoot = path.join(root, "bundled");
   const userRoot = path.join(root, "user", "plugin");
   await mkdir(path.join(bundledRoot, "bundled-plugin"), { recursive: true });

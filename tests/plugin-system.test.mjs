@@ -390,7 +390,7 @@ test("mounts plugins into native Shadow DOM and exposes scoped plugin context", 
     );
     assert.equal(host.shadowRoot.children[1].innerHTML, "<p>&lt;script&gt;alert(1)&lt;/script&gt;</p>");
     assert.equal(host.attributes["aria-label"], "بطاقة الطقس");
-    assert.equal(host.__takweenPluginFunctions.get("getLanguage")(), "ar");
+    assert.equal(host.__embedlyPluginFunctions.get("getLanguage")(), "ar");
     assert.deepEqual(host.events.map((event) => event.type), [
       "click",
       "onDaySelected",
@@ -403,7 +403,7 @@ test("mounts plugins into native Shadow DOM and exposes scoped plugin context", 
     assert.equal(host.events[0].bubbles, true);
     assert.equal(host.events[0].composed, true);
     assert.equal(
-      host.__takweenPluginFunctions.get("getCity")(),
+      host.__embedlyPluginFunctions.get("getCity")(),
       "<script>alert(1)</script>",
     );
 
@@ -417,12 +417,12 @@ test("mounts plugins into native Shadow DOM and exposes scoped plugin context", 
       "change",
     ]);
     assert.equal(
-      host.__takweenPluginFunctions.get("getCity")(),
+      host.__embedlyPluginFunctions.get("getCity")(),
       "<script>alert(1)</script>",
     );
 
     unmountPluginElements(host);
-    assert.equal(host.__takweenPluginFunctions, undefined);
+    assert.equal(host.__embedlyPluginFunctions, undefined);
     assert.deepEqual(host.events.map((event) => event.type), [
       "click",
       "onDaySelected",

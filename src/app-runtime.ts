@@ -1515,7 +1515,7 @@ export function startRuntime(
       ).find((target) => target.matches("[data-plugin-id]"));
       if (!pluginHost)
         throw new Error("The selected plugin element is unavailable.");
-      const pluginFunctions = pluginHost.__takweenPluginFunctions;
+      const pluginFunctions = pluginHost.__embedlyPluginFunctions;
       functionValue = pluginFunctions?.get(action.functionName);
       if (typeof functionValue !== "function")
         throw new Error(

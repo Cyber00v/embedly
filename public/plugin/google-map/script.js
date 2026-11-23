@@ -22,8 +22,8 @@ const messages =
 const status = root.querySelector("[data-map-status]");
 const mapCanvas = root.querySelector("[data-map-canvas]");
 root.querySelector(".map-widget").setAttribute("aria-label", messages.map);
-const loaderKey = "__takweenGoogleMapsApiLoader";
-const callbackName = "__takweenGoogleMapsApiReady";
+const loaderKey = "__embedlyGoogleMapsApiLoader";
+const callbackName = "__embedlyGoogleMapsApiReady";
 let active = true;
 let map;
 let marker;
