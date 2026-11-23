@@ -135,6 +135,7 @@ export function startRuntime(
     }
     applyAppAppearance();
     await runInitialRequests();
+    await Promise.all([twkBindingsReady, staticCollectionsReady]);
     startupSplashPending = false;
     if (
       activePageId === INITIAL_SPLASH_PAGE_ID &&
@@ -1446,7 +1447,7 @@ export function startRuntime(
     updateElementPropertyBindings();
   }
 
-  initializeStaticCollections().catch((error) => {
+  const staticCollectionsReady = initializeStaticCollections().catch((error) => {
     const message = "Unable to initialize collection items: " + error.message;
     showErrorPage(message);
     document.dispatchEvent(new CustomEvent("embedded-app:error", { detail: { message } }));
@@ -3262,7 +3263,7 @@ export function startRuntime(
     });
   });
 
-  loadTwkBindings();
+  const twkBindingsReady = loadTwkBindings();
   async function runInitialRequests() {
     try {
       for (const request of API_REQUESTS.filter(

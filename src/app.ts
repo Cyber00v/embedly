@@ -1109,8 +1109,8 @@ function applyEditorLanguage() {
   const editorToggle = document.querySelector("#editor-language-toggle");
   const editorToggleLabel =
     editorLanguage === "ar"
-      ? localize.EnglishLanguage.en
-      : localize.ArabicLanguage.ar;
+      ? localize.EnglishLanguage.ar
+      : localize.ArabicLanguage.en;
   if (editorToggle.textContent !== editorToggleLabel)
     editorToggle.textContent = editorToggleLabel;
 }
@@ -4715,8 +4715,8 @@ function renderPreview(updateProperties = true) {
   if (updateProperties) renderProperties();
   document.querySelector("#app-language-toggle").textContent =
     state.settings.appLanguage === "ar"
-      ? localize.EnglishLanguage.en
-      : localize.ArabicLanguage.ar;
+      ? localize.ArabicLanguage.ar
+      : localize.EnglishLanguage.en;
   updateAppThemeToggle();
   updateHistoryControls();
   preview.scrollTo({ top: previewScrollTop, behavior: "instant" });
@@ -9971,9 +9971,19 @@ function handleElementPaletteClick(event) {
   else addElement(button.dataset.type);
 }
 elementPalette.addEventListener("click", handleElementPaletteClick);
-document
-  .querySelector(".toolbar-menubar")
-  .addEventListener("click", (event) => {
+const toolbarMenubar = document.querySelector(".toolbar-menubar");
+toolbarMenubar.addEventListener("focusout", (event) => {
+  const menu = event.target.closest(".toolbar-menu");
+  if (menu && !menu.contains(event.relatedTarget)) menu.open = false;
+});
+document.addEventListener("pointerdown", (event) => {
+  if (!(event.target instanceof Element)) return;
+  const targetMenu = event.target.closest(".toolbar-menu");
+  toolbarMenubar.querySelectorAll(".toolbar-menu[open]").forEach((menu) => {
+    if (!menu.contains(event.target) && menu !== targetMenu) menu.open = false;
+  });
+});
+toolbarMenubar.addEventListener("click", (event) => {
     if (event.target.closest("button")) {
       const menu = event.target.closest(".toolbar-menu");
       if (menu) menu.open = false;

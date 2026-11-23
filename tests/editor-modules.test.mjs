@@ -163,6 +163,38 @@ test("resolves missing locales from the first configured translation", () => {
   assert.equal(resolveLocalizedContent({}, "fr", "Base"), "Base");
 });
 
+test("waits for initial collection data before running app-load actions", () => {
+  const buildScript = createRuntimeBuilder({
+    TWK_FIELDS: [],
+    state: {
+      elements: [],
+      pages: [{ id: "page-home", name: "Home", kind: "page" }],
+      settings: {},
+      requests: [],
+      variables: [],
+      assets: [],
+    },
+    componentRuntimePropertyRegistry: {},
+    normalizeExtraData: () => [],
+    normalizeLocalizedContent: () => ({}),
+    normalizeCollectionDataSource: (source) => source ?? { type: "static" },
+    removeDefaultProperties: (value) => value,
+    normalizeAppLoadHandlers: () => [],
+    isJavaScriptAsset: () => false,
+    assetArchivePath: () => "",
+    twkSystemActionOptions: [],
+    twkPermissionActionTypes: [],
+    variantOptionsByType: {},
+  });
+  const script = buildScript();
+
+  assert.ok(
+    script.indexOf("await Promise.all([twkBindingsReady, staticCollectionsReady]);") <
+      script.indexOf("await runAppLoadHandlers();"),
+  );
+  assert.doesNotThrow(() => new Function(script));
+});
+
 test("creates editor state and history from the loaded project", () => {
   const project = {
     elements: [{ id: "element-1", type: "text" }],
