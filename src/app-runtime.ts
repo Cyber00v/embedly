@@ -361,10 +361,9 @@ export function startRuntime(
     return activePageId;
   }
 
-  const TRANSITION_DURATION = 300; // Matches your 0.3s CSS transition
+  const TRANSITION_DURATION = 300;
 
   function closeSheet() {
-    // 1. Remove active states to trigger the exit transition
     document.querySelectorAll("[data-sheet-id]").forEach((sheet) => {
       sheet.classList.remove("is-active");
     });
@@ -373,10 +372,8 @@ export function startRuntime(
       backdrop.classList.remove("is-active");
     }
 
-    // 2. Wait for the transition to finish, then hide elements
     setTimeout(() => {
       document.querySelectorAll("[data-sheet-id]").forEach((sheet) => {
-        // Ensure it wasn't re-opened during the animation
         if (!sheet.classList.contains("is-active")) {
           sheet.hidden = true;
         }

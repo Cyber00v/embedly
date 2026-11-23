@@ -837,7 +837,7 @@ function normalizeSpacing(value, fallback = 0, max = 100) {
   );
 }
 
-function normalizeAppSpacing(settings) {
+function normalizeAppSpacing(settings, migratePreviousDefaults = true) {
   const hasLegacyMargin = Number.isFinite(settings?.appMargin);
   const legacyMargin = hasLegacyMargin
     ? clampNumber(settings.appMargin, 0, 100, 0)
@@ -861,7 +861,7 @@ function normalizeAppSpacing(settings) {
     appPaddings.bottom === 12 &&
     appPaddings.left === 12;
 
-  if (hasPreviousDefaults) {
+  if (migratePreviousDefaults && hasPreviousDefaults) {
     appMargins.right = 16;
     appMargins.left = 16;
     appPaddings.right = 16;
@@ -1663,13 +1663,16 @@ function loadProject() {
           parsed.settings?.appElementSize,
         )
           ? parsed.settings.appElementSize
-          : "normal",
+          : defaultSettings.appElementSize,
         appTheme: parsed.settings?.appTheme === "dark" ? "dark" : "light",
         appDarkTheme: normalizeThemeColors(
           parsed.settings?.appDarkTheme,
           darkThemeColors,
         ),
-        ...normalizeAppSpacing(parsed.settings),
+        ...normalizeAppSpacing(
+          parsed.settings,
+          !Number.isFinite(parsed.schemaVersion) || parsed.schemaVersion < 5,
+        ),
         appTopBarType:
           parsed.settings?.appTopBarType ?? defaultSettings.appTopBarType,
         appLogoAssetId:
@@ -2109,6 +2112,13 @@ function getDefaultElementOutputValues(element) {
     defaults.filePickerMode = "single";
     defaults.filePickerAppearance = "button";
   }
+  if (element.parentId) {
+    // Child insertion resets padding to zero, unlike standalone element defaults.
+    defaults.styles.padding = 0;
+    ["Top", "Right", "Bottom", "Left"].forEach((side) => {
+      defaults.styles[`padding${side}`] = 0;
+    });
+  }
   return defaults;
 }
 
@@ -2185,6 +2195,8 @@ function pruneProjectForOutput(project) {
     "title",
     "orgnization",
     "appTopBarType",
+    "appElementSize",
+    "appPaddings",
   ]);
   return output;
 }
@@ -5108,7 +5120,10 @@ function validateImportedProject(project) {
       ...defaultSettings,
       ...sourceSettings,
       appMargin: clampNumber(sourceSettings.appMargin, 0, 100, 0),
-      ...normalizeAppSpacing(sourceSettings),
+      ...normalizeAppSpacing(
+        sourceSettings,
+        !Number.isFinite(source.schemaVersion) || source.schemaVersion < 5,
+      ),
       appLanguage: sourceSettings.appLanguage === "en" ? "en" : "ar",
       titleLocalizations: normalizeLocalizedContent(
         sourceSettings.titleLocalizations,
@@ -10639,7 +10654,11 @@ function syncSelectedSharedProperty(element, control) {
         selected.verticalAlignment = element.verticalAlignment;
       return;
     }
-    if (styleProperty) selected.styles[styleProperty] = element.styles[styleProperty];
+    if (styleProperty) {
+      selected.styles[styleProperty] = element.styles[styleProperty];
+      if (styleProperty.startsWith("padding"))
+        delete selected.styles.padding;
+    }
   });
 }
 
@@ -10758,6 +10777,7 @@ function updateSelectedElement(event) {
       key.startsWith("padding") ? 48 : 100,
       0,
     );
+    if (key.startsWith("padding")) delete element.styles.padding;
     syncSelectedSharedProperty(element, spacingField);
     renderPreview(false);
     scheduleSave();

@@ -8,9 +8,8 @@ const defaultLabels =
     ? ["الحساب", "التفاصيل", "المراجعة"]
     : ["Account", "Details", "Review"];
 const rawLabels = String(properties.steps || "").trim();
-const labels = (rawLabels === "Account|Details|Review"
-  ? defaultLabels.join("|")
-  : rawLabels
+const labels = (
+  rawLabels === "Account|Details|Review" ? defaultLabels.join("|") : rawLabels
 )
   .split("|")
   .map((label) => label.trim())
@@ -20,20 +19,20 @@ const configuredLabels = labels.length ? labels : defaultLabels;
 const stepsSlot = root.querySelector("[data-stepper-steps]");
 const stepElements = stepsSlot
   ? stepsSlot
-    .assignedElements()
-    .filter((element) => element.dataset.pluginId === "step")
+      .assignedElements()
+      .filter((element) => element.dataset.pluginId === "step")
   : [];
 const steps = stepElements.length
   ? stepElements.map((element, index) => {
-    const stepProperties = JSON.parse(
-      element.dataset.pluginProperties || "{}",
-    );
-    const label =
-      typeof stepProperties.label === "string"
-        ? stepProperties.label.trim()
-        : "";
-    return label || configuredLabels[index] || `Step ${index + 1}`;
-  })
+      const stepProperties = JSON.parse(
+        element.dataset.pluginProperties || "{}",
+      );
+      const label =
+        typeof stepProperties.label === "string"
+          ? stepProperties.label.trim()
+          : "";
+      return label || configuredLabels[index] || `Step ${index + 1}`;
+    })
   : configuredLabels;
 let currentStep = Math.max(
   1,
@@ -52,45 +51,52 @@ stepper.lang = locale;
 
 if (controls) controls.hidden = properties.showControls === false;
 if (status) status.hidden = properties.showStatus === false;
+
 function render() {
   list.replaceChildren();
   stepElements.forEach((element, index) => {
     element.hidden = index !== currentStep - 1;
   });
-  steps.forEach((label, index) => {
-    const stepNumber = index + 1;
-    const item = document.createElement("li");
-    const marker = document.createElement("span");
-    const text = document.createElement("span");
-    item.className = "stepper-item";
-    if (stepNumber === currentStep) {
-      item.classList.add("is-current");
-      item.setAttribute("aria-current", "step");
-    } else if (stepNumber < currentStep) {
-      item.classList.add("is-complete");
-    }
-    marker.className = "stepper-marker";
-    marker.textContent = stepNumber < currentStep ? "✓" : String(stepNumber);
-    text.className = "stepper-label";
-    text.textContent = label;
-    item.append(marker, text);
-    list.append(item);
-  });
 
-  status.textContent =
-    locale === "ar"
-      ? `الخطوة ${currentStep} من ${steps.length}: ${steps[currentStep - 1]}`
-      : `Step ${currentStep} of ${steps.length}: ${steps[currentStep - 1]}`;
-  backButton.textContent = locale === "ar" ? "السابق" : "Back";
-  nextButton.textContent =
-    currentStep === steps.length
-      ? locale === "ar"
-        ? "إنهاء"
-        : "Finish"
-      : locale === "ar"
-        ? "التالي"
-        : "Next";
-  backButton.disabled = currentStep === 1;
+  properties.showSteps &&
+    steps.forEach((label, index) => {
+      const stepNumber = index + 1;
+      const item = document.createElement("li");
+      const marker = document.createElement("span");
+      const text = document.createElement("span");
+      item.className = "stepper-item";
+      if (stepNumber === currentStep) {
+        item.classList.add("is-current");
+        item.setAttribute("aria-current", "step");
+      } else if (stepNumber < currentStep) {
+        item.classList.add("is-complete");
+      }
+      marker.className = "stepper-marker";
+      marker.textContent = stepNumber < currentStep ? "✓" : String(stepNumber);
+      text.className = "stepper-label";
+      text.textContent = label;
+      item.append(marker, text);
+      list.append(item);
+    });
+
+  if (properties.showStatus)
+    status.textContent =
+      locale === "ar"
+        ? `الخطوة ${currentStep} من ${steps.length}: ${steps[currentStep - 1]}`
+        : `Step ${currentStep} of ${steps.length}: ${steps[currentStep - 1]}`;
+
+  if (properties.showControls) {
+    backButton.textContent = locale === "ar" ? "السابق" : "Back";
+    nextButton.textContent =
+      currentStep === steps.length
+        ? locale === "ar"
+          ? "إنهاء"
+          : "Finish"
+        : locale === "ar"
+          ? "التالي"
+          : "Next";
+    backButton.disabled = currentStep === 1;
+  }
 }
 
 function emitStepChange(previousStep, currentStep) {
@@ -121,7 +127,7 @@ function onClick(event) {
   }
 
   render();
-  emitStepChange(previousStep, currentStep)
+  emitStepChange(previousStep, currentStep);
 }
 
 function next() {
@@ -136,7 +142,7 @@ function next() {
   const previousStep = currentStep;
   currentStep += 1;
   render();
-  emitStepChange(previousStep, currentStep)
+  emitStepChange(previousStep, currentStep);
 }
 
 function previous() {
@@ -144,7 +150,7 @@ function previous() {
   const previousStep = currentStep;
   currentStep -= 1;
   render();
-  emitStepChange(previousStep, currentStep)
+  emitStepChange(previousStep, currentStep);
 }
 
 pluginContext.exposeFunction("next", next);

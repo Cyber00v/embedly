@@ -34,6 +34,12 @@
       "default": "app"
     },
     {
+      "key": "showSteps",
+      "label": "Show steps label",
+      "type": "boolean",
+      "default": true
+    },
+    {
       "key": "showControls",
       "label": "Show navigation buttons",
       "type": "boolean",
