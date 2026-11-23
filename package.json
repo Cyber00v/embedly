@@ -1,6 +1,6 @@
 {
   "name": "embedly",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Embedly",
   "type": "module",
   "main": "electron/main.cjs",
