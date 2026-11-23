@@ -560,6 +560,49 @@ test("renders nested plugin containers, sheet children, and an asset-backed app 
     iconClass: "fa-star",
     styles: { variant: "primary", align: "center" },
   };
+  const compatibilityElements = [
+    {
+      id: "compat-accordion",
+      pageId: "page-home",
+      type: "accordion",
+      content: "Accordion",
+      accordionOpen: false,
+      styles: {},
+    },
+    {
+      id: "compat-accordion-child",
+      pageId: "page-home",
+      parentId: "compat-accordion",
+      type: "text",
+      content: "Accordion content",
+      styles: {},
+    },
+    {
+      id: "compat-progress",
+      pageId: "page-home",
+      type: "progress",
+      content: "Progress",
+      progressMode: "determinate",
+      progressMax: 100,
+      progressValue: 30,
+      styles: {},
+    },
+    {
+      id: "compat-collection",
+      pageId: "page-home",
+      type: "collection",
+      listSource: { type: "static" },
+      styles: {},
+    },
+    {
+      id: "compat-collection-child",
+      pageId: "page-home",
+      parentId: "compat-collection",
+      type: "text",
+      content: "Collection item",
+      styles: {},
+    },
+  ];
   const state = {
     elements: [
       sheet,
@@ -568,6 +611,7 @@ test("renders nested plugin containers, sheet children, and an asset-backed app 
       stepContainer,
       stepChild,
       iconButton,
+      ...compatibilityElements,
     ],
     userComponents: [
       createPluginComponent(stepperPlugin),
@@ -636,6 +680,13 @@ test("renders nested plugin containers, sheet children, and an asset-backed app 
 
   const markup = buildMarkup((asset) => `assets/${asset.id}.png`);
 
+  assert.doesNotMatch(
+    markup,
+    /<(?:dialog|details|summary|progress|template|main|header|section|nav)(?:\s|>)/i,
+  );
+  assert.match(markup, /data-accordion-toggle aria-expanded="false"/);
+  assert.match(markup, /role="progressbar"[^>]*aria-valuenow="30"/);
+  assert.match(markup, /data-collection-template="compat-collection"/);
   assert.match(markup, /<img class="app-logo" src="assets\/logo-asset\.png" alt="">/);
   assert.match(
     markup,

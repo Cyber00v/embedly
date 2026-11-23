@@ -247,7 +247,7 @@ export function startRuntime(
         if (type === "loading") element.setAttribute("aria-label", content);
         if (type === "progress")
           element
-            .querySelector("progress")
+            .querySelector("[role='progressbar']")
             ?.setAttribute("aria-label", content);
         if (type === "fab") element.setAttribute("aria-label", content);
         if (type === "breadcrumbs")
@@ -640,6 +640,19 @@ export function startRuntime(
       });
       return;
     }
+    const accordionToggle = event.target.closest("[data-accordion-toggle]");
+    if (accordionToggle) {
+      const accordion = accordionToggle.closest(".content-accordion");
+      const panel = accordion?.querySelector(".content-accordion-panel");
+      if (!accordion || !panel)
+        throw new Error("The selected accordion is unavailable.");
+      const isOpen = accordion.dataset.accordionOpen !== "true";
+      accordion.dataset.accordionOpen = String(isOpen);
+      accordionToggle.setAttribute("aria-expanded", String(isOpen));
+      panel.hidden = !isOpen;
+      updateElementPropertyBindings();
+      return;
+    }
     const chip = event.target.closest("[data-chip-toggle]");
     if (chip) {
       const selected = chip.getAttribute("aria-pressed") !== "true";
@@ -659,18 +672,14 @@ export function startRuntime(
   });
 
   document.addEventListener("change", () => updateElementPropertyBindings());
-  document.addEventListener(
-    "toggle",
-    (event) => {
-      if (event.target instanceof HTMLDetailsElement)
-        updateElementPropertyBindings();
-    },
-    true,
-  );
-
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !document.querySelector("[data-sheet-backdrop]")?.hidden)
-      closeSheet();
+    if (event.key !== "Escape") return;
+    const messageDialog = document.querySelector("#app-message-dialog");
+    if (messageDialog && !messageDialog.hidden) {
+      closeMessageDialog();
+      return;
+    }
+    if (!document.querySelector("[data-sheet-backdrop]")?.hidden) closeSheet();
   });
 
   function changeElementProperty(
@@ -834,9 +843,25 @@ export function startRuntime(
             : "Progress value must be zero or greater.",
         );
       targets.forEach((target) => {
-        const progress = target.querySelector("progress");
+        const progress = target.querySelector("[role='progressbar']");
         if (!progress) throw new Error("The target progress bar is unavailable.");
-        progress[property] = number;
+        const max =
+          property === "max"
+            ? number
+            : Number(progress.getAttribute("aria-valuemax")) || 100;
+        const previousValue = Number(progress.getAttribute("aria-valuenow")) || 0;
+        progress.setAttribute("aria-valuemax", String(max));
+        const fill = progress.querySelector(".content-progress-fill");
+        if (!fill) throw new Error("The target progress fill is unavailable.");
+        if (property === "value" || progress.hasAttribute("aria-valuenow")) {
+          const nextValue =
+            property === "value"
+              ? Math.min(number, max)
+              : Math.min(previousValue, max);
+          progress.dataset.indeterminate = "false";
+          progress.setAttribute("aria-valuenow", String(nextValue));
+          fill.style.width = `${Math.max(0, Math.min(100, (nextValue / max) * 100))}%`;
+        }
       });
       return;
     }
@@ -956,9 +981,11 @@ export function startRuntime(
       } else if (type === "collection") {
         target.setAttribute("aria-label", value);
       } else if (type === "accordion") {
-        const summary = target.querySelector(":scope > summary");
-        if (!summary) throw new Error("The target accordion is unavailable.");
-        summary.textContent = value;
+        const toggle = target.querySelector(
+          "[data-accordion-toggle] [data-localize-content]",
+        );
+        if (!toggle) throw new Error("The target accordion is unavailable.");
+        toggle.textContent = value;
       } else if (type === "tab") {
         const content = target.querySelector("[data-localize-content]");
         if (!content) throw new Error("The target tab is unavailable.");
@@ -1034,11 +1061,17 @@ export function startRuntime(
       title || (appLanguage === "en" ? "Message" : "رسالة"),
     );
     content.textContent = String(message ?? "");
-    if (!dialog.open) dialog.showModal();
+    dialog.hidden = false;
+    document.querySelector("#app-message-close")?.focus();
+  }
+
+  function closeMessageDialog() {
+    const dialog = document.querySelector("#app-message-dialog");
+    if (dialog) dialog.hidden = true;
   }
 
   document.querySelector("#app-message-close")?.addEventListener("click", () => {
-    document.querySelector("#app-message-dialog")?.close();
+    closeMessageDialog();
   });
 
   function updateApiProgressIndicator() {
@@ -1315,18 +1348,19 @@ export function startRuntime(
   async function populateCollection(collection, items) {
     if (!Array.isArray(items)) throw new Error("Custom list data source must resolve to an array.");
     const template = document.querySelector(
-      "template[data-collection-template='" + CSS.escape(collection.dataset.collectionId) + "']",
+      "[data-collection-template='" + CSS.escape(collection.dataset.collectionId) + "']",
     );
     const target = collection.querySelector(".content-collection-items");
     if (!template || !target) throw new Error("Custom list template is unavailable.");
     ACTIVE_COLLECTION_ROWS.delete(collection.dataset.collectionId);
     unmountPluginElements(target);
-    target.replaceChildren();
+    while (target.firstChild) target.removeChild(target.firstChild);
     for (const record of items) {
       const item = document.createElement("div");
       item.className = "content-collection-item";
       item.dataset.collectionRecord = JSON.stringify(record);
-      const content = template.content.cloneNode(true);
+      const content = document.createElement("div");
+      content.innerHTML = template.textContent;
       applyElementLocalizations(content);
       content.querySelectorAll("[data-element-id]").forEach((element) => {
         collectionInstanceId += 1;
@@ -1358,7 +1392,7 @@ export function startRuntime(
             });
           }
         });
-      item.append(content);
+      while (content.firstChild) item.appendChild(content.firstChild);
       target.append(item);
       mountPluginElements(item, PLUGIN_DEFINITIONS);
       await runCollectionItemActions(item, "onItemRender");
@@ -1606,7 +1640,7 @@ export function startRuntime(
         element.setAttribute("aria-label", text);
       if (element.classList.contains("content-progress"))
         element
-          .querySelector("progress")
+          .querySelector("[role='progressbar']")
           ?.setAttribute("aria-label", text);
       if (element.classList.contains("content-fab"))
         element.setAttribute("aria-label", text);
@@ -1644,9 +1678,9 @@ export function startRuntime(
         : null);
     if (!target)
       throw new Error("Element property source is unavailable: " + elementId);
-    const control = target.matches("input, select, textarea, progress, details")
+    const control = target.matches("input, select, textarea, [role='progressbar']")
       ? target
-      : target.querySelector("input, select, textarea, progress, details");
+      : target.querySelector("input, select, textarea, [role='progressbar']");
     const elementType = ELEMENT_TYPES[elementId];
     const registeredProperties =
       COMPONENT_RUNTIME_PROPERTY_REGISTRY[elementType] || [];
@@ -1710,7 +1744,8 @@ export function startRuntime(
             .map(readFormValue);
           return control.multiple ? values : values[0] ?? "";
         }
-        if (control instanceof HTMLProgressElement) return control.value;
+        if (elementType === "progress")
+          return Number(control.getAttribute("aria-valuenow")) || 0;
         throw new Error("Value is unavailable for this element.");
       case "files":
         if (
@@ -1734,12 +1769,13 @@ export function startRuntime(
         if (!registeredProperties.includes("min"))
           throw new Error("Minimum is unavailable for this element.");
         if (control instanceof HTMLInputElement) return control.min;
-        if (control instanceof HTMLProgressElement) return 0;
+        if (elementType === "progress") return 0;
         throw new Error("Minimum is unavailable for this element.");
       case "max":
         if (!registeredProperties.includes("max"))
           throw new Error("Maximum is unavailable for this element.");
-        if (control instanceof HTMLProgressElement) return control.max;
+        if (elementType === "progress")
+          return Number(control.getAttribute("aria-valuemax")) || 100;
         if (control instanceof HTMLInputElement) return control.max;
         throw new Error("Maximum is unavailable for this element.");
       case "isValid":
@@ -1817,9 +1853,9 @@ export function startRuntime(
         return dataset;
       }
       case "open":
-        if (!(target instanceof HTMLDetailsElement))
+        if (elementType !== "accordion")
           throw new Error("Open state is only available for accordion elements.");
-        return target.open;
+        return target.dataset.accordionOpen === "true";
       case "selected":
         if (!target.classList.contains("content-chip"))
           throw new Error("Selected state is only available for chip elements.");

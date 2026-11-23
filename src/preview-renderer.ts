@@ -222,7 +222,7 @@ export function createPreviewRenderer(dependencies) {
           )
           .map((child) => renderElement(child, depth + 4))
           .join("\n");
-        return `${indent}<section class="${componentClass("content content-sheet")}" data-sheet-id="${escapeHtml(element.id)}" data-sheet-page="${escapeHtml(element.pageId)}" role="dialog" aria-modal="true" aria-label="${escapeHtml(contentValue || "Sheet")}" dir="${state.settings.appLanguage === "ar" ? "rtl" : "ltr"}" hidden style="${styles}"${elementAttribute}>\n${indent}  <div class="content-sheet-toolbar"><button type="button" class="content-sheet-close" data-sheet-close aria-label="إغلاق">×</button></div>\n${children}\n${indent}</section>`;
+        return `${indent}<div class="${componentClass("content content-sheet")}" data-sheet-id="${escapeHtml(element.id)}" data-sheet-page="${escapeHtml(element.pageId)}" role="dialog" aria-modal="true" aria-label="${escapeHtml(contentValue || "Sheet")}" dir="${state.settings.appLanguage === "ar" ? "rtl" : "ltr"}" hidden style="${styles}"${elementAttribute}>\n${indent}  <div class="content-sheet-toolbar"><button type="button" class="content-sheet-close" data-sheet-close aria-label="إغلاق">×</button></div>\n${children}\n${indent}</div>`;
       }
       if (element.type === "tabs") {
         const tabs = state.elements.filter(
@@ -248,7 +248,7 @@ export function createPreviewRenderer(dependencies) {
         const panels = tabs
           .map((tab) => renderElement(tab, depth + 4))
           .join("\n");
-        return `${indent}<section class="${componentClass("content content-tabs")}" aria-label="${escapeHtml(contentValue || (state.settings.appLanguage === "ar" ? "علامات تبويب" : "Tabs"))}" style="${styles}"${elementAttribute}>\n${indent}  <div class="content-tab-list" role="tablist" aria-label="${escapeHtml(contentValue || (state.settings.appLanguage === "ar" ? "علامات تبويب" : "Tabs"))}">\n${tabButtons}\n${indent}  </div>\n${indent}  <div class="content-tab-panels">\n${panels}\n${indent}  </div>\n${indent}</section>`;
+        return `${indent}<div class="${componentClass("content content-tabs")}" aria-label="${escapeHtml(contentValue || (state.settings.appLanguage === "ar" ? "علامات تبويب" : "Tabs"))}" style="${styles}"${elementAttribute}>\n${indent}  <div class="content-tab-list" role="tablist" aria-label="${escapeHtml(contentValue || (state.settings.appLanguage === "ar" ? "علامات تبويب" : "Tabs"))}">\n${tabButtons}\n${indent}  </div>\n${indent}  <div class="content-tab-panels">\n${panels}\n${indent}  </div>\n${indent}</div>`;
       }
       if (element.type === "tab") {
         const children = state.elements
@@ -275,9 +275,9 @@ export function createPreviewRenderer(dependencies) {
             ? parent.activeTabId
             : siblings[0]?.id || "";
           const selected = activeTabId === element.id;
-          return `${indent}<section class="${componentClass("content content-tab-panel")}" data-tab-panel="${escapeHtml(element.id)}" role="tabpanel" aria-labelledby="tab-trigger-${escapeHtml(element.id)}" tabindex="0"${selected ? "" : " hidden"} style="${styles}"${elementAttribute}><span data-localize-content hidden>${content}</span>${children ? `\n${children}\n${indent}` : ""}</section>`;
+          return `${indent}<div class="${componentClass("content content-tab-panel")}" data-tab-panel="${escapeHtml(element.id)}" role="tabpanel" aria-labelledby="tab-trigger-${escapeHtml(element.id)}" tabindex="0"${selected ? "" : " hidden"} style="${styles}"${elementAttribute}><span data-localize-content hidden>${content}</span>${children ? `\n${children}\n${indent}` : ""}</div>`;
         }
-        return `${indent}<section class="${componentClass("content content-tab-panel")}" role="region" aria-label="${escapeHtml(contentValue || "Tab")}" style="${styles}"${elementAttribute}><strong data-localize-content>${content}</strong>${children ? `\n${children}\n${indent}` : ""}</section>`;
+        return `${indent}<div class="${componentClass("content content-tab-panel")}" role="region" aria-label="${escapeHtml(contentValue || "Tab")}" style="${styles}"${elementAttribute}><strong data-localize-content>${content}</strong>${children ? `\n${children}\n${indent}` : ""}</div>`;
       }
       if (element.type === "accordion") {
         const children = state.elements
@@ -287,7 +287,8 @@ export function createPreviewRenderer(dependencies) {
           )
           .map((child) => renderElement(child, depth + 4))
           .join("\n");
-        return `${indent}<details class="${componentClass("content content-accordion")}"${element.accordionOpen ? " open" : ""} style="${styles}"${elementAttribute}>\n${indent}  <summary data-localize-content>${content}</summary>\n${indent}  <div class="content-accordion-panel">${children}</div>\n${indent}</details>`;
+        const isOpen = element.accordionOpen === true;
+        return `${indent}<div class="${componentClass("content content-accordion")}" data-accordion-open="${isOpen}" style="${styles}"${elementAttribute}>\n${indent}  <button type="button" class="content-accordion-toggle" data-accordion-toggle aria-expanded="${isOpen}"><span data-localize-content>${content}</span></button>\n${indent}  <div class="content-accordion-panel"${isOpen ? "" : " hidden"}>${children}</div>\n${indent}</div>`;
       }
       if (element.type === "chip") {
         const variant = getVariantOptions("chip").includes(element.styles.variant)
@@ -313,7 +314,7 @@ export function createPreviewRenderer(dependencies) {
         }
       }
       if (element.type === "breadcrumbs") {
-        return `${indent}<nav class="${componentClass("content content-breadcrumbs")}" aria-label="${state.settings.appLanguage === "ar" ? "مسار التنقل" : "Breadcrumb"}" style="${styles}"${elementAttribute}><span data-localize-content>${content}</span></nav>`;
+        return `${indent}<div class="${componentClass("content content-breadcrumbs")}" role="navigation" aria-label="${state.settings.appLanguage === "ar" ? "مسار التنقل" : "Breadcrumb"}" style="${styles}"${elementAttribute}><span data-localize-content>${content}</span></div>`;
       }
       if (element.type === "badge") {
         const variant = getVariantOptions("badge").includes(
@@ -344,9 +345,9 @@ export function createPreviewRenderer(dependencies) {
       if (element.type === "progress") {
         const max = clampNumber(element.progressMax, 1, 1000000, 100);
         const value = clampNumber(element.progressValue, 0, max, 0);
-        const progressValue =
-          element.progressMode === "determinate" ? ` value="${value}"` : "";
-        return `${indent}<div class="${componentClass("content content-progress")}" style="${styles}"${elementAttribute}><progress class="content-progress-bar" max="${max}"${progressValue} aria-label="${escapeHtml(contentValue || "Progress")}"></progress><span class="content-progress-label" data-localize-content>${content}</span></div>`;
+        const determinate = element.progressMode === "determinate";
+        const fillWidth = determinate ? (value / max) * 100 : 35;
+        return `${indent}<div class="${componentClass("content content-progress")}" style="${styles}"${elementAttribute}><div class="content-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="${max}"${determinate ? ` aria-valuenow="${value}"` : ""} aria-label="${escapeHtml(contentValue || "Progress")}"><div class="content-progress-fill" style="width:${fillWidth}%"></div></div><span class="content-progress-label" data-localize-content>${content}</span></div>`;
       }
       if (element.type === "switch") {
         const formName = escapeHtml(getFormName(element));
@@ -474,7 +475,7 @@ export function createPreviewRenderer(dependencies) {
           )
           .map((child) => renderElement(child, depth + 4))
           .join("\n");
-        return `${indent}<section class="${componentClass("content content-collection")}" data-collection-id="${escapeHtml(element.id)}"${sourceAttributes} style="${styles}"${elementAttribute}>\n${indent}  <div class="content-collection-items" style="${itemsStyle}"></div>\n${indent}  <template data-collection-template="${escapeHtml(element.id)}">\n${children || `${indent}    <div class="content">أضف عناصر إلى قالب القائمة</div>`}\n${indent}  </template>\n${indent}</section>`;
+        return `${indent}<div class="${componentClass("content content-collection")}" data-collection-id="${escapeHtml(element.id)}"${sourceAttributes} style="${styles}"${elementAttribute}>\n${indent}  <div class="content-collection-items" style="${itemsStyle}"></div>\n${indent}  <script type="text/x-embedly-template" data-collection-template="${escapeHtml(element.id)}">\n${children || `${indent}    <div class="content">أضف عناصر إلى قالب القائمة</div>`}\n${indent}  </script>\n${indent}</div>`;
       }
       if (
         element.type === "layout" ||
@@ -514,7 +515,7 @@ export function createPreviewRenderer(dependencies) {
           ? `${indent}  <strong class="layout-title" data-localize-content>${content}</strong>\n`
           : "";
         if (element.type === "absoluteLayout") {
-          return `${indent}<section class="${componentClass("content content-layout content-absolute-layout")}" aria-label="${escapeHtml(element.content || "Absolute Layout")}" style="${styles};position:relative" data-element-id="${escapeHtml(element.id)}"${element.hidden ? " hidden" : ""}>\n${title}${indent}  <div class="content-absolute-layout-children">\n${children || `${indent}    <!-- Add elements to this absolute layout in the editor -->`}\n${indent}  </div>\n${indent}</section>`;
+          return `${indent}<div class="${componentClass("content content-layout content-absolute-layout")}" aria-label="${escapeHtml(element.content || "Absolute Layout")}" style="${styles};position:relative" data-element-id="${escapeHtml(element.id)}"${element.hidden ? " hidden" : ""}>\n${title}${indent}  <div class="content-absolute-layout-children">\n${children || `${indent}    <!-- Add elements to this absolute layout in the editor -->`}\n${indent}  </div>\n${indent}</div>`;
         }
         if (element.type === "scrollView") {
           const axis = ["vertical", "horizontal", "both"].includes(
@@ -532,10 +533,10 @@ export function createPreviewRenderer(dependencies) {
           const flexWrap =
             axis === "vertical" && config.direction === "row" ? "wrap" : "nowrap";
           const width = axis === "horizontal" ? "width:max-content;" : "";
-          return `${indent}<section class="${componentClass("content content-layout content-scroll-view")}" aria-label="${escapeHtml(contentValue || "منطقة تمرير")}" style="${styles};height:${normalizeDimension(element.styles.height) || `${height}%`};min-height:0;flex-shrink:0;overflow-x:${overflowX};overflow-y:${overflowY}"${elementAttribute}>\n${title}${indent}  <div class="content-layout-children content-scroll-view-children" style="display:flex;${width}flex-direction:${config.direction === "row" || axis === "horizontal" ? "row" : "column"};flex-wrap:${flexWrap};align-items:${alignItems};justify-content:${justifyContent};gap:${clampNumber(config.gap, 0, 48, 8)}px">\n${children || `${indent}    <!-- اسحب عناصر إلى هذه المنطقة في المحرر -->`}\n${indent}  </div>\n${indent}</section>`;
+          return `${indent}<div class="${componentClass("content content-layout content-scroll-view")}" aria-label="${escapeHtml(contentValue || "منطقة تمرير")}" style="${styles};height:${normalizeDimension(element.styles.height) || `${height}%`};min-height:0;flex-shrink:0;overflow-x:${overflowX};overflow-y:${overflowY}"${elementAttribute}>\n${title}${indent}  <div class="content-layout-children content-scroll-view-children" style="display:flex;${width}flex-direction:${config.direction === "row" || axis === "horizontal" ? "row" : "column"};flex-wrap:${flexWrap};align-items:${alignItems};justify-content:${justifyContent};gap:${clampNumber(config.gap, 0, 48, 8)}px">\n${children || `${indent}    <!-- اسحب عناصر إلى هذه المنطقة في المحرر -->`}\n${indent}  </div>\n${indent}</div>`;
         }
         const grid = element.type === "grid";
-        return `${indent}<section class="${componentClass(`content content-layout${grid ? " content-grid" : ""}`)}" aria-label="${escapeHtml(element.content || (grid ? "شبكة" : "مجموعة تخطيط"))}" style="${styles}"${elementAttribute}>\n${title}${indent}  <div class="content-layout-children${grid ? " content-grid-children" : ""}" style="display:${grid ? "grid" : "flex"};${grid ? `grid-template-columns:repeat(${clampNumber(config.columns, 1, 12, 2)},minmax(0,1fr));`         : `flex-direction:${config.direction === "row" ? "row" : "column"};flex-wrap:nowrap;`}align-items:${alignItems};justify-content:${justifyContent};gap:${clampNumber(config.gap, 0, 48, 8)}px">\n${children || `${indent}    <!-- اسحب العناصر إلى ${grid ? "الشبكة" : "المجموعة"} في المحرر -->`}\n${indent}  </div>\n${indent}</section>`;
+        return `${indent}<div class="${componentClass(`content content-layout${grid ? " content-grid" : ""}`)}" aria-label="${escapeHtml(element.content || (grid ? "شبكة" : "مجموعة تخطيط"))}" style="${styles}"${elementAttribute}>\n${title}${indent}  <div class="content-layout-children${grid ? " content-grid-children" : ""}" style="display:${grid ? "grid" : "flex"};${grid ? `grid-template-columns:repeat(${clampNumber(config.columns, 1, 12, 2)},minmax(0,1fr));`         : `flex-direction:${config.direction === "row" ? "row" : "column"};flex-wrap:nowrap;`}align-items:${alignItems};justify-content:${justifyContent};gap:${clampNumber(config.gap, 0, 48, 8)}px">\n${children || `${indent}    <!-- اسحب العناصر إلى ${grid ? "الشبكة" : "المجموعة"} في المحرر -->`}\n${indent}  </div>\n${indent}</div>`;
       }
       if (element.type === "divider")
         return `${indent}<hr class="${componentClass("content content-divider")}" style="${styles}"${elementAttribute}>`;
@@ -604,7 +605,7 @@ export function createPreviewRenderer(dependencies) {
         const initialPage =
           state.pages.find((item) => item.kind === "splash") ||
           state.pages.find((item) => item.kind === "page");
-        return `  <section class="app-page app-page-${page.kind}" data-app-page="${escapeHtml(page.id)}"${page.id === initialPage?.id ? "" : " hidden"}>\n${statusMarkup}${blocks || ""}\n  </section>`;
+        return `  <div class="app-page app-page-${page.kind}" data-app-page="${escapeHtml(page.id)}"${page.id === initialPage?.id ? "" : " hidden"}>\n${statusMarkup}${blocks || ""}\n  </div>`;
       })
       .join("\n");
 
@@ -616,14 +617,14 @@ export function createPreviewRenderer(dependencies) {
       appLogoAsset?.type.startsWith("image/")
         ? `<img class="app-logo" src="${escapeHtml(assetUrlFor(appLogoAsset))}" alt="">`
         : "";
-    const headerMarkup = `<header class="app-header">
+    const headerMarkup = `<div class="app-header">
       ${state.settings.appTopBarType === "none"
         ? ""
         : `
       ${appLogoMarkup}
       <span><strong>${escapeHtml(resolveLocalizedContent(state.settings.titleLocalizations, state.settings.appLanguage, state.settings.title))}</strong><small>${escapeHtml(resolveLocalizedContent(state.settings.organizationLocalizations, state.settings.appLanguage, state.settings.orgnization))}</small></span>`
       }
-    </header>`;
+    </div>`;
     const direction = state.settings.appLanguage === "ar" ? "rtl" : "ltr";
     const sheetMarkup = state.elements
       .filter(
@@ -632,25 +633,25 @@ export function createPreviewRenderer(dependencies) {
       .map((element) => renderElement(element))
       .join("\n");
 
-    return `<main class="embedded-app" dir="${direction}" lang="${state.settings.appLanguage}">
+    return `<div class="embedded-app" dir="${direction}" lang="${state.settings.appLanguage}">
       ${headerMarkup}
       ${pageMarkup}
       <div class="app-api-progress" id="app-api-progress" role="status" aria-live="polite" aria-label="${state.settings.appLanguage === "ar" ? "جارٍ تحميل البيانات" : "Loading data"}" hidden>
         <span class="app-api-progress-indicator" aria-hidden="true"></span>
         ${state.settings.appApiProgressLabel === true ? `<span class="app-api-progress-label">${state.settings.appLanguage === "ar" ? "جارٍ تحميل البيانات" : "Loading data"}</span>` : ""}
       </div>
-    </main>
+    </div>
     <div class="app-sheet-portal" dir="${direction}"  style="display:contents">
       ${sheetMarkup}
       <button class="app-sheet-backdrop" data-sheet-backdrop hidden aria-label="إغلاق النافذة"></button>
     </div>
-  <dialog class="app-message-dialog" id="app-message-dialog" aria-labelledby="app-message-title">
+  <div class="app-message-dialog" id="app-message-dialog" role="dialog" aria-modal="true" aria-labelledby="app-message-title" hidden>
     <div class="app-message-dialog-content">
       <h2 id="app-message-title"></h2>
       <p id="app-message-content"></p>
       <button type="button" id="app-message-close">${state.settings.appLanguage === "ar" ? "إغلاق" : "Close"}</button>
     </div>
-  </dialog>`;
+  </div>`;
   }
 
   return buildMarkup;

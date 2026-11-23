@@ -2774,10 +2774,22 @@ function buildAdditionalComponentStyles(scope) {
 @keyframes content-loading-spin {
   to { transform: rotate(360deg); }
 }
-.content-progress-bar {
+.content-progress-bar:not([role="progressbar"]) {
   width: 100%;
   min-width: 40px;
   accent-color: var(--theme-primary, #007a53);
+}
+.content-progress-bar[role="progressbar"] {
+  flex: 1 1 auto;
+  min-width: 40px;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--theme-muted, #d2e0dc);
+}
+.content-progress-fill {
+  height: 100%;
+  background: var(--theme-primary, #007a53);
 }
 .content-progress-label {
   flex: 0 0 auto;
@@ -9018,16 +9030,28 @@ body {
   border-radius: var(--radius-md);
   background: var(--theme-surface);
 }
-.content-accordion > summary {
+.content-accordion > summary,
+.content-accordion-toggle {
   padding: calc(12px * var(--element-size-scale, 1)) calc(14px * var(--element-size-scale, 1));
   cursor: pointer;
   font-weight: 700;
   list-style-position: inside;
 }
+.content-accordion-toggle {
+  width: 100%;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: start;
+}
 .content-accordion-panel {
   display: grid;
   gap: calc(8px * var(--element-size-scale, 1));
   padding: 0 calc(14px * var(--element-size-scale, 1)) calc(14px * var(--element-size-scale, 1));
+}
+.content-accordion-panel[hidden] {
+  display: none !important;
 }
 .content-tabs {
   display: grid;
@@ -9617,25 +9641,41 @@ body {
 
 /* Modals & Dialogs */
 .app-message-dialog {
-  width: min(480px, calc(100% - 32px));
-  padding: 0;
-  border: 0;
+  position: fixed;
+  z-index: 10000;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 16px;
   border-radius: var(--radius-lg);
-  background: var(--popover);
+  background: rgba(15, 28, 23, 0.5);
   color: var(--popover-foreground);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
+  overflow: auto;
 }
 
-.app-message-dialog::backdrop {
-  background: rgba(15, 28, 23, 0.5);
-  backdrop-filter: blur(4px);
+.app-message-dialog[hidden] {
+  display: none !important;
 }
 
 .app-message-dialog-content {
-  display: grid;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  max-height: 100%;
+  overflow: auto;
   padding: 24px;
+  border-radius: var(--radius-lg);
+  background: var(--popover);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
 }
 
 .app-message-dialog h2 {
@@ -9645,13 +9685,14 @@ body {
 }
 
 .app-message-dialog p {
-  margin: 0;
+  margin: 16px 0 0;
   line-height: 1.4;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
 .app-message-dialog button {
+  margin-top: 16px;
   min-height: 44px;
   border: 0;
   border-radius: var(--radius-md);

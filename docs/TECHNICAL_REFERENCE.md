@@ -230,6 +230,8 @@ The app is browser TypeScript. The supported public runtime calls are listed und
 
 ### Exported runtime: pages, values, controls, requests
 
+Standalone exports prefer widely supported `div`, `button`, and `span` markup for app containers, accordions, progress indicators, message dialogs, and collection templates instead of newer native elements. This improves compatibility with older embedded WebViews; custom plugin HTML retains its authored markup.
+
 | Function (parameters) | Inferred return | Responsibility |
 |---|---|---|
 | `applyAppLanguage()`, `applyElementLocalizations(root = document)` | void | Set app direction/language and localized content. |
