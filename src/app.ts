@@ -9470,7 +9470,7 @@ body {
 .content-list select:focus-visible {
   border-color: var(--theme-ring);
   outline: 2px solid var(--theme-ring);
-  outline-offset: 2px;
+  outline-offset: 0px;
   box-shadow: none;
 }
 

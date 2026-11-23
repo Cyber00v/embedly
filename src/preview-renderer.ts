@@ -308,9 +308,8 @@ export function createPreviewRenderer(dependencies) {
           )
             ? element.styles.variant
             : getDefaultVariant("button");
-          const appDirection =
-            state.settings.appLanguage === "ar" ? "rtl" : "ltr";
-          return `${indent}<button type="button" class="${componentClass(`content content-button content-button-has-icon variant-${variant}`)}" data-variant-background="${escapeHtml(getExportElementThemeColor(element, "background"))}" data-variant-color="${escapeHtml(getExportElementThemeColor(element, "color"))}" dir="${appDirection}" style="${styles}"${actionAttribute}${bindingAttributes}${disabledAttribute}>${icon}${label}</button>`;
+
+          return `${indent}<button type="button" class="${componentClass(`content content-button content-button-has-icon variant-${variant}`)}" data-variant-background="${escapeHtml(getExportElementThemeColor(element, "background"))}" data-variant-color="${escapeHtml(getExportElementThemeColor(element, "color"))}" style="${styles}"${actionAttribute}${bindingAttributes}${disabledAttribute}>${icon}${label}</button>`;
         }
       }
       if (element.type === "breadcrumbs") {
