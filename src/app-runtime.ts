@@ -2228,7 +2228,7 @@ export function startRuntime(
       }
       if (first instanceof HTMLInputElement && first.type === "radio") {
         const selected = controls.find((control) => control.checked);
-        if (selected) setValue(name, readFormValue(selected));
+        setValue(name, selected ? readFormValue(selected) : "");
         return;
       }
       if (controls.every((control) => control instanceof HTMLInputElement && control.type === "checkbox")) {

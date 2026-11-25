@@ -13,6 +13,7 @@ import {
 } from "./editor-state.ts";
 import { registerEditorEvents } from "./editor-events.ts";
 import { TemplateEngine } from "./template-engine.ts";
+import { getRadioGroupValue } from "./form-values.ts";
 import { attachRippleEffectListener } from "./app-runtime.ts";
 import { EXPORT_HTML_TEMPLATES } from "./html-templates.ts";
 import { createPreviewRenderer } from "./preview-renderer.ts";
@@ -5552,8 +5553,7 @@ function collectPreviewFormValues() {
       return;
     }
     if (first instanceof HTMLInputElement && first.type === "radio") {
-      const selected = controls.find((control) => control.checked);
-      if (selected) values.set(name, readValue(selected));
+      values.set(name, getRadioGroupValue(controls, readValue));
       return;
     }
     if (

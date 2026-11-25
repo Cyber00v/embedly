@@ -17,7 +17,9 @@ import {
 } from "../src/workflow/graph.ts";
 import { createWorkflowConditionEditor } from "../src/workflow/condition-editor.ts";
 import { TemplateEngine } from "../src/template-engine.ts";
+import { getRadioGroupValue } from "../src/form-values.ts";
 import { EXPORT_HTML_TEMPLATES } from "../src/html-templates.ts";
+import { startRuntime } from "../src/app-runtime.ts";
 import {
   getElementsOnPage,
   getRequestIdOrDefault,
@@ -151,6 +153,32 @@ test("filters condition source elements using its selected source page", () => {
     getElementsOnPage(state, pageId).map((element) => element.id),
     ["text-two", "button-two"],
   );
+});
+
+test("resolves an unselected radio form field to an empty value", () => {
+  const controls = [
+    { checked: false, value: "riyadh" },
+    { checked: false, value: "jeddah" },
+  ];
+
+  assert.equal(getRadioGroupValue(controls, (control) => control.value), "");
+  assert.equal(
+    getRadioGroupValue(
+      [{ checked: false, value: "riyadh" }, { checked: true, value: "jeddah" }],
+      (control) => control.value,
+    ),
+    "jeddah",
+  );
+});
+
+test("keeps unselected radio handling self-contained in the embedded runtime", () => {
+  const runtimeSource = startRuntime.toString();
+
+  assert.match(
+    runtimeSource,
+    /setValue\(name, selected \? readFormValue\(selected\) : ""\)/,
+  );
+  assert.doesNotMatch(runtimeSource, /\bgetRadioGroupValue\b/);
 });
 
 test("resolves nested actions in Switch branches with colon-delimited branch IDs", () => {
