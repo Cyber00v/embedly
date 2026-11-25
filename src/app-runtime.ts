@@ -1060,6 +1060,16 @@ export function startRuntime(
     return { type: visible ? "showElement" : "hideElement", elementId };
   }
 
+  function setElementEnabled(elementId, enabled, elementContext = null) {
+    if (!elementId) throw new Error("Select an element to enable or disable.");
+    const targets = getRuntimeElementTargets(elementId, elementContext);
+    if (!targets.length) throw new Error("Target element is unavailable.");
+    targets.forEach((target) => {
+      target.disabled = !enabled;
+    });
+    return { type: enabled ? "enableElement" : "disableElement", elementId };
+  }
+
   function showMessageDialog(title, message) {
     const dialog = document.querySelector("#app-message-dialog");
     const heading = document.querySelector("#app-message-title");
@@ -2892,10 +2902,7 @@ export function startRuntime(
     if (effect.type === "function")
       return runFunctionAction(effect, formValues, elementContext);
     if (effect.type === "setVariable") {
-      const variableId =
-        effect.variableId ||
-        VARIABLES.find((item) => item.source === "static")?.id ||
-        "";
+      const variableId = effect.variableId || VARIABLES.find((item) => item.source === "static")?.id || "";
       const variable = VARIABLES.find(
         (item) => item.id === variableId && item.source === "static",
       );
@@ -3239,10 +3246,7 @@ export function startRuntime(
     }
     if (configured.type === "setVariable") {
       try {
-        const variableId =
-          configured.variableId ||
-          VARIABLES.find((item) => item.source === "static")?.id ||
-          "";
+        const variableId = configured.variableId || VARIABLES.find((item) => item.source === "static")?.id || "";
         const variable = VARIABLES.find(
           (item) =>
             item.id === variableId && item.source === "static",
@@ -3461,7 +3465,7 @@ export function startRuntime(
     }
   }
 
-  window.embadly = Object.freeze({
+  window.embedly = Object.freeze({
     showMessage: showMessageDialog,
     navigateToPage(pageId) {
       showPage(pageId, true);
@@ -3471,6 +3475,9 @@ export function startRuntime(
     showSheet: (sheetId) => showSheet(sheetId),
     hideSheet: (sheetId) => hideSheet(sheetId),
     showToast: showToastElement,
+    enableElement: (elementId) => setElementEnabled(elementId, true),
+    disableElement: (elementId) => setElementEnabled(elementId, false),
+
     showElement: (elementId) => setElementVisibility(elementId, true),
     hideElement: (elementId) => setElementVisibility(elementId, false),
   });
