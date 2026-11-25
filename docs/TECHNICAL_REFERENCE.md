@@ -58,7 +58,7 @@ Element history is separate from project persistence: element snapshots have a 1
 | Variable | `id`, `name`, `source`, source-specific value/path/request/element fields. Static sources can be runtime-overridden. |
 | Binding | `source`, source key/path, optional `objectPath`; element bindings additionally identify element/property or item path. |
 | Extra data | Array of `{key, value}` entries on any element; runtime references use `{{elementId.extra.key}}`. |
-| Event handler | `event` (`click`, `change`, `input`, Collection lifecycle events, or app `load`), `type`, a stable editor `workflowId`, and action-specific fields. Conditions contain `condition`, ordered `actions`, and `elseActions`. |
+| Event handler | `event` (`click`, `change`, `input`, Collection lifecycle events, or app `load`), `type`, a stable editor `workflowId`, and action-specific fields. Conditions contain `condition`, ordered `actions`, and `elseActions`; nested conditions are supported. Switch actions contain a `source`, `cases` (`{id, value, actions}` entries), and optional `defaultEnabled`/`defaultActions`. |
 | Absolute Layout child | `horizontalAlignment`: `start|center|end`; `verticalAlignment`: `top|center|bottom`. These settings are meaningful for direct children of an `absoluteLayout`. |
 
 ### Token syntax

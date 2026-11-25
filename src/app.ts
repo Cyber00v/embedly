@@ -26,7 +26,10 @@ import {
   createWorkflowEdge as createWorkflowEdgeModel,
   ensureWorkflowActionIds as assignWorkflowActionIds,
   getConditionActionLists as readConditionActionLists,
+  getWorkflowActionBranches,
+  getWorkflowBranchActions,
   isWorkflowBranchAction as isWorkflowBranchActionModel,
+  setWorkflowBranchActions,
   serializeWorkflowGraph as serializeWorkflowGraphModel,
 } from "./workflow/graph.ts";
 import {
@@ -355,6 +358,7 @@ const typeNames = {
   list: "List View",
   checkbox: "Checkbox",
   radio: "Radio Button",
+  textarea: localize.Textarea[editorLanguage],
   layout: localize.Layout[editorLanguage],
   absoluteLayout: "Absolute Layout",
   scrollView: "Scroll View",
@@ -435,6 +439,7 @@ function getChangePropertyOptions(element) {
     [
       "button",
       "input",
+      "textarea",
       "list",
       "checkbox",
       "radio",
@@ -568,6 +573,7 @@ function normalizeElementVariant(type, variant) {
 
 const formElementTypes = [
   "input",
+  "textarea",
   "list",
   "checkbox",
   "radio",
@@ -695,6 +701,7 @@ const appLoadActionTypes = [
   "setVariable",
   "changeProperty",
   "condition",
+  "switch",
   "message",
   "showSheet",
   "hideSheet",
@@ -1936,6 +1943,7 @@ function pruneElementAttributes(elements) {
     custom: ["customComponentId", "pluginProperties"],
     card: ["cardHeader", "cardFooter"],
     input: ["fieldName", "inputType", "min", "max"],
+    textarea: ["fieldName", "placeholder", "value", "required", "rows"],
     filePicker: ["fieldName", "filePickerMode", "filePickerAppearance"],
     list: ["fieldName", "multiple", "options", "listSource"],
     checkbox: ["fieldName", "checked", "fieldValue"],
@@ -1966,6 +1974,7 @@ function pruneElementAttributes(elements) {
       [
         "button",
         "input",
+        "textarea",
         "list",
         "checkbox",
         "radio",
@@ -2230,6 +2239,7 @@ function createElement(type) {
     switch: "مفتاح التشغيل",
     card: localize.EnterCardContent.ar,
     input: localize.EnterText.ar,
+    textarea: localize.EnterText.ar,
     filePicker: localize.FilePicker.ar,
     list: localize.ChooseAnItem.ar,
     checkbox: localize.IAgreeToTheTerms.ar,
@@ -2274,6 +2284,10 @@ function createElement(type) {
     binding: null,
     fieldName: `${type}_${id.slice(-8)}`,
     inputType: "text",
+    placeholder: "",
+    value: "",
+    required: false,
+    rows: 4,
     min: "",
     max: "",
     hidden: false,
@@ -3886,6 +3900,8 @@ function renderPreview(updateProperties = true) {
     const node = document.createElement(
       !element.hidden && element.type === "input"
         ? "input"
+        : !element.hidden && element.type === "textarea"
+          ? "div"
         : !element.hidden && element.type === "image"
           ? "img"
           : element.type === "heading"
@@ -3988,6 +4004,27 @@ function renderPreview(updateProperties = true) {
       node.dataset.fieldName = getFormName(element);
       if (element.min !== "") node.min = String(element.min ?? "");
       if (element.max !== "") node.max = String(element.max ?? "");
+    } else if (element.type === "textarea") {
+      node.setAttribute("aria-label", localizedContent || localize.Textarea[editorLanguage]);
+      node.style.display = "flex";
+      node.style.flexDirection = "column";
+      const label = document.createElement("label");
+      label.className = "content-textarea-label";
+      const labelText = document.createElement("span");
+      labelText.dataset.localizeContent = "";
+      labelText.textContent = localizedContent;
+      const control = document.createElement("textarea");
+      control.className = "content-textarea";
+      control.name = getFormName(element);
+      control.dataset.formName = getFormName(element);
+      control.dataset.fieldName = getFormName(element);
+      control.placeholder = element.placeholder || "";
+      control.value = element.value ?? "";
+      control.required = element.required === true;
+      control.rows = clampNumber(element.rows, 1, 30, 4);
+      control.disabled = Boolean(element.disabled);
+      label.append(labelText, control);
+      node.append(label);
     } else if (element.type === "filePicker") {
       node.dataset.fieldName = getFormName(element);
       node.dataset.filePicker = "";
@@ -5533,7 +5570,11 @@ function collectPreviewFormValues() {
         );
       return;
     }
-    if (first instanceof HTMLInputElement) values.set(name, first.value);
+    if (
+      first instanceof HTMLInputElement ||
+      first instanceof HTMLTextAreaElement
+    )
+      values.set(name, first.value);
   });
   return values;
 }
@@ -5805,6 +5846,7 @@ function renderProperties() {
   const disabledTypes = [
     "button",
     "input",
+    "textarea",
     "list",
     "checkbox",
     "radio",
@@ -5931,6 +5973,7 @@ function renderProperties() {
 
   document.querySelector("#field-name-field").hidden = ![
     "input",
+    "textarea",
     "list",
     "checkbox",
     "radio",
@@ -5940,6 +5983,20 @@ function renderProperties() {
   document.querySelector("#property-field-name").value = getFormName(element);
   renderExtraDataFields(element);
   document.querySelector("#input-type-field").hidden = element.type !== "input";
+  document.querySelector("#textarea-fields").hidden =
+    element.type !== "textarea";
+  document.querySelector("#property-textarea-placeholder").value =
+    element.placeholder || "";
+  document.querySelector("#property-textarea-value").value =
+    element.value ?? "";
+  document.querySelector("#property-textarea-required").checked =
+    element.required === true;
+  document.querySelector("#property-textarea-rows").value = clampNumber(
+    element.rows,
+    1,
+    30,
+    4,
+  );
   document.querySelector("#property-input-type").value = inputTypes.includes(
     element.inputType,
   )
@@ -6258,6 +6315,21 @@ function initializeEventHandler(handler) {
     handler.actions ||= [];
     handler.elseActions ||= [];
   }
+  if (handler.type === "switch") {
+    handler.switchSource ||= "element";
+    handler.switchStaticValue ??= "null";
+    if (!Array.isArray(handler.cases))
+      handler.cases = [{ id: createId(), value: "null", actions: [] }];
+    handler.cases.forEach((item) => {
+      item.id ||= createId();
+      item.value ??= "null";
+      item.actions = Array.isArray(item.actions) ? item.actions : [];
+    });
+    handler.defaultEnabled = handler.defaultEnabled === true;
+    handler.defaultActions = Array.isArray(handler.defaultActions)
+      ? handler.defaultActions
+      : [];
+  }
   if (twkPermissionActionTypes.includes(handler.type)) {
     delete handler.condition;
     handler.actions ||= [];
@@ -6464,7 +6536,7 @@ function getWorkflowTokenOptions(element, callerContext = false) {
   ];
   const formFields = state.elements
     .filter((candidate) =>
-      ["input", "list", "checkbox", "radio", "switch", "filePicker"].includes(
+      ["input", "textarea", "list", "checkbox", "radio", "switch", "filePicker"].includes(
         candidate.type,
       ),
     )
@@ -6474,7 +6546,7 @@ function getWorkflowTokenOptions(element, callerContext = false) {
         label: `form.${name}`,
         token: `{{form.${name}}}`,
         category:
-          field.type === "input"
+          ["input", "textarea"].includes(field.type)
             ? "Text inputs"
             : ["list", "radio"].includes(field.type)
               ? "Selection fields"
@@ -6721,6 +6793,7 @@ const workflowActionEditor = createWorkflowActionEditor({
   state, editorLanguage, localize, variantLabels, twkSystemActionOptions, twkPermissionActionTypes, toast,
   getElementName, getChangePropertyOptions, normalizeChangePropertyAction, getVariantOptions,
   getPluginEvents: (element) => getPluginForElement(element)?.events || [],
+  getElementSourcePropertyOptions,
   isWorkflowBranchAction, normalizeAppLoadHandlers, createId, isInsideCollection, createElement,
   escapeHtml, isJavaScriptAsset, clampNumber, ensureWorkflowActionIds, getWorkflowGraphLayout,
   getWorkflowEditorState, serializeWorkflowGraph, createWorkflowEdge, saveWorkflowGraphLayout,
@@ -9452,6 +9525,7 @@ body {
   opacity: 0.6;
 }
 .content-input,
+.content-textarea,
 .content-list select {
   width: 100%;
   min-height: calc(44px * var(--element-size-scale, 1));
@@ -9463,6 +9537,24 @@ body {
   font: inherit;
   font-size: calc(14px * var(--element-size-scale, 1));
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.content-textarea-label {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: calc(6px * var(--element-size-scale, 1));
+}
+
+.content-textarea {
+  min-width: 0;
+  padding: calc(10px * var(--element-size-scale, 1)) calc(12px * var(--element-size-scale, 1));
+  background: inherit;
+  color: inherit;
+  border-radius: inherit;
+  font-size: inherit;
+  line-height: 1.4;
+  resize: vertical;
 }
 
 .content-input[type="range"] {
@@ -9482,6 +9574,7 @@ body {
 }
 
 .content-input:focus-visible,
+.content-textarea:focus-visible,
 .content-list select:focus-visible {
   border-color: var(--theme-ring);
   outline: 2px solid var(--theme-ring);
@@ -9490,6 +9583,7 @@ body {
 }
 
 .content-input[aria-invalid="true"],
+.content-textarea[aria-invalid="true"],
 .content-list select[aria-invalid="true"] {
   border-color: var(--destructive);
 }
@@ -10707,7 +10801,24 @@ function updateSelectedElement(event) {
       ? { ...(element.action || {}) }
       : handlers[index - 1];
     if (!Number.isInteger(index) || !handler) return;
-    handler[field] = eventHandlerField.value;
+    if (field === "switchCaseValue") {
+      const selectedCase = handler.cases?.find(
+        (item) => item.id === eventHandlerField.dataset.switchCaseId,
+      );
+      if (!selectedCase) return;
+      selectedCase.value = eventHandlerField.value;
+    } else {
+      handler[field] = eventHandlerField.value;
+    }
+    if (field === "switchElementPageId") {
+      const pageElements = getElementsOnPage(state, eventHandlerField.value);
+      if (
+        !pageElements.some(
+          (candidate) => candidate.id === handler.switchElementId,
+        )
+      )
+        handler.switchElementId = pageElements[0]?.id || "";
+    }
     if (field === "targetPageId") updateActionElementPage(handler);
     if (
       ["targetElementId", "targetPageId"].includes(field) &&
@@ -10737,6 +10848,10 @@ function updateSelectedElement(event) {
         "targetElementId",
         "targetPageId",
         "functionSource",
+        "switchSource",
+        "switchElementPageId",
+        "switchElementId",
+        "switchProperty",
       ].includes(field)
     )
       renderEventHandlers(element.action);
@@ -10853,11 +10968,7 @@ function updateSelectedElement(event) {
   if (conditionalActionField) {
     const branch = conditionalActionField.dataset.conditionBranch;
     const index = Number(conditionalActionField.dataset.actionIndex);
-    if (
-      !["actions", "elseActions"].includes(branch) ||
-      !Number.isInteger(index)
-    )
-      return;
+    if (!branch || !Number.isInteger(index)) return;
     const handlerIndex = Number(
       conditionalActionField.dataset.eventHandlerIndex,
     );
@@ -11120,6 +11231,18 @@ function updateSelectedElement(event) {
       break;
     case "property-input-max":
       element.max = event.target.value;
+      break;
+    case "property-textarea-placeholder":
+      element.placeholder = event.target.value;
+      break;
+    case "property-textarea-value":
+      element.value = event.target.value;
+      break;
+    case "property-textarea-required":
+      element.required = event.target.checked;
+      break;
+    case "property-textarea-rows":
+      element.rows = clampNumber(event.target.value, 1, 30, 4);
       break;
     case "property-disabled":
       element.disabled = event.target.checked;
@@ -11652,6 +11775,37 @@ document.addEventListener("click", (event) => {
     scheduleSave();
     return;
   }
+  const switchCaseControl = event.target.closest(
+    "[data-add-switch-case], [data-remove-switch-case], [data-toggle-switch-default]",
+  );
+  if (switchCaseControl) {
+    const element = state.elements.find((item) => item.id === state.selectedId);
+    if (!element?.action) return;
+    const index = Number(switchCaseControl.dataset.eventHandlerIndex);
+    const handler =
+      switchCaseControl.dataset.eventHandlerPrimary === "true"
+        ? element.action
+        : element.action.handlers?.[index - 1];
+    if (!handler || handler.type !== "switch") return;
+    handler.cases = Array.isArray(handler.cases) ? handler.cases : [];
+    if (switchCaseControl.hasAttribute("data-add-switch-case")) {
+      handler.cases.push({
+        id: createId(),
+        value: "null",
+        actions: [],
+      });
+    } else if (switchCaseControl.hasAttribute("data-remove-switch-case")) {
+      handler.cases = handler.cases.filter(
+        (item) => item.id !== switchCaseControl.dataset.removeSwitchCase,
+      );
+    } else {
+      handler.defaultEnabled = !handler.defaultEnabled;
+    }
+    renderEventHandlers(element.action);
+    renderPreview(false);
+    scheduleSave();
+    return;
+  }
   const addButton = event.target.closest("[data-add-condition-action]");
   const removeButton = event.target.closest("[data-remove-condition-action]");
   const addHandlerButton = event.target.closest("#add-event-handler");
@@ -11709,9 +11863,10 @@ document.addEventListener("click", (event) => {
   const branch = (addButton || removeButton).dataset[
     addButton ? "addConditionAction" : "removeConditionAction"
   ];
-  if (!["actions", "elseActions"].includes(branch)) return;
-  const lists = getConditionActionLists(conditionOwner);
-  const actions = lists[branch].map((action) => ({ ...action }));
+  if (!branch) return;
+  const actions = getWorkflowBranchActions(conditionOwner, branch).map(
+    (action) => ({ ...action }),
+  );
   if (addButton) {
     actions.push({
       type: "showElement",
@@ -11720,9 +11875,7 @@ document.addEventListener("click", (event) => {
   } else {
     actions.splice(Number(removeButton.dataset.actionIndex), 1);
   }
-  conditionOwner.actions = branch === "actions" ? actions : lists.actions;
-  conditionOwner.elseActions =
-    branch === "elseActions" ? actions : lists.elseActions;
+  setWorkflowBranchActions(conditionOwner, branch, actions);
   delete conditionOwner.effect;
   renderEventHandlers(element.action);
   renderPreview(false);
@@ -11762,7 +11915,24 @@ function updateAppLoadHandlerField(field) {
   const handler = actions?.[index];
   if (!Number.isInteger(index) || !handler) return;
   const fieldName = field.dataset.eventHandlerField;
-  if (fieldName !== "event") handler[fieldName] = field.value;
+  if (fieldName === "switchCaseValue") {
+    const selectedCase = handler.cases?.find(
+      (item) => item.id === field.dataset.switchCaseId,
+    );
+    if (!selectedCase) return;
+    selectedCase.value = field.value;
+  } else if (fieldName !== "event") {
+    handler[fieldName] = field.value;
+  }
+  if (fieldName === "switchElementPageId") {
+    const pageElements = getElementsOnPage(state, field.value);
+    if (
+      !pageElements.some(
+        (candidate) => candidate.id === handler.switchElementId,
+      )
+    )
+      handler.switchElementId = pageElements[0]?.id || "";
+  }
   if (!globalActionId) handler.event = "load";
   if (fieldName === "targetPageId") updateActionElementPage(handler);
   if (
@@ -11778,9 +11948,17 @@ function updateAppLoadHandlerField(field) {
   if (fieldName === "functionSource" && handler.functionSource === "asset")
     handler.scriptAssetId ||= state.assets.find(isJavaScriptAsset)?.id || "";
   if (
-    ["type", "property", "targetElementId", "targetPageId", "functionSource"].includes(
-      fieldName,
-    )
+    [
+      "type",
+      "property",
+      "targetElementId",
+      "targetPageId",
+      "functionSource",
+      "switchSource",
+      "switchElementPageId",
+      "switchElementId",
+      "switchProperty",
+    ].includes(fieldName)
   )
     renderManagedWorkflow(globalActionId);
   scheduleSave();
@@ -11923,6 +12101,27 @@ workflowDialog.addEventListener("click", (event) => {
     ? getManagedWorkflowActions(globalActionId)
     : null;
   if (globalActionId && !managedActions) return;
+  const switchCaseControl = event.target.closest(
+    "[data-add-switch-case], [data-remove-switch-case], [data-toggle-switch-default]",
+  );
+  if (switchCaseControl) {
+    const index = Number(switchCaseControl.dataset.eventHandlerIndex);
+    const handler = managedActions?.[index];
+    if (!handler || handler.type !== "switch") return;
+    handler.cases = Array.isArray(handler.cases) ? handler.cases : [];
+    if (switchCaseControl.hasAttribute("data-add-switch-case")) {
+      handler.cases.push({ id: createId(), value: "null", actions: [] });
+    } else if (switchCaseControl.hasAttribute("data-remove-switch-case")) {
+      handler.cases = handler.cases.filter(
+        (item) => item.id !== switchCaseControl.dataset.removeSwitchCase,
+      );
+    } else {
+      handler.defaultEnabled = !handler.defaultEnabled;
+    }
+    renderManagedWorkflow(globalActionId);
+    scheduleSave();
+    return;
+  }
   const removeHandler = event.target.closest(
     "[data-remove-event-handler][data-event-handler-app-load='true'], [data-remove-event-handler][data-global-action-id]",
   );
@@ -11962,7 +12161,7 @@ workflowDialog.addEventListener("click", (event) => {
   if (!actionsForContext) return;
   const index = Number((addAction || removeAction).dataset.eventHandlerIndex);
   const handler = actionsForContext[index];
-  if (!handler || handler.type !== "condition") return;
+  if (!handler || !isWorkflowBranchAction(handler)) return;
   const conditionOwner = getConditionOwnerForField(
     handler,
     addAction || removeAction,
@@ -11971,9 +12170,10 @@ workflowDialog.addEventListener("click", (event) => {
   const branch = (addAction || removeAction).dataset[
     addAction ? "addConditionAction" : "removeConditionAction"
   ];
-  if (!["actions", "elseActions"].includes(branch)) return;
-  const lists = getConditionActionLists(conditionOwner);
-  const actions = lists[branch].map((action) => ({ ...action }));
+  if (!branch) return;
+  const actions = getWorkflowBranchActions(conditionOwner, branch).map(
+    (action) => ({ ...action }),
+  );
   if (addAction) {
     actions.push({
       type: "showElement",
@@ -11982,9 +12182,7 @@ workflowDialog.addEventListener("click", (event) => {
   } else {
     actions.splice(Number(removeAction.dataset.actionIndex), 1);
   }
-  conditionOwner.actions = branch === "actions" ? actions : lists.actions;
-  conditionOwner.elseActions =
-    branch === "elseActions" ? actions : lists.elseActions;
+  setWorkflowBranchActions(conditionOwner, branch, actions);
   delete conditionOwner.effect;
   renderManagedWorkflow(actionId);
   scheduleSave();

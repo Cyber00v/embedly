@@ -10,6 +10,15 @@ import { createRuntimeBuilder } from "../src/runtime-builder.ts";
 import { createPreviewRenderer } from "../src/preview-renderer.ts";
 import { createWorkflowActionFields } from "../src/workflow/action-fields.ts";
 import {
+  ensureWorkflowActionIds,
+  getWorkflowActionBranches,
+  isWorkflowBranchAction,
+  serializeWorkflowGraph,
+} from "../src/workflow/graph.ts";
+import { createWorkflowConditionEditor } from "../src/workflow/condition-editor.ts";
+import { TemplateEngine } from "../src/template-engine.ts";
+import { EXPORT_HTML_TEMPLATES } from "../src/html-templates.ts";
+import {
   getElementsOnPage,
   getRequestIdOrDefault,
   getTargetPageId,
@@ -141,6 +150,243 @@ test("filters condition source elements using its selected source page", () => {
   assert.deepEqual(
     getElementsOnPage(state, pageId).map((element) => element.id),
     ["text-two", "button-two"],
+  );
+});
+
+test("resolves nested actions in Switch branches with colon-delimited branch IDs", () => {
+  const conditionEditor = createWorkflowConditionEditor({
+    isWorkflowBranchAction: (action) =>
+      isWorkflowBranchAction(action, []),
+  });
+  const selectedAction = { type: "back" };
+  const switchAction = {
+    type: "switch",
+    cases: [
+      {
+        id: "ready",
+        actions: [
+          {
+            type: "condition",
+            actions: [],
+            elseActions: [selectedAction],
+          },
+        ],
+      },
+    ],
+  };
+  const path = conditionEditor.conditionActionPathValue([
+    { branch: "case:ready", index: 0 },
+    { branch: "elseActions", index: 0 },
+  ]);
+  const parsedPath = conditionEditor.parseConditionActionPath(path);
+
+  assert.deepEqual(parsedPath, [
+    { branch: "case:ready", index: 0 },
+    { branch: "elseActions", index: 0 },
+  ]);
+  assert.equal(
+    conditionEditor.getConditionActionAtPath(switchAction, parsedPath),
+    selectedAction,
+  );
+});
+
+test("switch source element choices are scoped to a selected page", () => {
+  const state = {
+    currentPageId: "page-one",
+    pages: [
+      { id: "page-one", name: "One", kind: "page" },
+      { id: "page-two", name: "Two", kind: "page" },
+    ],
+    elements: [
+      { id: "input-one", type: "input", pageId: "page-one" },
+      { id: "input-two", type: "input", pageId: "page-two" },
+      { id: "label-two", type: "label", pageId: "page-two" },
+    ],
+  };
+  const handler = {
+    type: "switch",
+    switchSource: "element",
+    switchElementId: "input-two",
+  };
+  const selects = new Map();
+  const renderFields = createWorkflowActionFields({
+    state,
+    editorLanguage: "en",
+    localize: {
+      APIRequest: { en: "API request" },
+      Element: { en: "Element" },
+      Variable: { en: "Variable" },
+      FormFieldAlternativeA: { en: "Form field" },
+      Value: { en: "Value" },
+      SwitchSource: { en: "Source" },
+      TargetPage: { en: "Target page" },
+      AddSourceElementFirst: { en: "Add an element first" },
+      NoMatchingElements: { en: "No matching elements" },
+      Property: { en: "Property" },
+    },
+    getElementName: (element) => element.id,
+    getElementSourcePropertyOptions: () => [["Value", "value"]],
+  });
+
+  renderFields({
+    handler,
+    type: { value: "switch" },
+    title: { textContent: "Action 1" },
+    row: { append() {} },
+    addSelect(field, options, value, _ariaLabel, label) {
+      const select = { value: value || options[0]?.[1] || "" };
+      selects.set(field, { options, select, label });
+      return select;
+    },
+    addInput() {},
+  });
+
+  assert.equal(selects.get("switchElementPageId").select.value, "page-two");
+  assert.equal(selects.get("switchSource").label, "Source");
+  assert.equal(selects.get("switchElementPageId").label, "Target page");
+  assert.equal(selects.get("switchElementId").label, "Element");
+  assert.equal(selects.get("switchProperty").label, "Property");
+  assert.deepEqual(selects.get("switchElementId").options, [
+    ["input-two", "input-two"],
+    ["label-two", "label-two"],
+  ]);
+});
+
+test("keeps nested condition and switch branch actions distinct when serializing", () => {
+  const firstAction = { type: "back" };
+  const secondAction = { type: "navigate", pageId: "page-home" };
+  const switchAction = {
+    type: "switch",
+    cases: [
+      {
+        id: "case-ready",
+        value: '"ready"',
+        actions: [firstAction, secondAction],
+      },
+    ],
+    defaultEnabled: true,
+    defaultActions: [
+      {
+        type: "condition",
+        actions: [{ type: "back" }],
+        elseActions: [],
+      },
+    ],
+  };
+  const isBranchAction = (action) =>
+    isWorkflowBranchAction(action, []);
+  let nextId = 0;
+  ensureWorkflowActionIds([switchAction], {
+    isBranchAction,
+    createId: () => `id-${++nextId}`,
+  });
+
+  const actionId = `action:${switchAction.workflowId}`;
+  const branch = "case:case-ready";
+  const branchRootId = `branch:${switchAction.workflowId}:${branch}`;
+  const nodes = [
+    { id: "trigger", kind: "trigger" },
+    { id: actionId, kind: "action", action: switchAction },
+    { id: branchRootId, kind: "branch-root" },
+    {
+      id: "first",
+      kind: "branch-action",
+      parentConditionId: actionId,
+      branch,
+      action: firstAction,
+    },
+    {
+      id: "second",
+      kind: "branch-action",
+      parentConditionId: actionId,
+      branch,
+      action: secondAction,
+    },
+  ];
+  const serialized = serializeWorkflowGraph(
+    nodes,
+    [
+      { kind: "sequence", from: "trigger", to: actionId },
+      { kind: "branch", from: branchRootId, to: "first", branch },
+      { kind: "branch", from: "first", to: "second", branch },
+    ],
+    isBranchAction,
+  );
+
+  assert.deepEqual(serialized[0].cases[0].actions, [firstAction, secondAction]);
+  assert.ok(switchAction.workflowId);
+  assert.ok(firstAction.workflowId);
+  assert.ok(secondAction.workflowId);
+  assert.ok(switchAction.defaultActions[0].workflowId);
+  assert.ok(switchAction.defaultActions[0].actions[0].workflowId);
+  assert.deepEqual(
+    getWorkflowActionBranches(switchAction).map(({ key }) => key),
+    ["case:case-ready", "default"],
+  );
+});
+
+test("exports textarea label, placeholder, initial value, required state, and rows", () => {
+  const state = {
+    elements: [
+      {
+        id: "textarea-1",
+        type: "textarea",
+        pageId: "page-home",
+        content: "Details",
+        fieldName: "details",
+        placeholder: "Write details",
+        value: "Initial text",
+        required: true,
+        rows: 6,
+        styles: {},
+      },
+    ],
+    pages: [{ id: "page-home", kind: "page", name: "Home" }],
+    settings: {
+      appLanguage: "en",
+      appTopBarType: "none",
+      appApiProgressLabel: false,
+      appShowErrorMessage: true,
+    },
+    assets: [],
+    userComponents: [],
+    requests: [],
+  };
+  const buildMarkup = createPreviewRenderer({
+    TemplateEngine,
+    EXPORT_HTML_TEMPLATES,
+    state,
+    escapeHtml: TemplateEngine.escapeHtml,
+    normalizeClassNames: () => "",
+    getLocalizedContent: (element) => element.content,
+    getElementThemeColor: () => "#ffffff",
+    getExportElementThemeColor: () => "#ffffff",
+    getExportThemeColor: () => "#ffffff",
+    getElementFontSize: () => 16,
+    getScaledSpacingCss: () => "0px",
+    getSpacingCss: () => "0px",
+    clampNumber: (_value, _min, _max, fallback) => fallback,
+    safeColor: (_value, fallback) => fallback,
+    defaultBorderRadius: () => 0,
+    normalizeDimension: () => "",
+    getAbsoluteLayoutChildAlignment: () => null,
+    getFormName: (element) => element.fieldName,
+    inputTypes: [],
+    getAsset: () => null,
+    safeImageUrl: () => "",
+    isInsideCollection: () => false,
+    getVariantOptions: () => [],
+    getDefaultVariant: () => "",
+    normalizeOptions: () => [],
+    customComponentClass: () => "",
+    safeCustomHtml: () => "",
+  });
+
+  const markup = buildMarkup();
+  assert.match(markup, /<span data-localize-content>Details<\/span>/);
+  assert.match(
+    markup,
+    /<textarea class="content-textarea" name="details" data-form-name="details" aria-label="Details" placeholder="Write details" rows="6" required[^>]*>Initial text<\/textarea>/,
   );
 });
 

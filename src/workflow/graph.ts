@@ -5,8 +5,73 @@
 export function isWorkflowBranchAction(action, branchActionTypes) {
   return (
     action?.type === "condition" ||
+    action?.type === "switch" ||
     branchActionTypes.includes(action?.type)
   );
+}
+
+export function getWorkflowActionBranches(action = {}, isBranchAction = null) {
+  if (action.type === "switch") {
+    const branches = (Array.isArray(action.cases) ? action.cases : []).map(
+      (item, index) => ({
+        key: `case:${item.id}`,
+        label: String(item.value ?? `Case ${index + 1}`),
+        actions: Array.isArray(item.actions) ? item.actions : [],
+      }),
+    );
+    if (action.defaultEnabled || action.defaultActions?.length)
+      branches.push({
+        key: "default",
+        label: "Default",
+        actions: Array.isArray(action.defaultActions) ? action.defaultActions : [],
+      });
+    return branches;
+  }
+  if (
+    action.type === "condition" ||
+    (typeof isBranchAction === "function" && isBranchAction(action)) ||
+    (Array.isArray(isBranchAction) && isBranchAction.includes(action.type)) ||
+    Array.isArray(action.actions) ||
+    Array.isArray(action.elseActions)
+  ) {
+    const lists = getConditionActionLists(action);
+    return [
+      { key: "actions", label: "True", actions: lists.actions },
+      { key: "elseActions", label: "False", actions: lists.elseActions },
+    ];
+  }
+  return [];
+}
+
+export function getWorkflowBranchActions(action, branch) {
+  if (action?.type === "switch") {
+    if (branch === "default")
+      return Array.isArray(action.defaultActions) ? action.defaultActions : [];
+    if (branch.startsWith("case:")) {
+      const selectedCase = action.cases?.find(
+        (item) => `case:${item.id}` === branch,
+      );
+      return Array.isArray(selectedCase?.actions) ? selectedCase.actions : [];
+    }
+  }
+  return Array.isArray(action?.[branch]) ? action[branch] : [];
+}
+
+export function setWorkflowBranchActions(action, branch, actions) {
+  if (action?.type === "switch") {
+    if (branch === "default") {
+      action.defaultActions = actions;
+      return;
+    }
+    if (branch.startsWith("case:")) {
+      const selectedCase = action.cases?.find(
+        (item) => `case:${item.id}` === branch,
+      );
+      if (selectedCase) selectedCase.actions = actions;
+      return;
+    }
+  }
+  action[branch] = actions;
 }
 
 export function getConditionActionLists(action = {}) {
@@ -32,9 +97,9 @@ export function ensureWorkflowActionIds(
     visited.add(action);
     actionNodes.push(action);
     if (!isBranchAction(action)) return;
-    const lists = getConditionActionLists(action);
-    lists.actions.forEach(collect);
-    lists.elseActions.forEach(collect);
+    getWorkflowActionBranches(action, isBranchAction).forEach(({ actions }) =>
+      actions.forEach(collect),
+    );
   };
   actions.forEach(collect);
 
@@ -113,46 +178,48 @@ export function serializeWorkflowGraph(nodes, edges, isBranchAction) {
     )
     .forEach((condition) => {
       // Rebuild each branch list from its root edge and sequence edges, retaining unconnected actions last.
-      ["actions", "elseActions"].forEach((branch) => {
-        const branchNodes = nodes.filter(
-          (node) =>
-            node.kind === "branch-action" &&
-            node.parentConditionId === condition.id &&
-            node.branch === branch,
-        );
-        if (!branchNodes.length) return;
-        const branchNodeIds = new Set(branchNodes.map((node) => node.id));
-        const branchEdges = edges.filter(
-          (edge) => edge.kind === "branch" && edge.branch === branch,
-        );
-        const nextBySource = new Map(
-          branchEdges
-            .filter(
-              (edge) =>
-                branchNodeIds.has(edge.from) && branchNodeIds.has(edge.to),
-            )
-            .map((edge) => [edge.from, edge.to]),
-        );
-        const branchRootId = `branch:${condition.action.workflowId}:${branch}`;
-        const first = branchEdges.find(
-          (edge) =>
-            edge.from === branchRootId && branchNodeIds.has(edge.to),
-        )?.to;
-        const orderedBranch = [];
-        const branchVisited = new Set();
-        let nextId = first;
-        while (nextId && !branchVisited.has(nextId)) {
-          const node = byId.get(nextId);
-          if (!node || node.kind !== "branch-action") break;
-          branchVisited.add(nextId);
-          orderedBranch.push(node.action);
-          nextId = nextBySource.get(nextId);
-        }
-        branchNodes.forEach((node) => {
-          if (!branchVisited.has(node.id)) orderedBranch.push(node.action);
-        });
-        condition.action[branch] = orderedBranch;
-      });
+      getWorkflowActionBranches(condition.action, isBranchAction).forEach(
+        ({ key: branch }) => {
+          const branchNodes = nodes.filter(
+            (node) =>
+              node.kind === "branch-action" &&
+              node.parentConditionId === condition.id &&
+              node.branch === branch,
+          );
+          if (!branchNodes.length) return;
+          const branchNodeIds = new Set(branchNodes.map((node) => node.id));
+          const branchEdges = edges.filter(
+            (edge) => edge.kind === "branch" && edge.branch === branch,
+          );
+          const nextBySource = new Map(
+            branchEdges
+              .filter(
+                (edge) =>
+                  branchNodeIds.has(edge.from) && branchNodeIds.has(edge.to),
+              )
+              .map((edge) => [edge.from, edge.to]),
+          );
+          const branchRootId = `branch:${condition.action.workflowId}:${branch}`;
+          const first = branchEdges.find(
+            (edge) =>
+              edge.from === branchRootId && branchNodeIds.has(edge.to),
+          )?.to;
+          const orderedBranch = [];
+          const branchVisited = new Set();
+          let nextId = first;
+          while (nextId && !branchVisited.has(nextId)) {
+            const node = byId.get(nextId);
+            if (!node || node.kind !== "branch-action") break;
+            branchVisited.add(nextId);
+            orderedBranch.push(node.action);
+            nextId = nextBySource.get(nextId);
+          }
+          branchNodes.forEach((node) => {
+            if (!branchVisited.has(node.id)) orderedBranch.push(node.action);
+          });
+          setWorkflowBranchActions(condition.action, branch, orderedBranch);
+        },
+      );
     });
   return ordered;
 }

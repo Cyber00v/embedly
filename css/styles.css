@@ -1834,6 +1834,27 @@ html[dir="ltr"]
   font-size: 14px;
 }
 
+.preview-content.type-textarea,
+.content-textarea-label {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.content-textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: calc(44px * var(--element-size-scale, 1));
+  padding: 10px 12px;
+  border: 1px solid #dbe5e1;
+  border-radius: var(--radius-sm, 8px);
+  background: #fff;
+  color: #52615c;
+  font: inherit;
+  resize: vertical;
+}
+
 .preview-content.type-input[type="range"] {
   min-height: 24px;
   padding: 0;
@@ -2129,6 +2150,59 @@ html[dir="ltr"]
   gap: 7px;
 }
 
+.workflow-workspace {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 320px);
+  gap: 10px;
+  align-items: stretch;
+}
+
+.workflow-inspector {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.workflow-inspector-title {
+  margin: 0;
+  color: #30433c;
+  font-size: 15px;
+}
+
+.workflow-inspector-summary,
+.workflow-inspector-empty {
+  margin: 0;
+  color: #687972;
+  font-size: 12px;
+}
+
+.workflow-inspector-content {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.workflow-inspector-content select,
+.workflow-inspector-content input:not([type="checkbox"]):not([type="radio"]),
+.workflow-inspector-content textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+
+.workflow-node-properties {
+  min-width: 0;
+  margin: 0;
+}
+
 .workflow-launch-button {
   display: flex;
   width: 100%;
@@ -2256,6 +2330,14 @@ html[dir="ltr"]
     min-height: 500px;
   }
 
+  .workflow-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .workflow-inspector {
+    max-height: 280px;
+  }
+
   .workflow-dialog-actions {
     align-items: stretch;
     flex-direction: column;
@@ -2375,10 +2457,17 @@ html[dir="ltr"]
 }
 
 .workflow-action-node {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
   max-width: 340px;
   margin: 0;
-  padding: 12px;
-  gap: 9px;
+  padding: 10px 12px;
+  gap: 8px;
+}
+
+.workflow-action-node > .workflow-action-field-label {
+  margin-top: 0;
 }
 
 .workflow-action-node .token-picker-input {
@@ -2579,8 +2668,12 @@ html[dir="ltr"]
 }
 
 .workflow-condition-branch-node {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 8px;
   width: 340px;
-  padding: 12px;
+  padding: 10px 12px;
   border-color: #d1b677;
   background: linear-gradient(145deg, #fffaf0, #fff);
 }
@@ -2615,6 +2708,8 @@ html[dir="ltr"]
 .workflow-node-header {
   display: flex;
   min-height: 26px;
+  min-width: 0;
+  flex: 1;
   align-items: center;
   gap: 8px;
   cursor: grab;
@@ -2645,13 +2740,36 @@ html[dir="ltr"]
 
 .workflow-node-kind {
   margin-inline-start: auto;
+  flex: 0 0 auto;
+  max-width: 46%;
+  overflow: hidden;
   color: #6b7d75;
   font-size: 10px;
   font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.workflow-action-node .event-action-title,
+.workflow-condition-branch-node .event-action-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .workflow-trigger-node select {
   width: 100%;
+}
+
+.workflow-action-node > .workflow-handle-output {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.workflow-condition-branch-node > .workflow-handle-output {
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .workflow-trigger-help {
@@ -2721,6 +2839,38 @@ html[dir="ltr"]
 .workflow-branch-port-true {
   right: -10px;
   transform: translate(100%, -50%);
+}
+
+.workflow-branch-port-switch {
+  right: -10px;
+  transform: translate(100%, -50%);
+}
+
+.workflow-switch-branch-node-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.workflow-switch-case-value {
+  min-width: 0;
+  width: 100%;
+}
+
+.workflow-switch-case-label {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 4px;
+  color: #52615c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.workflow-switch-case-remove,
+.workflow-switch-case-add,
+.workflow-switch-default-toggle {
+  white-space: nowrap;
 }
 
 .workflow-condition-branch-node > .workflow-handle-output {

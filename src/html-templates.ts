@@ -26,6 +26,7 @@
 {{{script}}}
   </script>`,
   input: `{{{indent}}}<input class="{{{className}}}" type="{{inputType}}" name="{{{formName}}}" data-form-name="{{{formName}}}" aria-label="{{{accessibleName}}}" placeholder="{{{content}}}" style="{{{styles}}}"{{{elementAttributes}}}{{{bindingAttributes}}}{{{min}}}{{{max}}}{{{disabled}}}>`,
+  textarea: `{{{indent}}}<label class="{{{className}}}" style="{{{styles}}}"{{{elementAttributes}}}><span data-localize-content>{{{label}}}</span><textarea class="content-textarea" name="{{{formName}}}" data-form-name="{{{formName}}}" aria-label="{{{accessibleName}}}" placeholder="{{{placeholder}}}" rows="{{rows}}"{{{required}}}{{{bindingAttributes}}}{{{disabled}}}>{{{value}}}</textarea></label>`,
   filePicker: `{{{indent}}}<button type="button" class="{{{className}}}" data-file-picker data-file-picker-mode="{{mode}}" data-file-picker-appearance="{{appearance}}" data-file-picker-value="[]" name="{{{formName}}}" data-form-name="{{{formName}}}" aria-label="{{{accessibleName}}}" style="{{{styles}}}"{{{elementAttributes}}}{{{bindingAttributes}}}{{{disabled}}}><span data-localize-content>{{{content}}}</span></button>`,
   image: `{{{indent}}}<img class="{{{className}}}"{{{source}}} alt="{{{alt}}}" style="{{{styles}}};object-fit:{{fit}}"{{{elementAttributes}}}>`,
 });

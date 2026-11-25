@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 // Draws workflow connection paths and the compact node overview.
- 
+
 export function renderWorkflowEdges(
   stage,
   svg,
@@ -9,6 +9,7 @@ export function renderWorkflowEdges(
   zoom,
   { getEditorState, escapeHtml },
 ) {
+
   const stageRect = stage.getBoundingClientRect();
   const edgeMarkup = [];
   const paths = [];
@@ -34,7 +35,7 @@ export function renderWorkflowEdges(
     const path = `M ${x1} ${y1} C ${x1 + curve} ${y1}, ${x2 - curve} ${y2}, ${x2} ${y2}`;
     // Keep an invisible, focusable path above the visible stroke for reliable edge selection.
     paths.push(
-      `<path class="workflow-edge-path workflow-edge-${edge.kind}" d="${path}" data-workflow-edge-id="${escapeHtml(edge.id)}" tabindex="0" role="button" aria-label="${escapeHtml(edge.label || "Workflow connection")}"></path>`,
+      `<path class="workflow-edge-path workflow-edge-${escapeHtml(edge.kind)}" d="${path}" data-workflow-edge-id="${escapeHtml(edge.id)}" tabindex="0" role="button" aria-label="${escapeHtml(edge.label || "Workflow connection")}"></path>`,
     );
     edgeMarkup.push(
       `<path class="workflow-edge-visible workflow-edge-${edge.kind}" d="${path}"></path>`,
@@ -62,24 +63,32 @@ export function renderWorkflowEdges(
 export function renderWorkflowMinimap(minimap, nodeLayer, layout, graphKey) {
   if (!minimap) return;
   const nodes = [...nodeLayer.children];
+  
+  const readPos = (value, fallback) => {
+    const n = Number.parseFloat(value);
+    return Number.isFinite(n) ? n : fallback;
+  };
+
   const maxX = Math.max(
     1,
     ...nodes.map(
-      (node) => Number.parseFloat(node.style.left) + node.offsetWidth,
+      (node) => readPos(node.style.left, node.offsetLeft) + node.offsetWidth,
     ),
   );
+
   const maxY = Math.max(
     1,
     ...nodes.map(
-      (node) => Number.parseFloat(node.style.top) + node.offsetHeight,
+      (node) => readPos(node.style.top, node.offsetTop) + node.offsetHeight,
     ),
   );
+
   minimap.dataset.workflowGraph = graphKey;
   // Scale nodes relative to the graph bounds so their relative positions remain recognizable.
   minimap.innerHTML = nodes
     .map((node) => {
-      const left = (Number.parseFloat(node.style.left) / maxX) * 170;
-      const top = (Number.parseFloat(node.style.top) / maxY) * 86;
+      const left = (readPos(node.style.left, node.offsetLeft) / maxX) * 170;
+      const top = (readPos(node.style.top, node.offsetTop) / maxY) * 86;
       const width = Math.max(5, (node.offsetWidth / maxX) * 170);
       const height = Math.max(4, (node.offsetHeight / maxY) * 86);
       return `<span class="workflow-minimap-node ${node.classList.contains("workflow-trigger-node") ? "is-trigger" : ""}" style="left:${left}px;top:${top}px;width:${width}px;height:${height}px"></span>`;

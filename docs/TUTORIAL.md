@@ -92,6 +92,7 @@ container on the page, new elements may be placed inside it automatically.
 | Text & display | **Badge** | Display a short status label. |
 | Text & display | **Divider** | Separate sections visually. |
 | Form elements | **Input** | Collect typed text, numeric, date, and other supported values. |
+| Form elements | **Textarea** | Collect multi-line text with a label, placeholder, initial value, required state, and configurable rows. |
 | Form elements | **Checkbox** | Collect a yes/no or grouped selection. |
 | Form elements | **Radio Button** | Let the user choose one option. |
 | Form elements | **Switch** | Collect a boolean choice. |
@@ -251,6 +252,7 @@ such as `{{form.email}}`. Depending on element type, this section can also
 contain:
 
 - Input type and minimum/maximum values.
+- Textarea placeholder, default value, required state, and row count.
 - Default checked state and checkbox submitted value.
 - List multi-select and file picker mode/appearance.
 - Progress mode, current value, and maximum.

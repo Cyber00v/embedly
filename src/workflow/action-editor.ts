@@ -2,6 +2,7 @@
 import { createWorkflowActionFields } from "./action-fields.ts";
 import { createWorkflowConditionBranches } from "./condition-branches.ts";
 import { getRequestIdOrDefault } from "./action-selection.ts";
+import { getWorkflowActionBranches } from "./graph.ts";
  
 // Composes trigger, token, action, and branch nodes into the interactive workflow graph.
 export function createWorkflowActionEditor(dependencies) {
@@ -25,6 +26,7 @@ export function createWorkflowActionEditor(dependencies) {
     createElement,
     escapeHtml,
     isJavaScriptAsset,
+    getElementSourcePropertyOptions,
     clampNumber,
     ensureWorkflowActionIds,
     getWorkflowGraphLayout,
@@ -48,11 +50,11 @@ export function createWorkflowActionEditor(dependencies) {
   const renderWorkflowActionFields = createWorkflowActionFields({
     state, editorLanguage, localize, variantLabels, getElementName,
     normalizeChangePropertyAction, getChangePropertyOptions, getVariantOptions,
-    isJavaScriptAsset,
+    isJavaScriptAsset, getElementSourcePropertyOptions,
   });
   const renderWorkflowConditionBranches = createWorkflowConditionBranches({
     renderConditionOptions, twkPermissionActionTypes, isWorkflowBranchAction,
-    editorLanguage, localize,
+    editorLanguage, localize, createId,
   });
 
 function renderEventHandlers(
@@ -98,6 +100,8 @@ function renderEventHandlers(
   viewport.className = "workflow-viewport";
   viewport.dataset.workflowGraph = graphKey;
   viewport.tabIndex = 0;
+  const workspace = document.createElement("div");
+  workspace.className = "workflow-workspace";
   const stage = document.createElement("div");
   stage.className = "workflow-stage";
   stage.dataset.workflowGraph = graphKey;
@@ -111,8 +115,32 @@ function renderEventHandlers(
   const minimap = document.createElement("div");
   minimap.className = "workflow-minimap";
   minimap.hidden = !layout.minimapOpen;
+  const inspector = document.createElement("aside");
+  inspector.className = "workflow-inspector";
+  inspector.setAttribute(
+    "aria-label",
+    localize.Properties[editorLanguage],
+  );
+  const inspectorTitle = document.createElement("h3");
+  inspectorTitle.className = "workflow-inspector-title";
+  inspectorTitle.textContent = localize.Properties[editorLanguage];
+  const inspectorSummary = document.createElement("p");
+  inspectorSummary.className = "workflow-inspector-summary";
+  const inspectorEmpty = document.createElement("p");
+  inspectorEmpty.className = "workflow-inspector-empty";
+  inspectorEmpty.textContent =
+    localize.SelectWorkflowNodeToEdit[editorLanguage];
+  const inspectorContent = document.createElement("div");
+  inspectorContent.className = "workflow-inspector-content";
+  inspector.append(
+    inspectorTitle,
+    inspectorSummary,
+    inspectorEmpty,
+    inspectorContent,
+  );
+  workspace.append(viewport, inspector);
   container.classList.add("workflow-editor");
-  container.append(toolbar, viewport, minimap);
+  container.append(toolbar, workspace, minimap);
   const handlers = appLoad
     ? normalizeAppLoadHandlers(action.handlers).map((handler) => ({
         ...handler,
@@ -153,8 +181,32 @@ function renderEventHandlers(
         ]
       : [];
   const branchRootWorkflowNodes = [];
+  const workflowPropertiesByNodeId = new Map();
+  const showNodeProperties = (nodeId) => {
+    const nodeProperties = workflowPropertiesByNodeId.get(nodeId);
+    inspectorContent.replaceChildren();
+    if (!nodeProperties) {
+      inspectorSummary.textContent = "";
+      inspectorEmpty.hidden = false;
+      return;
+    }
+    inspectorSummary.textContent = `${nodeProperties.title} · ${nodeProperties.type}`;
+    inspectorEmpty.hidden = true;
+    inspectorContent.append(nodeProperties.content);
+  };
   // Keep IDs stable across redraws so persisted positions and connections stay attached to their nodes.
   handlers.forEach((handler, index) => {
+    if (handler.type === "switch") {
+      handler.cases = Array.isArray(handler.cases) ? handler.cases : [];
+      handler.cases.forEach((item) => {
+        item.id ||= createId();
+        item.value ??= "null";
+        item.actions = Array.isArray(item.actions) ? item.actions : [];
+      });
+      handler.defaultActions = Array.isArray(handler.defaultActions)
+        ? handler.defaultActions
+        : [];
+    }
     if (handler.type === "request") {
       handler.requestId = getRequestIdOrDefault(
         state.requests,
@@ -327,7 +379,7 @@ function renderEventHandlers(
   handlers.forEach((handler, index) => {
     const row = document.createElement("div");
     row.tabIndex = 0;
-    row.className = `condition-action event-action-card workflow-node workflow-action-node${handler.type === "condition" ? " workflow-condition-node" : twkPermissionActionTypes.includes(handler.type) ? " workflow-permission-node" : ""}`;
+    row.className = `workflow-node workflow-action-node${handler.type === "condition" ? " workflow-condition-node" : twkPermissionActionTypes.includes(handler.type) ? " workflow-permission-node" : ""}`;
     row.dataset.workflowNodeId = `action:${handler.workflowId}`;
     row.dataset.workflowEventName = appLoad
       ? "load"
@@ -337,6 +389,12 @@ function renderEventHandlers(
     row.dataset.workflowGraph = graphKey;
     row.dataset.workflowHandle = "in";
     row.dataset.workflowPortId = row.dataset.workflowNodeId;
+    const propertyForm = document.createElement("div");
+    propertyForm.className =
+      "condition-action event-action-card workflow-node-properties";
+    propertyForm.dataset.workflowNodeId = row.dataset.workflowNodeId;
+    propertyForm.dataset.workflowEventName = row.dataset.workflowEventName;
+    propertyForm.dataset.workflowGraph = graphKey;
     const eventIndices = eventGroups.get(row.dataset.workflowEventName) || [];
     const eventIndex = eventIndices.indexOf(index);
     const actionPosition =
@@ -348,25 +406,39 @@ function renderEventHandlers(
     row.style.top = `${actionPosition.y}px`;
     const outputHandle = document.createElement("button");
     if (isWorkflowBranchAction(handler)) {
-      [
-        ["elseActions", "workflow-handle-condition-false"],
-        ["actions", "workflow-handle-condition-true"],
-      ].forEach(([branch, positionClass]) => {
+      getWorkflowActionBranches(handler, isWorkflowBranchAction).forEach(
+        ({ key: branch, label }, branchIndex, branches) => {
         const handle = document.createElement("button");
         handle.type = "button";
-        handle.className = `workflow-handle workflow-handle-output ${positionClass}`;
+        handle.className = `workflow-handle workflow-handle-output ${
+          branch === "actions"
+            ? "workflow-handle-condition-true"
+            : branch === "elseActions"
+              ? "workflow-handle-condition-false"
+              : "workflow-handle-switch-case"
+        }`;
         handle.dataset.workflowHandle = "out";
         handle.dataset.workflowNodeId = row.dataset.workflowNodeId;
-        handle.dataset.workflowPortId = `${row.dataset.workflowNodeId}:${branch === "actions" ? "true" : "false"}`;
+        handle.dataset.workflowPortId = `${row.dataset.workflowNodeId}:${branch}`;
         handle.dataset.workflowBranch = branch;
+        if (handler.type === "switch") {
+          handle.style.top = `${Math.round(
+            ((branchIndex + 1) / (branches.length + 1)) * 100,
+          )}%`;
+          handle.style.transform = "translateY(-50%)";
+        }
         const branchLabel =
           twkPermissionActionTypes.includes(handler.type)
             ? branch === "actions"
               ? localize.Granted[editorLanguage]
               : localize.Denied[editorLanguage]
-            : branch === "actions"
-              ? localize.True[editorLanguage]
-              : localize.False[editorLanguage];
+            : handler.type === "switch"
+              ? label === "Default"
+                ? localize.DefaultBranch[editorLanguage]
+                : `${localize.CaseMatchValue[editorLanguage]}: ${label}`
+              : branch === "actions"
+                ? localize.True[editorLanguage]
+                : localize.False[editorLanguage];
         handle.setAttribute(
           "aria-label",
           localize.BranchOutput[editorLanguage].replace(
@@ -376,8 +448,13 @@ function renderEventHandlers(
         );
         row.append(handle);
         const portLabel = document.createElement("span");
-        portLabel.className = `workflow-branch-port-label workflow-branch-port-${branch === "actions" ? "true" : "false"}`;
+        portLabel.className = `workflow-branch-port-label workflow-branch-port-${branch === "actions" ? "true" : branch === "elseActions" ? "false" : "switch"}`;
         portLabel.textContent = branchLabel;
+        if (handler.type === "switch") {
+          portLabel.style.top = handle.style.top;
+          portLabel.style.right = "-10px";
+          portLabel.style.transform = "translate(100%, -50%)";
+        }
         row.append(portLabel);
       });
     } else {
@@ -398,21 +475,23 @@ function renderEventHandlers(
     nodeHeader.append(nodeIcon);
     const title = document.createElement("span");
     title.className = "event-action-title";
-    title.textContent = localize.IndexedAction[editorLanguage].replace(
-      "{index}",
-      () => String(index + 1),
-    );
+    title.textContent = handler.workflowTitle || "";
     nodeHeader.append(title);
     const nodeKind = document.createElement("span");
     nodeKind.className = "workflow-node-kind";
-    nodeKind.textContent = twkPermissionActionTypes.includes(handler.type)
-      ? "Permission"
-      : handler.type === "condition"
-        ? "Condition"
-        : "Action";
     nodeHeader.append(nodeKind);
     row.append(nodeHeader);
-    const addSelect = (field, options, value, ariaLabel) => {
+    const addFieldLabel = (field, control, labelText) => {
+      if (!labelText) return;
+      const fieldId = `workflow-${handler.workflowId}-${field}`;
+      control.id = fieldId;
+      const label = document.createElement("label");
+      label.className = "field-label workflow-action-field-label";
+      label.htmlFor = fieldId;
+      label.textContent = labelText;
+      propertyForm.append(label);
+    };
+    const addSelect = (field, options, value, ariaLabel, labelText = "") => {
       const select = document.createElement("select");
       select.dataset.eventHandlerField = field;
       select.dataset.eventHandlerIndex = String(index);
@@ -424,10 +503,11 @@ function renderEventHandlers(
         select.add(new Option(label, optionValue)),
       );
       select.value = value || options[0]?.[1] || "";
-      row.append(select);
+      addFieldLabel(field, select, labelText);
+      propertyForm.append(select);
       return select;
     };
-    const addInput = (field, value, ariaLabel, options = {}) => {
+    const addInput = (field, value, ariaLabel, options = {}, labelText = "") => {
       const input = document.createElement(
         options.multiline ? "textarea" : "input",
       );
@@ -443,13 +523,14 @@ function renderEventHandlers(
       if (globalWorkflow) input.dataset.globalActionId = globalActionId;
       input.dataset.workflowInputId = `${index}-${field}`;
       input.setAttribute("aria-label", ariaLabel);
+      addFieldLabel(field, input, labelText);
       attachTokenPicker(
         input,
         managedWorkflow ? null : selectedElement,
         undefined,
         globalWorkflow,
       );
-      row.append(input.parentElement);
+      propertyForm.append(input.parentElement);
       return input;
     };
     const addParameterList = (field, serializedValue, ariaLabel) => {
@@ -585,7 +666,7 @@ function renderEventHandlers(
         syncParameters();
       });
       container.append(serializedField, list, error, addButton);
-      row.append(container);
+      propertyForm.append(container);
       return serializedField;
     };
 
@@ -595,6 +676,7 @@ function renderEventHandlers(
         eventOptions,
         handler.event || "click",
         `${title.textContent}: ${localize.TriggerEvent[editorLanguage]}`,
+        localize.TriggerEvent[editorLanguage],
       );
     }
 
@@ -609,6 +691,7 @@ function renderEventHandlers(
         [localize.SetVariableAction[editorLanguage], "setVariable"],
         [localize.ChangeElementPropertyAction[editorLanguage], "changeProperty"],
         [localize.RunConditionalActionsAction[editorLanguage], "condition"],
+        [localize.SwitchAction[editorLanguage], "switch"],
         [localize.ShowMessageAction[editorLanguage], "message"],
         [localize.ShowSheetAction[editorLanguage], "showSheet"],
         [localize.HideSheetAction[editorLanguage], "hideSheet"],
@@ -619,24 +702,102 @@ function renderEventHandlers(
       ],
       handler.type,
       `${title.textContent}: ${localize.ActionType[editorLanguage]}`,
+      localize.ActionType[editorLanguage],
     );
+    const defaultTitle = localize.IndexedAction[editorLanguage].replace(
+      "{index}",
+      () => String(index + 1),
+    );
+    title.textContent = handler.workflowTitle || defaultTitle;
+    nodeKind.textContent = type.selectedOptions[0]?.textContent || "";
+    const workflowTitleInput = document.createElement("input");
+    workflowTitleInput.type = "text";
+    workflowTitleInput.value = handler.workflowTitle || "";
+    workflowTitleInput.placeholder = defaultTitle;
+    workflowTitleInput.dataset.eventHandlerField = "workflowTitle";
+    workflowTitleInput.dataset.eventHandlerIndex = String(index);
+    workflowTitleInput.dataset.eventHandlerPrimary = String(handler.isPrimary);
+    workflowTitleInput.dataset.eventHandlerAppLoad = String(appLoad);
+    if (globalWorkflow)
+      workflowTitleInput.dataset.globalActionId = globalActionId;
+    workflowTitleInput.setAttribute(
+      "aria-label",
+      `${title.textContent}: ${localize.Title[editorLanguage]}`,
+    );
+    addFieldLabel("workflowTitle", workflowTitleInput, localize.Title[editorLanguage]);
+    workflowTitleInput.addEventListener("input", () => {
+      title.textContent = workflowTitleInput.value.trim() || defaultTitle;
+      type.setAttribute(
+        "aria-label",
+        `${title.textContent}: ${localize.ActionType[editorLanguage]}`,
+      );
+      workflowTitleInput.setAttribute(
+        "aria-label",
+        `${title.textContent}: ${localize.Title[editorLanguage]}`,
+      );
+      const nodeProperties = workflowPropertiesByNodeId.get(
+        row.dataset.workflowNodeId,
+      );
+      if (nodeProperties) nodeProperties.title = title.textContent;
+      if (editorState.selectedNodeId === row.dataset.workflowNodeId)
+        inspectorSummary.textContent = `${title.textContent} · ${nodeKind.textContent}`;
+    });
+    propertyForm.append(workflowTitleInput);
 
     const conditionActionFields = isWorkflowBranchAction(handler)
       ? renderWorkflowConditionBranches({
-          handler, index, appLoad, globalActionId, row, actionPosition, nodeLayer, graphKey,
-          layout, branchRootWorkflowNodes,
+          handler, index, appLoad, globalActionId, row: propertyForm, actionPosition, nodeLayer, graphKey,
+          layout, branchRootWorkflowNodes, workflowPropertiesByNodeId,
         })
       : [];
     renderWorkflowActionFields({
-      handler, type, title, row, addSelect, addInput, addParameterList,
+      handler, type, title, row: propertyForm, addSelect, addInput, addParameterList,
     });
+    if (handler.type === "switch") {
+      const addCase = document.createElement("button");
+      addCase.type = "button";
+      addCase.className = "button button-quiet workflow-switch-case-add";
+      addCase.dataset.addSwitchCase = "";
+      addCase.dataset.eventHandlerIndex = String(index);
+      addCase.dataset.eventHandlerPrimary = String(handler.isPrimary);
+      addCase.dataset.eventHandlerAppLoad = String(appLoad);
+      if (globalWorkflow) addCase.dataset.globalActionId = globalActionId;
+      addCase.textContent = localize.AddCase[editorLanguage];
+      propertyForm.append(addCase);
+
+      const toggleDefault = document.createElement("button");
+      toggleDefault.type = "button";
+      toggleDefault.className = "button button-quiet workflow-switch-default-toggle";
+      toggleDefault.dataset.toggleSwitchDefault = "";
+      toggleDefault.dataset.eventHandlerIndex = String(index);
+      toggleDefault.dataset.eventHandlerPrimary = String(handler.isPrimary);
+      toggleDefault.dataset.eventHandlerAppLoad = String(appLoad);
+      if (globalWorkflow)
+        toggleDefault.dataset.globalActionId = globalActionId;
+      toggleDefault.textContent = handler.defaultEnabled
+        ? localize.RemoveCase[editorLanguage]
+        : localize.UseDefaultBranch[editorLanguage];
+      propertyForm.append(toggleDefault);
+    }
+
+    const resolveBranchAction = (pathValue = "") =>
+      pathValue.split("/").filter(Boolean).reduce((action, part) => {
+        const separatorIndex = part.lastIndexOf(":");
+        const branch = part.slice(0, separatorIndex);
+        const actionIndex = part.slice(separatorIndex + 1);
+        const nestedActions = getWorkflowBranchActions(action, branch);
+        const parsedIndex = Number(actionIndex);
+        return Number.isInteger(parsedIndex)
+          ? nestedActions[parsedIndex] || null
+          : null;
+      }, handler);
 
     const actionHelp = document.createElement("span");
     actionHelp.className = "event-action-help";
     actionHelp.textContent = localize.SelfContentTokenHelp[editorLanguage];
-    row.append(actionHelp);
+    propertyForm.append(actionHelp);
 
-    row.querySelectorAll("[data-event-handler-field]").forEach((field) => {
+    propertyForm.querySelectorAll("[data-event-handler-field]").forEach((field) => {
       if (globalWorkflow) field.dataset.globalActionId = globalActionId;
       const fieldName = field.dataset.eventHandlerField;
       if (
@@ -655,28 +816,30 @@ function renderEventHandlers(
     const addWorkflowInputPort = (field, inputId) => {
       field.dataset.workflowInputId = inputId;
     };
-    row
+    propertyForm
       .querySelectorAll(
         '[data-event-condition-field="property-condition-value"]',
       )
-      .forEach((field) =>
+      .forEach((field) => {
+        const conditionAction = resolveBranchAction(
+          field.dataset.conditionActionOwnerPath,
+        );
         addWorkflowInputPort(
           field,
-          `input:${handler.workflowId}:condition.value`,
-        ),
-      );
+          `input:${conditionAction?.workflowId || handler.workflowId}:condition.value`,
+        );
+      });
     conditionActionFields
       .filter((field) =>
         ["value", "values"].includes(field.dataset.conditionAction),
       )
       .forEach((field) => {
-        const branch = field.dataset.conditionBranch;
-        const nestedAction = handler[branch]?.[
-          Number.parseInt(field.dataset.actionIndex, 10)
-        ];
+        const nestedAction = resolveBranchAction(
+          field.dataset.conditionActionPath,
+        );
         addWorkflowInputPort(
           field,
-          `input:${nestedAction?.workflowId || handler.workflowId}:${branch}:${field.dataset.conditionAction}`,
+          `input:${nestedAction?.workflowId || handler.workflowId}:${field.dataset.conditionAction}`,
         );
       });
     if (index > 0 || managedWorkflow) {
@@ -687,8 +850,13 @@ function renderEventHandlers(
       remove.dataset.eventHandlerAppLoad = String(appLoad);
       if (globalWorkflow) remove.dataset.globalActionId = globalActionId;
       remove.textContent = localize.RemoveAction[editorLanguage];
-      row.append(remove);
+      propertyForm.append(remove);
     }
+    workflowPropertiesByNodeId.set(row.dataset.workflowNodeId, {
+      title: title.textContent,
+      type: nodeKind.textContent,
+      content: propertyForm,
+    });
     nodeLayer.append(row);
   });
 
@@ -727,25 +895,29 @@ function renderEventHandlers(
   layout.edges = layout.edges.filter((edge) => edge.kind !== "branch");
   rootWorkflowNodes.forEach((node) => {
     if (!isWorkflowBranchAction(node.action)) return;
-    ["actions", "elseActions"].forEach((branch) => {
-      const branchRootId = `branch:${node.action.workflowId}:${branch}`;
-      const label = twkPermissionActionTypes.includes(node.action.type)
-        ? branch === "actions"
-          ? "Granted"
-          : "Denied"
-        : branch === "actions"
-          ? "True"
-          : "False";
-      const rootEdge = createWorkflowEdge(
-        node.id,
-        branchRootId,
-        "branch",
-        label,
-      );
-      rootEdge.branch = branch;
-      rootEdge.fromPort = `${node.id}:${branch === "actions" ? "true" : "false"}`;
-      layout.edges.push(rootEdge);
-    });
+    getWorkflowActionBranches(node.action, isWorkflowBranchAction).forEach(
+      ({ key: branch, label }) => {
+        const branchRootId = `branch:${node.action.workflowId}:${branch}`;
+        const branchLabel = twkPermissionActionTypes.includes(node.action.type)
+          ? branch === "actions"
+            ? "Granted"
+            : "Denied"
+          : node.action.type === "switch"
+            ? label
+            : branch === "actions"
+              ? "True"
+              : "False";
+        const rootEdge = createWorkflowEdge(
+          node.id,
+          branchRootId,
+          "branch",
+          branchLabel,
+        );
+        rootEdge.branch = branch;
+        rootEdge.fromPort = `${node.id}:${branch}`;
+        layout.edges.push(rootEdge);
+      },
+    );
   });
   layout.edges = layout.edges.filter((edge) => {
     if (edge.kind === "branch")
@@ -793,6 +965,13 @@ function renderEventHandlers(
   viewport.style.setProperty("--workflow-zoom", String(layout.zoom));
   renderWorkflowEdges(stage, svg, layout, layout.zoom);
   renderWorkflowMinimap(minimap, nodeLayer, layout, graphKey);
+  const selectedNode = editorState.selectedNodeId
+    ? nodeLayer.querySelector(
+        `[data-workflow-node-id="${CSS.escape(editorState.selectedNodeId)}"]`,
+      )
+    : null;
+  selectedNode?.classList.add("is-selected");
+  showNodeProperties(editorState.selectedNodeId);
   attachWorkflowCanvasInteractions({
     container,
     toolbar,
@@ -808,6 +987,8 @@ function renderEventHandlers(
     workflowNodes,
     appLoad,
     globalActionId: globalWorkflow ? globalActionId : "",
+    onSelectNode: (node) =>
+      showNodeProperties(node?.dataset.workflowNodeId || ""),
   }, {
     clampNumber,
     createWorkflowEdge,

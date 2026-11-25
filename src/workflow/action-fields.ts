@@ -18,6 +18,7 @@ export function createWorkflowActionFields(dependencies) {
     getChangePropertyOptions,
     getVariantOptions,
     isJavaScriptAsset,
+    getElementSourcePropertyOptions,
   } = dependencies;
 
   return function renderWorkflowActionFields({
@@ -57,6 +58,128 @@ export function createWorkflowActionFields(dependencies) {
         handler.requestId,
         `${title.textContent}: ${localize.APIRequest[editorLanguage]}`,
       );
+    } else if (type.value === "switch") {
+      handler.switchSource ||= "element";
+      addSelect(
+        "switchSource",
+        [
+          [localize.Element[editorLanguage], "element"],
+          [localize.Variable[editorLanguage], "variable"],
+          [localize.FormFieldAlternativeA[editorLanguage], "form"],
+          [localize.APIRequest[editorLanguage], "api"],
+          [localize.Value[editorLanguage], "static"],
+        ],
+        handler.switchSource,
+        `${title.textContent}: ${localize.SwitchSource[editorLanguage]}`,
+        localize.SwitchSource[editorLanguage],
+      );
+      if (handler.switchSource === "element") {
+        const pageId = getTargetPageId(
+          state,
+          handler,
+          "switchElementId",
+          "switchElementPageId",
+        );
+        addSelect(
+          "switchElementPageId",
+          state.pages
+            .filter((page) => page.kind === "page")
+            .map((page) => [page.name, page.id]),
+          pageId,
+          `${title.textContent}: ${localize.TargetPage[editorLanguage]}`,
+          localize.TargetPage[editorLanguage],
+        );
+        const pageElements = getElementsOnPage(state, pageId);
+        const elements = elementTargetOptions(pageElements, getElementName);
+        if (!pageElements.length)
+          elements[0] = [
+            localize.NoMatchingElements[editorLanguage],
+            "",
+          ];
+        const selectedElement = pageElements.some(
+          (element) => element.id === handler.switchElementId,
+        )
+          ? handler.switchElementId
+          : pageElements[0]?.id || "";
+        handler.switchElementId = selectedElement;
+        const elementSelect = addSelect(
+          "switchElementId",
+          elements,
+          selectedElement,
+          `${title.textContent}: ${localize.Element[editorLanguage]}`,
+          localize.Element[editorLanguage],
+        );
+        const target = state.elements.find(
+          (element) => element.id === elementSelect.value,
+        );
+        const properties = getElementSourcePropertyOptions(target || { type: "" });
+        addSelect(
+          "switchProperty",
+          properties,
+          handler.switchProperty || "value",
+          `${title.textContent}: ${localize.Property[editorLanguage]}`,
+          localize.Property[editorLanguage],
+        );
+      } else if (handler.switchSource === "variable") {
+        const variables = state.variables.map((variable) => [
+          variable.name,
+          variable.id,
+        ]);
+        if (!variables.length)
+          variables.push([localize.AddAVariableFirst[editorLanguage], ""]);
+        addSelect(
+          "switchVariableId",
+          variables,
+          handler.switchVariableId,
+          `${title.textContent}: ${localize.Variable[editorLanguage]}`,
+          localize.Variable[editorLanguage],
+        );
+      } else if (handler.switchSource === "form") {
+        const fields = state.elements
+          .filter((element) =>
+            ["input", "textarea", "list", "checkbox", "radio", "switch", "filePicker"].includes(element.type),
+          )
+          .map((element) => [
+            `${getElementName(element)} · ${element.fieldName || element.id}`,
+            element.fieldName || element.id,
+          ]);
+        if (!fields.length)
+          fields.push([localize.AddSourceElementFirst[editorLanguage], ""]);
+        addSelect(
+          "switchFormField",
+          fields,
+          handler.switchFormField,
+          `${title.textContent}: ${localize.FormFieldAlternativeA[editorLanguage]}`,
+          localize.FormFieldAlternativeA[editorLanguage],
+        );
+      } else if (handler.switchSource === "api") {
+        addSelect(
+          "switchRequestId",
+          state.requests.map((request) => [request.name, request.id]),
+          handler.switchRequestId,
+          `${title.textContent}: ${localize.APIRequest[editorLanguage]}`,
+          localize.APIRequest[editorLanguage],
+        );
+        addInput(
+          "switchPath",
+          handler.switchPath,
+          `${title.textContent}: ${localize.DataPath[editorLanguage]}`,
+          { direction: "ltr", placeholder: "data.status" },
+          localize.DataPath[editorLanguage],
+        );
+      } else {
+        addInput(
+          "switchStaticValue",
+          handler.switchStaticValue ?? "null",
+          `${title.textContent}: ${localize.Value[editorLanguage]}`,
+          {
+            multiline: true,
+            direction: "ltr",
+            placeholder: '"active", 18, true, or {{var.expected}}',
+          },
+          localize.Value[editorLanguage],
+        );
+      }
     } else if (type.value === "openService") {
       addInput(
         "serviceId",

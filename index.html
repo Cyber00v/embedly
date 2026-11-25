@@ -197,6 +197,11 @@
             <span><strong data-i18n="Input">Input</strong><small>A text input</small></span>
             <span class="add-symbol" aria-hidden="true">+</span>
           </button>
+          <button class="element-card" type="button" draggable="true" data-type="textarea">
+            <span class="element-icon icon-input" aria-hidden="true"><i class="fa-solid fa-align-left"></i></span>
+            <span><strong data-i18n="Textarea">Textarea</strong><small data-i18n="MultiLineTextField">Multi-line text field</small></span>
+            <span class="add-symbol" aria-hidden="true">+</span>
+          </button>
           <button class="element-card" type="button" draggable="true" data-type="radio">
             <span class="element-icon icon-radio" aria-hidden="true"><i class="fa-solid fa-circle-dot"></i></span>
             <span><strong>Radio Button</strong><small>Collection of radio buttons</small></span>
@@ -819,6 +824,18 @@
                   <label class="field-label" for="property-input-max" data-i18n="MaximumValue">Maximum value</label>
                   <input id="property-input-max" type="text" dir="ltr" />
                 </div>
+              </div>
+              <div id="textarea-fields" hidden>
+                <label class="field-label" for="property-textarea-placeholder" data-i18n="Placeholder">Placeholder</label>
+                <input id="property-textarea-placeholder" type="text" />
+                <label class="field-label" for="property-textarea-value" data-i18n="DefaultValue">Default value</label>
+                <textarea id="property-textarea-value" rows="3"></textarea>
+                <label class="check-option">
+                  <input id="property-textarea-required" type="checkbox" />
+                  <span data-i18n="Required">Required</span>
+                </label>
+                <label class="field-label" for="property-textarea-rows" data-i18n="Rows">Rows</label>
+                <input id="property-textarea-rows" type="number" min="1" max="30" value="4" />
               </div>
             </div>
           </div>

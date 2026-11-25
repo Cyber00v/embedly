@@ -1,7 +1,11 @@
 // @ts-nocheck
 
 // Handles workflow-canvas gestures, node connections, selection, and graph persistence.
- 
+import {
+  getWorkflowBranchActions,
+  setWorkflowBranchActions,
+} from "./graph.ts";
+
 export function attachWorkflowCanvasInteractions({
   container,
   toolbar,
@@ -17,6 +21,7 @@ export function attachWorkflowCanvasInteractions({
   workflowNodes,
   appLoad,
   globalActionId = "",
+  onSelectNode = () => {},
 }, dependencies) {
   const {
     clampNumber,
@@ -225,6 +230,7 @@ export function attachWorkflowCanvasInteractions({
       editorState.selectedNodeId = node.dataset.workflowNodeId;
       editorState.selectedEdgeId = "";
       nodeLayerSelect(node);
+      onSelectNode(node);
       node.focus({ preventScroll: true });
       viewport.setPointerCapture(event.pointerId);
       event.preventDefault();
@@ -355,11 +361,16 @@ export function attachWorkflowCanvasInteractions({
           (node) => node.id === branchNode?.parentConditionId,
         );
         if (branchNode && condition) {
-          condition.action[branchNode.branch] = (
-            condition.action[branchNode.branch] || []
-          ).filter(
-            (action) =>
-              action.workflowId !== branchNode.action.workflowId,
+          setWorkflowBranchActions(
+            condition.action,
+            branchNode.branch,
+            getWorkflowBranchActions(
+              condition.action,
+              branchNode.branch,
+            ).filter(
+              (action) =>
+                action.workflowId !== branchNode.action.workflowId,
+            ),
           );
           writeWorkflowActions(handlers, appLoad, globalActionId);
         }
@@ -421,6 +432,7 @@ export function attachWorkflowCanvasInteractions({
     editorState.selectedNodeId = node.dataset.workflowNodeId;
     editorState.selectedEdgeId = "";
     nodeLayerSelect(node);
+    onSelectNode(node);
     if (!event.target.closest("input, select, textarea, button"))
       node.focus({ preventScroll: true });
   });
@@ -456,11 +468,7 @@ export function attachWorkflowCanvasInteractions({
       sourceNode?.kind === "action" &&
       isWorkflowBranchAction(sourceNode.action) &&
       source.portId.startsWith(`${sourceNode.id}:`)
-        ? source.portId.endsWith(":true")
-          ? "actions"
-          : source.portId.endsWith(":false")
-            ? "elseActions"
-            : ""
+        ? source.branch || source.portId.slice(sourceNode.id.length + 1)
         : "";
     // Branch connections must stay within their owning condition and selected outcome.
     if (sourceBranch || sourceNode?.kind === "branch-action" ||
@@ -498,12 +506,12 @@ export function attachWorkflowCanvasInteractions({
         (node) => node.id === conditionId && isWorkflowBranchAction(node.action),
       );
       if (!condition) return;
-      const actions = (condition.action[branch] || []).slice();
+      const actions = getWorkflowBranchActions(
+        condition.action,
+        branch,
+      ).slice();
       if (targetNode.kind === "action") {
-        if (
-          targetNode.action.type === "condition" ||
-          targetNode.event !== condition.event
-        )
+        if (targetNode.event !== condition.event)
           return;
         const targetHandlerIndex = handlers.findIndex(
           (handler) => handler.workflowId === targetNode.action.workflowId,
@@ -518,7 +526,7 @@ export function attachWorkflowCanvasInteractions({
               ) + 1
             : 0;
         actions.splice(Math.max(0, insertionIndex), 0, targetAction);
-        condition.action[branch] = actions;
+        setWorkflowBranchActions(condition.action, branch, actions);
         writeWorkflowActions(handlers, appLoad, globalActionId);
         return;
       }
@@ -544,7 +552,7 @@ export function attachWorkflowCanvasInteractions({
         );
         actions.splice(nextTargetIndex, 0, moved);
       }
-      condition.action[branch] = actions;
+      setWorkflowBranchActions(condition.action, branch, actions);
       writeWorkflowActions(handlers, appLoad, globalActionId);
       return;
     }

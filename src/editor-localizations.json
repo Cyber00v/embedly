@@ -1,4 +1,68 @@
 {
+  "Textarea": {
+    "en": "Textarea",
+    "ar": "حقل نص متعدد الأسطر"
+  },
+  "MultiLineTextField": {
+    "en": "Multi-line text field",
+    "ar": "حقل نص متعدد الأسطر"
+  },
+  "Placeholder": {
+    "en": "Placeholder",
+    "ar": "نص العنصر النائب"
+  },
+  "DefaultValue": {
+    "en": "Default value",
+    "ar": "القيمة الافتراضية"
+  },
+  "Required": {
+    "en": "Required",
+    "ar": "مطلوب"
+  },
+  "Rows": {
+    "en": "Rows",
+    "ar": "الأسطر"
+  },
+  "SwitchAction": {
+    "en": "Switch",
+    "ar": "تفرع متعدد"
+  },
+  "SwitchSource": {
+    "en": "Value source",
+    "ar": "مصدر القيمة"
+  },
+  "AddCase": {
+    "en": "Add case",
+    "ar": "إضافة حالة"
+  },
+  "RemoveCase": {
+    "en": "Remove case",
+    "ar": "إزالة الحالة"
+  },
+  "CaseMatchValue": {
+    "en": "Match value",
+    "ar": "قيمة المطابقة"
+  },
+  "DefaultBranch": {
+    "en": "Default branch",
+    "ar": "الفرع الافتراضي"
+  },
+  "UseDefaultBranch": {
+    "en": "Use a default branch",
+    "ar": "استخدام فرع افتراضي"
+  },
+  "CaseBranch": {
+    "en": "Case {value}",
+    "ar": "الحالة {value}"
+  },
+  "WorkflowBranch": {
+    "en": "Branch",
+    "ar": "فرع"
+  },
+  "SelectWorkflowNodeToEdit": {
+    "en": "Select a node to edit its properties.",
+    "ar": "اختر عقدة لتحرير خصائصها."
+  },
   "MainMenu": {
     "en": "Main menu",
     "ar": "القائمة الرئيسية"

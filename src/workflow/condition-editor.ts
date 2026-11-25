@@ -5,6 +5,7 @@ import {
   getElementsOnPage,
   getTargetPageId,
 } from "./action-selection.ts";
+import { getWorkflowBranchActions } from "./graph.ts";
 
 export function createWorkflowConditionEditor(dependencies) {
   const {
@@ -63,8 +64,11 @@ function conditionActionPathValue(path) {
 function parseConditionActionPath(value = "") {
   if (!value) return [];
   return value.split("/").map((part) => {
-    const [branch, index] = part.split(":");
-    return { branch, index: Number(index) };
+    const separatorIndex = part.lastIndexOf(":");
+    return {
+      branch: part.slice(0, separatorIndex),
+      index: Number(part.slice(separatorIndex + 1)),
+    };
   });
 }
 
@@ -72,7 +76,7 @@ function getConditionActionAtPath(owner, path) {
   // Nested action fields resolve through each condition's branch/index path.
   return path.reduce((action, step) => {
     if (!isWorkflowBranchAction(action)) return null;
-    const actions = getConditionActionLists(action)[step.branch];
+    const actions = getWorkflowBranchActions(action, step.branch);
     return Number.isInteger(step.index) ? actions[step.index] || null : null;
   }, owner);
 }
@@ -89,6 +93,7 @@ function renderConditionOptions(
   root = document,
   actionPath = [],
   handlerContext = null,
+  configuredActionLists = null,
 ) {
   const condition = handlerContext?.branchOnly
     ? {}
@@ -271,7 +276,7 @@ function renderConditionOptions(
 
   const { actions: configuredActions, elseActions: configuredElseActions } =
     getConditionActionLists(action);
-  const actionLists = [
+  const actionLists = configuredActionLists || [
     {
       branch: "actions",
       heading: localize.ConditionIsMet[editorLanguage],
@@ -283,8 +288,11 @@ function renderConditionOptions(
       actions: configuredElseActions,
     },
   ];
-  actionLists.forEach(({ branch, heading, actions }) => {
-    const list = root.querySelector(`#condition-${branch}`);
+  actionLists.forEach(({ branch, heading, actions, listSelector }) => {
+    const list = root.querySelector(
+      listSelector || `#condition-${branch}`,
+    );
+    if (!list) return;
     list.replaceChildren();
     actions.forEach((item, index) => {
       const row = document.createElement("div");
@@ -865,10 +873,9 @@ function renderConditionOptions(
       row.append(remove);
       list.append(row);
     });
-    const addButton = [...root.querySelectorAll(
-      `[data-add-condition-action="${branch}"]`,
-    )].find(
+    const addButton = [...root.querySelectorAll("[data-add-condition-action]")].find(
       (button) =>
+        button.dataset.addConditionAction === branch &&
         button.closest(".condition-action-nested-condition") ===
         (root.classList.contains("condition-action-nested-condition")
           ? root

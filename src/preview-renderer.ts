@@ -38,6 +38,8 @@ export function createPreviewRenderer(dependencies) {
               ? "hr"
               : element.type === "input"
                 ? "input"
+                : element.type === "textarea"
+                  ? "textarea"
                 : "div";
       const contentValue =
         getLocalizedContent(element, state.settings.appLanguage);
@@ -160,6 +162,29 @@ export function createPreviewRenderer(dependencies) {
           bindingAttributes: TemplateEngine.raw(bindingAttributes),
           min: TemplateEngine.raw(min),
           max: TemplateEngine.raw(max),
+          disabled: TemplateEngine.raw(disabledAttribute),
+        });
+      }
+      if (element.type === "textarea") {
+        const formName = escapeHtml(getFormName(element));
+        const rows = Math.max(1, Math.min(30, Number(element.rows) || 4));
+        return renderExportTemplate("textarea", {
+          indent: TemplateEngine.raw(indent),
+          className: TemplateEngine.raw(
+            componentClass("content content-textarea-label"),
+          ),
+          label: TemplateEngine.raw(content),
+          formName: TemplateEngine.raw(formName),
+          accessibleName: TemplateEngine.raw(
+            escapeHtml(contentValue || "Textarea"),
+          ),
+          placeholder: TemplateEngine.raw(escapeHtml(element.placeholder || "")),
+          rows,
+          value: TemplateEngine.raw(escapeHtml(element.value ?? "")),
+          required: TemplateEngine.raw(element.required === true ? " required" : ""),
+          styles: TemplateEngine.raw(styles),
+          elementAttributes: TemplateEngine.raw(elementAttribute),
+          bindingAttributes: TemplateEngine.raw(bindingAttributes),
           disabled: TemplateEngine.raw(disabledAttribute),
         });
       }

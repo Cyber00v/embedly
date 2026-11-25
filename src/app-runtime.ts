@@ -778,6 +778,7 @@ export function startRuntime(
         ![
           "button",
           "input",
+          "textarea",
           "list",
           "checkbox",
           "radio",
@@ -799,9 +800,9 @@ export function startRuntime(
           target.inert = disabled;
           return;
         }
-        const controls = target.matches("button, input, select")
+        const controls = target.matches("button, input, select, textarea")
           ? [target]
-          : [...target.querySelectorAll("button, input, select")];
+          : [...target.querySelectorAll("button, input, select, textarea")];
         if (!controls.length)
           throw new Error("The target element has no disableable control.");
         controls.forEach((control) => {
@@ -940,7 +941,17 @@ export function startRuntime(
       throw new Error("Unsupported target property: " + property);
 
     targets.forEach((target) => {
-      if (type === "input") {
+      if (type === "textarea") {
+        const label = target.matches(".content-textarea-label")
+          ? target.querySelector(":scope > [data-localize-content]")
+          : target.querySelector(
+              ":scope > .content-textarea-label > [data-localize-content]",
+            );
+        if (!label)
+          throw new Error("The target Textarea element is unavailable.");
+        label.textContent = value;
+        target.setAttribute("aria-label", value);
+      } else if (type === "input") {
         target.placeholder = value;
       } else if (type === "list") {
         const select = target.querySelector("select");
@@ -1861,6 +1872,7 @@ export function startRuntime(
       case "disabled":
         return control instanceof HTMLInputElement ||
           control instanceof HTMLSelectElement ||
+          control instanceof HTMLTextAreaElement ||
           control instanceof HTMLButtonElement
           ? control.disabled
           : target.getAttribute("aria-disabled") === "true";
@@ -2214,9 +2226,43 @@ export function startRuntime(
         else setValue(name, controls.filter((control) => control.checked).map(readFormValue));
         return;
       }
-      if (first instanceof HTMLInputElement) setValue(name, first.value);
+      if (
+        first instanceof HTMLInputElement ||
+        first instanceof HTMLTextAreaElement
+      )
+        setValue(name, first.value);
     });
     return values;
+  }
+
+  function validateRequiredFormFields() {
+    const activePage = document.querySelector(
+      '[data-app-page="' + CSS.escape(activePageId) + '"]',
+    );
+    if (!activePage) return true;
+    const activeSheets = [
+      ...document.querySelectorAll("[data-sheet-id][data-sheet-page]"),
+    ].filter(
+      (sheet) =>
+        sheet.dataset.sheetPage === activePageId &&
+        !sheet.hidden &&
+        sheet.classList.contains("is-active"),
+    );
+    const controls = [
+      ...activePage.querySelectorAll("[data-form-name][required]:not(:disabled)"),
+      ...activeSheets.flatMap((sheet) => [
+        ...(sheet.matches("[data-form-name][required]:not(:disabled)")
+          ? [sheet]
+          : []),
+        ...sheet.querySelectorAll("[data-form-name][required]:not(:disabled)"),
+      ]),
+    ];
+    const invalid = controls.find(
+      (control) => !control.closest("[hidden]") && !control.checkValidity(),
+    );
+    if (!invalid) return true;
+    invalid.reportValidity();
+    return false;
   }
 
   async function resolveActionValue(
@@ -2593,6 +2639,95 @@ export function startRuntime(
     throw new Error("Unsupported condition operator: " + operator);
   }
 
+  async function evaluateSwitchSource(action, formValues, elementContext) {
+    let actual;
+    if (action.switchSource === "element") {
+      if (!action.switchElementId)
+        throw new Error("Select an element for the Switch action.");
+      actual = getRuntimeElementPropertyValue(
+        action.switchElementId,
+        action.switchProperty || "value",
+        elementContext,
+      );
+    } else if (action.switchSource === "variable") {
+      const variable = VARIABLES.find(
+        (item) => item.id === action.switchVariableId,
+      );
+      if (!variable) throw new Error("Select a variable for the Switch action.");
+      actual = await resolveVariableValue(
+        variable.name,
+        formValues,
+        elementContext,
+      );
+    } else if (action.switchSource === "form") {
+      const fieldName = action.switchFormField;
+      if (!fieldName || !Object.hasOwn(formValues, fieldName))
+        throw new Error("Select an available form field for the Switch action.");
+      actual = formValues[fieldName];
+    } else if (action.switchSource === "api") {
+      const request = API_REQUESTS.find(
+        (item) => item.id === action.switchRequestId,
+      );
+      if (!request) throw new Error("Select a valid API request for the Switch action.");
+      if (!Object.hasOwn(API_RESPONSES, request.id)) {
+        const response = await runRequest(request, formValues, elementContext);
+        if (response === undefined)
+          throw new Error("The API response required by the Switch action could not be loaded.");
+      }
+      actual = readPath(API_RESPONSES[request.id], action.switchPath || "");
+    } else if (action.switchSource === "static") {
+      actual = await resolveConfiguredActionValue(
+        action.switchStaticValue ?? "null",
+        formValues,
+        elementContext,
+      );
+    } else {
+      throw new Error("Select a valid Switch value source.");
+    }
+    return actual;
+  }
+
+  async function runSwitchEffect(action, formValues, elementContext, globalActionStack) {
+    const actual = await evaluateSwitchSource(
+      action,
+      formValues,
+      elementContext,
+    );
+    let selectedCase = null;
+    for (const candidate of action.cases || []) {
+      const expected = await resolveConfiguredActionValue(
+        candidate.value ?? "null",
+        formValues,
+        elementContext,
+      );
+      if (conditionValuesEqual(actual, expected)) {
+        selectedCase = candidate;
+        break;
+      }
+    }
+    const selectedActions = selectedCase
+      ? selectedCase.actions || []
+      : action.defaultEnabled
+        ? action.defaultActions || []
+        : [];
+    const effects = [];
+    for (const nestedAction of selectedActions)
+      effects.push(
+        await runConditionalEffect(
+          nestedAction,
+          formValues,
+          elementContext,
+          globalActionStack,
+        ),
+      );
+    return {
+      type: "switch",
+      value: actual,
+      matchedCaseId: selectedCase?.id || "",
+      effects,
+    };
+  }
+
   async function runTwkSystemAction(action) {
     const helper = window.TWK && window.TWK[action.type];
     if (typeof helper !== "function")
@@ -2656,6 +2791,13 @@ export function startRuntime(
     elementContext = null,
     globalActionStack = new Set(),
   ) {
+    if (effect.type === "switch")
+      return runSwitchEffect(
+        effect,
+        formValues,
+        elementContext,
+        globalActionStack,
+      );
     if (effect.type === "condition") {
       const matched = await evaluateCondition(
         effect.condition || {},
@@ -2890,6 +3032,7 @@ export function startRuntime(
         "setVariable",
         "changeProperty",
         "condition",
+        "switch",
         "message",
         "function",
         "globalAction",
@@ -2899,6 +3042,7 @@ export function startRuntime(
       additionalHandlers.length
     ) {
       try {
+        if (!validateRequiredFormFields()) return;
         formValues = collectFormValues();
       } catch (error) {
         const message = "تعذر جمع قيم النموذج: " + error.message;
@@ -3020,6 +3164,21 @@ export function startRuntime(
             effects,
             effect: effects[effects.length - 1],
           },
+        }),
+      );
+      await runAdditionalHandlers();
+      return;
+    }
+    if (configured.type === "switch") {
+      const result = await runSwitchEffect(
+        configured,
+        formValues,
+        elementNode,
+        new Set(),
+      );
+      document.dispatchEvent(
+        new CustomEvent("embedded-app:action", {
+          detail: { action, elementId, ...result },
         }),
       );
       await runAdditionalHandlers();
