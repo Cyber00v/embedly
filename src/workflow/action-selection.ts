@@ -1,15 +1,36 @@
-type ApiRequest = { id: string };
-type Page = { id: string; kind: string };
-type Element = { id: string; pageId?: string; [key: string]: unknown };
-type ElementTargetState = {
+export type ApiRequest = {
+  id: string;
+};
+
+export type Page = {
+  id: string;
+  kind: string;
+};
+
+export type Element = {
+  id: string;
+  pageId?: string;
+  [key: string]: unknown;
+};
+
+export type ElementTargetState = {
   pages: readonly Page[];
   elements: readonly Element[];
   currentPageId?: string;
 };
-type ElementTargetAction = {
+
+export type ElementTargetAction = {
   targetPageId?: string;
   [key: string]: unknown;
 };
+
+function findValidPageId(
+  pages: readonly Page[],
+  candidateId: unknown,
+): string | undefined {
+  if (typeof candidateId !== "string" || !candidateId) return undefined;
+  return pages.find((page) => page.id === candidateId)?.id;
+}
 
 export function getRequestIdOrDefault(
   requests: readonly ApiRequest[],
@@ -28,26 +49,22 @@ export function getTargetPageId(
   pageField = "targetPageId",
 ): string {
   const pages = state.pages.filter((page) => page.kind === "page");
+
   const target = state.elements.find(
     (element) => element.id === action[targetField],
   );
-  if (
-    typeof target?.pageId === "string" &&
-    pages.some((page) => page.id === target.pageId)
-  )
-    return target.pageId;
+  const elementPageId = findValidPageId(pages, target?.pageId);
+  if (elementPageId) {
+    return elementPageId;
+  }
 
-  const targetPageId = action[pageField];
-  if (
-    typeof targetPageId === "string" &&
-    pages.some((page) => page.id === targetPageId)
-  )
-    return targetPageId;
+  const actionPageId = findValidPageId(pages, action[pageField]);
+  if (actionPageId) {
+    return actionPageId;
+  }
 
   return (
-    pages.find((page) => page.id === state.currentPageId)?.id ||
-    pages[0]?.id ||
-    ""
+    findValidPageId(pages, state.currentPageId) || pages[0]?.id || ""
   );
 }
 

@@ -153,10 +153,28 @@ function previous() {
   emitStepChange(previousStep, currentStep);
 }
 
+const unsubscribeFromEditor = pluginContext.onEditorEvent(
+  "element-selection-changed",
+  (detail) => {
+    if (!detail || typeof detail.selectedId !== "string") return;
+    const selectedIndex = stepElements.findIndex(
+      (element) => element.dataset.id === detail.selectedId,
+    );
+    if (selectedIndex < 0 || selectedIndex + 1 === currentStep) return;
+
+    currentStep = selectedIndex + 1;
+    render();
+    pluginContext.setProperty("currentStep", currentStep);
+  },
+);
+
 pluginContext.exposeFunction("next", next);
 pluginContext.exposeFunction("previous", previous);
 
 root.addEventListener("click", onClick);
 render();
 
-return () => root.removeEventListener("click", onClick);
+return () => {
+  root.removeEventListener("click", onClick);
+  unsubscribeFromEditor();
+};

@@ -292,7 +292,149 @@ test("the bundled calendar, Google Map, Step, and Stepper plugins validate", asy
     plugins.find((component) => component.id === "stepper").plugin.js,
     /assignedElements\(\)/,
   );
+  assert.match(
+    plugins.find((component) => component.id === "stepper").plugin.js,
+    /pluginContext\.onEditorEvent\(\s*"element-selection-changed"/,
+  );
+  assert.match(
+    plugins.find((component) => component.id === "stepper").plugin.js,
+    /element\.dataset\.id === detail\.selectedId/,
+  );
+  assert.match(
+    plugins.find((component) => component.id === "stepper").plugin.js,
+    /pluginContext\.setProperty\("currentStep", currentStep\)/,
+  );
   assert.ok(plugins.every((component) => !/<iframe\b/i.test(component.html)));
+});
+
+test("editor selection changes are exposed to plugin listeners", async () => {
+  const editorSource = await readFile(
+    new URL("../src/app.ts", import.meta.url),
+    "utf8",
+  );
+  const selectionStart = editorSource.indexOf("function selectElement(");
+  const selectionEnd = editorSource.indexOf("\nfunction addElement(", selectionStart);
+  const selectElementSource = editorSource.slice(selectionStart, selectionEnd);
+
+  assert.notEqual(selectionStart, -1);
+  assert.notEqual(selectionEnd, -1);
+  assert.match(
+    selectElementSource,
+    /new CustomEvent\("embedly-editor:element-selection-changed"/,
+  );
+  assert.match(selectElementSource, /selectedId: state\.selectedId/);
+  assert.match(selectElementSource, /selectedIds: \[\.\.\.state\.selectedIds\]/);
+});
+
+test("stepper follows the selected step and persists its current step", async () => {
+  const script = await readFile(
+    new URL("../public/plugin/stepper/script.js", import.meta.url),
+    "utf8",
+  );
+  const previousDocument = globalThis.document;
+  const createNode = () => ({
+    attributes: {},
+    children: [],
+    classList: { add() {} },
+    append(...children) {
+      this.children.push(...children);
+    },
+    replaceChildren(...children) {
+      this.children = children;
+    },
+    setAttribute(name, value) {
+      this.attributes[name] = value;
+    },
+  });
+  const steps = [
+    {
+      dataset: {
+        id: "step-1",
+        pluginId: "step",
+        pluginProperties: JSON.stringify({ label: "First" }),
+      },
+    },
+    {
+      dataset: {
+        id: "step-2",
+        pluginId: "step",
+        pluginProperties: JSON.stringify({ label: "Second" }),
+      },
+    },
+  ];
+  const stepper = { dataset: {} };
+  const list = createNode();
+  const status = { textContent: "" };
+  const controls = { hidden: false };
+  const backButton = { disabled: false, textContent: "" };
+  const nextButton = { textContent: "" };
+  const elements = new Map([
+    ["[data-stepper-steps]", { assignedElements: () => steps }],
+    ["[data-stepper]", stepper],
+    ["[data-stepper-list]", list],
+    ["[data-stepper-status]", status],
+    ["[data-stepper-controls]", controls],
+    ["[data-stepper-back]", backButton],
+    ["[data-stepper-next]", nextButton],
+  ]);
+  const listeners = new Map();
+  const root = {
+    querySelector: (selector) => elements.get(selector),
+    addEventListener: (name, handler) => listeners.set(name, handler),
+    removeEventListener: (name, handler) => {
+      if (listeners.get(name) === handler) listeners.delete(name);
+    },
+  };
+  const propertyChanges = [];
+  const emittedEvents = [];
+  let editorHandler;
+  let listening = false;
+  const pluginContext = {
+    language: "en",
+    properties: {
+      currentStep: 1,
+      locale: "app",
+      orientation: "horizontal",
+      showControls: true,
+      showStatus: true,
+      showSteps: true,
+      steps: "",
+    },
+    onEditorEvent(eventName, handler) {
+      assert.equal(eventName, "element-selection-changed");
+      editorHandler = handler;
+      listening = true;
+      return () => {
+        listening = false;
+      };
+    },
+    setProperty: (...args) => propertyChanges.push(args),
+    emit: (...args) => emittedEvents.push(args),
+    exposeFunction() {},
+  };
+
+  globalThis.document = { createElement: createNode };
+  try {
+    const cleanup = new Function("root", "pluginContext", script)(
+      root,
+      pluginContext,
+    );
+
+    editorHandler({ selectedId: "step-2" });
+    assert.equal(steps[0].hidden, true);
+    assert.equal(steps[1].hidden, false);
+    assert.deepEqual(propertyChanges, [["currentStep", 2]]);
+    assert.deepEqual(emittedEvents, []);
+
+    editorHandler({ selectedId: "unrelated-element" });
+    assert.equal(propertyChanges.length, 1);
+    cleanup();
+    assert.equal(listening, false);
+    assert.equal(listeners.has("click"), false);
+  } finally {
+    if (previousDocument === undefined) delete globalThis.document;
+    else globalThis.document = previousDocument;
+  }
 });
 
 test("mounts plugins into native Shadow DOM and exposes scoped plugin context", async () => {
@@ -350,6 +492,7 @@ test("mounts plugins into native Shadow DOM and exposes scoped plugin context", 
       Object.assign(this, options);
     }
   }
+  const editorEventListeners = new Map();
   const restore = (name, value) => {
     if (value === undefined) delete globalThis[name];
     else globalThis[name] = value;
@@ -358,7 +501,15 @@ test("mounts plugins into native Shadow DOM and exposes scoped plugin context", 
   globalThis.Element = MockElement;
   globalThis.HTMLElement = MockElement;
   globalThis.CustomEvent = MockCustomEvent;
-  globalThis.document = { createElement: () => new MockElement() };
+  globalThis.document = {
+    createElement: () => new MockElement(),
+    addEventListener: (eventName, listener) =>
+      editorEventListeners.set(eventName, listener),
+    removeEventListener: (eventName, listener) => {
+      if (editorEventListeners.get(eventName) === listener)
+        editorEventListeners.delete(eventName);
+    },
+  };
   globalThis.window = {};
   try {
     const plugin = normalizePluginManifest(
@@ -368,7 +519,7 @@ test("mounts plugins into native Shadow DOM and exposes scoped plugin context", 
       },
       "<p>{{city}}</p>",
       "p { color: red; }",
-      'window.pluginContext.setProperty("mode", "full"); window.pluginContext.emit("click"); window.pluginContext.emit("onDaySelected", { day: 18 }); window.pluginContext.exposeFunction("getCity", () => window.pluginContext.properties.city); window.pluginContext.exposeFunction("getLanguage", () => window.pluginContext.language); return () => window.pluginContext.emit("change");',
+      'let selectedId = ""; const unsubscribe = window.pluginContext.onEditorEvent("element-selection-changed", (detail) => { selectedId = detail.selectedId; }); window.pluginContext.setProperty("mode", "full"); window.pluginContext.emit("click"); window.pluginContext.emit("onDaySelected", { day: 18 }); window.pluginContext.exposeFunction("getCity", () => window.pluginContext.properties.city); window.pluginContext.exposeFunction("getLanguage", () => window.pluginContext.language); window.pluginContext.exposeFunction("getSelectedId", () => selectedId); return () => { unsubscribe(); window.pluginContext.emit("change"); };',
     );
     const host = new MockElement();
     host.isConnected = true;
@@ -420,9 +571,23 @@ test("mounts plugins into native Shadow DOM and exposes scoped plugin context", 
       host.__embedlyPluginFunctions.get("getCity")(),
       "<script>alert(1)</script>",
     );
+    const selectionListener = editorEventListeners.get(
+      "embedly-editor:element-selection-changed",
+    );
+    assert.equal(typeof selectionListener, "function");
+    selectionListener(
+      new MockCustomEvent("embedly-editor:element-selection-changed", {
+        detail: { selectedId: "step-2", selectedIds: ["step-2"] },
+      }),
+    );
+    assert.equal(host.__embedlyPluginFunctions.get("getSelectedId")(), "step-2");
 
     unmountPluginElements(host);
     assert.equal(host.__embedlyPluginFunctions, undefined);
+    assert.equal(
+      editorEventListeners.has("embedly-editor:element-selection-changed"),
+      false,
+    );
     assert.deepEqual(host.events.map((event) => event.type), [
       "click",
       "onDaySelected",

@@ -5516,7 +5516,7 @@ function createPreviewHeader() {
   return header;
 }
 
-function collectPreviewFormValues() {
+function groupPreviewFormControls() {
   const groups = new Map();
   preview
     .querySelectorAll("[data-field-name]:not(:disabled)")
@@ -5525,56 +5525,68 @@ function collectPreviewFormValues() {
       if (!groups.has(name)) groups.set(name, []);
       groups.get(name).push(control);
     });
-  const values = new Map();
-  const readValue = (control) => {
-    const raw =
-      control.dataset.formValue ??
-      (control instanceof HTMLInputElement ? control.dataset.value : undefined);
-    if (raw === undefined) return control.value;
-    return JSON.parse(raw);
-  };
-  groups.forEach((controls, name) => {
-    const first = controls[0];
-    if (first.dataset.filePicker !== undefined) {
-      try {
-        values.set(name, JSON.parse(first.dataset.filePickerValue || "[]"));
-      } catch {
-        values.set(name, []);
-      }
-      return;
+  return groups;
+}
+
+function readPreviewFormValue(control) {
+  const raw =
+    control.dataset.formValue ??
+    (control instanceof HTMLInputElement ? control.dataset.value : undefined);
+  if (raw === undefined) return control.value;
+  return JSON.parse(raw);
+}
+
+function getPreviewFormGroupValue(controls) {
+  const first = controls[0];
+  if (first.dataset.filePicker !== undefined) {
+    try {
+      return JSON.parse(first.dataset.filePickerValue || "[]");
+    } catch {
+      return [];
     }
-    if (first instanceof HTMLSelectElement) {
-      const selected = [...first.selectedOptions].filter(
-        (option) => !option.disabled,
-      );
-      const selectedValues = selected.map(readValue);
-      if (first.multiple) values.set(name, selectedValues);
-      else values.set(name, selectedValues.length ? selectedValues[0] : "");
-      return;
-    }
-    if (first instanceof HTMLInputElement && first.type === "radio") {
-      values.set(name, getRadioGroupValue(controls, readValue));
-      return;
-    }
-    if (
-      controls.every(
-        (control) =>
-          control instanceof HTMLInputElement && control.type === "checkbox",
-      )
-    ) {
-      if (controls.length === 1) values.set(name, first.checked);
-      else
-        values.set(
-          name,
-          controls.filter((control) => control.checked).map(readValue),
-        );
-      return;
-    }
-    if (
-      first instanceof HTMLInputElement ||
-      first instanceof HTMLTextAreaElement
+  }
+
+  if (first instanceof HTMLSelectElement) {
+    const selectedValues = [...first.selectedOptions]
+      .filter((option) => !option.disabled)
+      .map(readPreviewFormValue);
+    return first.multiple
+      ? selectedValues
+      : selectedValues.length
+        ? selectedValues[0]
+        : "";
+  }
+
+  if (first instanceof HTMLInputElement && first.type === "radio")
+    return getRadioGroupValue(controls, readPreviewFormValue);
+
+  if (
+    controls.every(
+      (control) =>
+        control instanceof HTMLInputElement && control.type === "checkbox",
     )
-      values.set(name, first.value);
+  ) {
+    return controls.length === 1
+      ? first.checked
+      : controls
+          .filter((control) => control.checked)
+          .map(readPreviewFormValue);
+  }
+
+  if (
+    first instanceof HTMLInputElement ||
+    first instanceof HTMLTextAreaElement
+  )
+    return first.value;
+
+  return undefined;
+}
+
+function collectPreviewFormValues() {
+  const values = new Map();
+  groupPreviewFormControls().forEach((controls, name) => {
+    const value = getPreviewFormGroupValue(controls);
+    if (value !== undefined) values.set(name, value);
   });
   return values;
 }
@@ -6805,7 +6817,11 @@ const workflowActionEditor = createWorkflowActionEditor({
   renderVariableOptions: workflowActionOptions.renderVariableOptions, showToast,
 });
 const { renderEventHandlers, moveEventHandler } = workflowActionEditor;
-const { conditionActionPathValue, parseConditionActionPath, getConditionActionAtPath, getConditionOwnerForField, renderConditionOptions } = workflowConditionEditor;
+const {
+  getConditionOwnerForField,
+  getConditionActionForField,
+  renderConditionOptions,
+} = workflowConditionEditor;
 const { renderTwkOptions, renderEndpointOptions, renderVariableOptions } = workflowActionOptions;
 
 function selectedVariable() {
@@ -7323,6 +7339,14 @@ function selectElement(id, focusPreviewElement = true, additive = false) {
   renderPreview();
   if (focusPreviewElement && state.selectedIds.includes(id))
     focusSelectedPreviewElement(id);
+  document.dispatchEvent(
+    new CustomEvent("embedly-editor:element-selection-changed", {
+      detail: {
+        selectedId: state.selectedId,
+        selectedIds: [...state.selectedIds],
+      },
+    }),
+  );
 }
 
 function addElement(
@@ -8318,14 +8342,6 @@ function renderThemeFields() {
   });
   document.querySelector("#reset-theme").textContent =
     mode === "dark" ? localize.RestoreDefaultDarkModeColors[editorLanguage] : localize.RestoreDefaultColors[editorLanguage];
-}
-
-function renderSettingsFields() {
-  if (!state.settings) return;
-  Object.entries(state.settings).forEach(([name, value]) => {
-    const input = document.querySelector(`#settings-${name}`);
-    if (input) input.value = value ?? defaultSettings[name];
-  });
 }
 
 function applyTheme() {
@@ -10909,7 +10925,7 @@ function updateSelectedElement(event) {
     const action = isPrimary
       ? element.action
       : element.action?.handlers?.[index - 1];
-    if (!action || action.type !== "condition") return;
+    if (!isWorkflowBranchAction(action)) return;
     const conditionAction = getConditionOwnerForField(
       action,
       eventConditionField,
@@ -10966,29 +10982,7 @@ function updateSelectedElement(event) {
     "[data-condition-action]",
   );
   if (conditionalActionField) {
-    const branch = conditionalActionField.dataset.conditionBranch;
-    const index = Number(conditionalActionField.dataset.actionIndex);
-    if (!branch || !Number.isInteger(index)) return;
-    const handlerIndex = Number(
-      conditionalActionField.dataset.eventHandlerIndex,
-    );
-    const isEventHandlerAction =
-      conditionalActionField.dataset.eventHandlerIndex !== undefined;
-    const conditionOwner = isEventHandlerAction
-      ? conditionalActionField.dataset.eventHandlerPrimary === "true"
-        ? element.action
-        : element.action?.handlers?.[handlerIndex - 1]
-      : element.action;
-    if (!isWorkflowBranchAction(conditionOwner)) return;
-    const actionPath = parseConditionActionPath(
-      conditionalActionField.dataset.conditionActionPath,
-    );
-    if (
-      conditionalActionField.closest(".condition-action-nested-condition") &&
-      !conditionalActionField.dataset.conditionActionPath
-    )
-      return;
-    const targetAction = getConditionActionAtPath(conditionOwner, actionPath);
+    const targetAction = getConditionActionForField(conditionalActionField);
     if (!targetAction) return;
     targetAction[conditionalActionField.dataset.conditionAction] =
       conditionalActionField.value;
@@ -11010,7 +11004,6 @@ function updateSelectedElement(event) {
     ) {
       initializeEventHandler(targetAction);
     }
-    delete conditionOwner.effect;
     if (
       ["type", "property", "targetElementId", "functionSource"].includes(
         conditionalActionField.dataset.conditionAction,
@@ -11876,7 +11869,6 @@ document.addEventListener("click", (event) => {
     actions.splice(Number(removeButton.dataset.actionIndex), 1);
   }
   setWorkflowBranchActions(conditionOwner, branch, actions);
-  delete conditionOwner.effect;
   renderEventHandlers(element.action);
   renderPreview(false);
   scheduleSave();
@@ -11969,7 +11961,7 @@ function updateAppLoadConditionField(field) {
   const actions = getManagedWorkflowActions(globalActionId);
   const index = Number(field.dataset.eventHandlerIndex);
   const handler = actions?.[index];
-  if (!Number.isInteger(index) || !handler || handler.type !== "condition")
+  if (!Number.isInteger(index) || !isWorkflowBranchAction(handler))
     return;
   const conditionAction = getConditionOwnerForField(handler, field);
   if (!conditionAction || conditionAction.type !== "condition") return;
@@ -12018,21 +12010,8 @@ function updateAppLoadConditionAction(field) {
   const index = Number(field.dataset.eventHandlerIndex);
   const handler = actions?.[index];
   const fieldName = field.dataset.conditionAction;
-  if (
-    !handler ||
-    !isWorkflowBranchAction(handler) ||
-    !fieldName
-  )
-    return;
-  if (
-    field.closest(".condition-action-nested-condition") &&
-    !field.dataset.conditionActionPath
-  )
-    return;
-  const targetAction = getConditionActionAtPath(
-    handler,
-    parseConditionActionPath(field.dataset.conditionActionPath),
-  );
+  if (!handler || !fieldName) return;
+  const targetAction = getConditionActionForField(field);
   if (!targetAction) return;
   targetAction[fieldName] = field.value;
   if (fieldName === "targetPageId") updateActionElementPage(targetAction);
@@ -12052,7 +12031,6 @@ function updateAppLoadConditionAction(field) {
   )
     targetAction.scriptAssetId ||=
       state.assets.find(isJavaScriptAsset)?.id || "";
-  delete handler.effect;
   if (
     ["type", "property", "targetElementId", "targetPageId", "functionSource"].includes(
       fieldName,
@@ -12183,7 +12161,6 @@ workflowDialog.addEventListener("click", (event) => {
     actions.splice(Number(removeAction.dataset.actionIndex), 1);
   }
   setWorkflowBranchActions(conditionOwner, branch, actions);
-  delete conditionOwner.effect;
   renderManagedWorkflow(actionId);
   scheduleSave();
 });

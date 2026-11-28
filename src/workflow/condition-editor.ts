@@ -1,5 +1,5 @@
 // @ts-nocheck
- 
+
 // Renders condition sources, comparisons, nested conditions, and branch action forms.
 import {
   getElementsOnPage,
@@ -7,17 +7,38 @@ import {
 } from "./action-selection.ts";
 import { getWorkflowBranchActions } from "./graph.ts";
 
+const CONDITION_OPERATORS = [
+  "equals",
+  "notEquals",
+  "empty",
+  "notEmpty",
+  "greaterThan",
+  "lessThan",
+  "contains",
+];
+
+const VALUE_LESS_OPERATORS = new Set(["empty", "notEmpty"]);
+
+const CONDITION_SOURCE_SECTIONS = [
+  ["static", "#condition-static-fields"],
+  ["endpoint", "#condition-api-fields"],
+  ["variable", "#condition-variable-fields"],
+  ["twk", "#condition-twk-fields"],
+  ["form", "#condition-form-fields"],
+  ["item", "#condition-item-fields"],
+  ["extra", "#condition-extra-fields"],
+  ["element", "#condition-element-fields"],
+];
+
 export function createWorkflowConditionEditor(dependencies) {
   const {
     state,
     editorLanguage,
     localize,
     TWK_FIELDS,
-    typeNames,
     variantLabels,
     twkSystemActionOptions,
     variableSourceTypes,
-    toast,
     getElementName,
     getChangePropertyOptions,
     getActionValueType,
@@ -25,406 +46,675 @@ export function createWorkflowConditionEditor(dependencies) {
     populateValueSourceOptions,
     isInsideCollection,
     normalizeExtraData,
-    createElement,
     getElementSourcePropertyOptions,
     isJavaScriptAsset,
     getConditionActionLists,
     isWorkflowBranchAction,
-    showToast,
   } = dependencies;
 
-function addTargetPagePicker(row, item, branch, index, title, targetField) {
-  const pageId = getTargetPageId(state, item, targetField);
-  const page = document.createElement("select");
-  page.dataset.conditionAction = "targetPageId";
-  page.dataset.conditionBranch = branch;
-  page.dataset.actionIndex = String(index);
-  page.setAttribute(
-    "aria-label",
-    `${title.textContent}: ${localize.TargetPage[editorLanguage]}`,
-  );
-  state.pages
-    .filter((candidate) => candidate.kind === "page")
-    .forEach((candidate) => page.add(new Option(candidate.name, candidate.id)));
-  page.value = pageId;
-  row.append(page);
-  return getElementsOnPage(state, pageId);
-}
+  const t = (key) => localize[key]?.[editorLanguage] ?? key;
+  const conditionActionForField = new WeakMap();
+  const conditionOwnerForField = new WeakMap();
 
-function getTargetOptions(elements, labelFor) {
-  return elements.length
-    ? elements.map((element) => [labelFor(element), element.id])
-    : [[localize.NoMatchingElements[editorLanguage], ""]];
-}
+  function populateSelectOptions(select, options, selectedValue, fallbackValue = "") {
+    select.replaceChildren(
+      ...options.map(([label, value]) => new Option(label, value)),
+    );
+    const hasSelected = options.some(([, value]) => value === selectedValue);
+    select.value = hasSelected ? selectedValue : fallbackValue;
+    return select.value;
+  }
 
-function conditionActionPathValue(path) {
-  return path.map(({ branch, index }) => `${branch}:${index}`).join("/");
-}
+  function createBranchControl(tagName, { actionKey, branch, index, ariaLabel }) {
+    const element = document.createElement(tagName);
+    element.dataset.conditionAction = actionKey;
+    element.dataset.conditionBranch = branch;
+    element.dataset.actionIndex = String(index);
+    element.setAttribute("aria-label", ariaLabel);
+    return element;
+  }
 
-function parseConditionActionPath(value = "") {
-  if (!value) return [];
-  return value.split("/").map((part) => {
-    const separatorIndex = part.lastIndexOf(":");
-    return {
-      branch: part.slice(0, separatorIndex),
-      index: Number(part.slice(separatorIndex + 1)),
-    };
-  });
-}
+  function addTargetPagePicker(row, item, branch, index, title, targetField) {
+    const pageId = getTargetPageId(state, item, targetField);
+    const page = createBranchControl("select", {
+      actionKey: "targetPageId",
+      branch,
+      index,
+      ariaLabel: `${title.textContent}: ${t("TargetPage")}`,
+    });
+    const pageOptions = state.pages
+      .filter((candidate) => candidate.kind === "page")
+      .map((candidate) => [candidate.name, candidate.id]);
+    populateSelectOptions(page, pageOptions, pageId, pageId);
+    row.append(page);
+    return getElementsOnPage(state, pageId);
+  }
 
-function getConditionActionAtPath(owner, path) {
-  // Nested action fields resolve through each condition's branch/index path.
-  return path.reduce((action, step) => {
-    if (!isWorkflowBranchAction(action)) return null;
-    const actions = getWorkflowBranchActions(action, step.branch);
-    return Number.isInteger(step.index) ? actions[step.index] || null : null;
-  }, owner);
-}
+  function getTargetOptions(elements, labelFor) {
+    return elements.length
+      ? elements.map((element) => [labelFor(element), element.id])
+      : [[t("NoMatchingElements"), ""]];
+  }
 
-function getConditionOwnerForField(owner, field) {
-  const pathValue = field.dataset.conditionActionOwnerPath;
-  if (field.closest(".condition-action-nested-condition") && !pathValue)
-    return null;
-  return getConditionActionAtPath(owner, parseConditionActionPath(pathValue));
-}
+  function conditionActionPathValue(path) {
+    return path.map(({ branch, index }) => `${branch}:${index}`).join("/");
+  }
 
-function renderConditionOptions(
-  action = {},
-  root = document,
-  actionPath = [],
-  handlerContext = null,
-  configuredActionLists = null,
-) {
-  const condition = handlerContext?.branchOnly
-    ? {}
-    : action.condition || (action.condition = {});
-  const actionPathValue = conditionActionPathValue(actionPath);
-  if (!handlerContext?.branchOnly) {
-  // Branch-only permission actions intentionally skip the editable condition form.
-  if (handlerContext) {
-    root.querySelectorAll('[id^="property-condition-"]').forEach((field) => {
-      field.dataset.eventConditionField = field.id;
-      field.dataset.conditionActionOwnerPath = actionPathValue;
-      field.dataset.eventHandlerIndex = String(handlerContext.index);
-      field.dataset.eventHandlerPrimary = String(handlerContext.isPrimary);
-      field.dataset.eventHandlerAppLoad = String(handlerContext.appLoad);
+  function parseConditionActionPath(value = "") {
+    if (!value) return [];
+    return value.split("/").map((part) => {
+      const separatorIndex = part.lastIndexOf(":");
+      return {
+        branch: part.slice(0, separatorIndex),
+        index: Number(part.slice(separatorIndex + 1)),
+      };
     });
   }
-  const sourceSelect = root.querySelector("#property-condition-source");
-  const eventIsAppLoad =
-    handlerContext?.appLoad === true;
-  const selectedContextElement = state.elements.find(
-    (element) => element.id === state.selectedId,
-  );
-  populateValueSourceOptions(
-    sourceSelect,
-    !eventIsAppLoad &&
-      Boolean(
-        selectedContextElement && isInsideCollection(selectedContextElement),
-      ),
-  );
-  const requestSelect = root.querySelector("#property-condition-request");
-  requestSelect.replaceChildren(
-    ...state.requests.map((request) => new Option(request.name, request.id)),
-  );
-  if (!state.requests.length)
-    requestSelect.add(new Option(localize.AddARequestInAPISettings[editorLanguage], ""));
-  requestSelect.disabled = !state.requests.length;
-  requestSelect.value = state.requests.some(
-    (request) => request.id === condition.requestId,
-  )
-    ? condition.requestId
-    : state.requests[0]?.id || "";
 
-  const variableSelect = root.querySelector("#property-condition-variable");
-  variableSelect.replaceChildren(
-    ...state.variables.map(
-      (variable) => new Option(variable.name, variable.name),
-    ),
-  );
-  if (!state.variables.length)
-    variableSelect.add(new Option(localize.AddAStaticVariable[editorLanguage], ""));
-  variableSelect.disabled = !state.variables.length;
-  const variableName = state.variables.some(
-    (variable) => variable.name === condition.variableName,
-  )
-    ? condition.variableName
-    : state.variables[0]?.name || "";
-
-  const twkSelect = root.querySelector("#property-condition-twk-field");
-  twkSelect.replaceChildren(
-    ...TWK_FIELDS.map((field) => new Option(field.label, field.key)),
-  );
-  twkSelect.value = TWK_FIELDS.some((field) => field.key === condition.fieldKey)
-    ? condition.fieldKey
-    : TWK_FIELDS[0].key;
-
-  const source =
-    condition.source === "api"
-      ? "endpoint"
-      : variableSourceTypes.includes(condition.source)
-        ? condition.source
-        : "endpoint";
-  variableSelect.value = variableName;
-  if (source === "variable" && variableName)
-    condition.variableName = variableName;
-  sourceSelect.value = source;
-  root.querySelector("#condition-static-fields").hidden = source !== "static";
-  root.querySelector("#condition-api-fields").hidden = source !== "endpoint";
-  root.querySelector("#condition-variable-fields").hidden =
-    source !== "variable";
-  root.querySelector("#condition-twk-fields").hidden = source !== "twk";
-  root.querySelector("#condition-form-fields").hidden = source !== "form";
-  root.querySelector("#condition-item-fields").hidden = source !== "item";
-  root.querySelector("#condition-extra-fields").hidden = source !== "extra";
-  root.querySelector("#condition-element-fields").hidden = source !== "element";
-  root.querySelector("#condition-object-path-fields").hidden = false;
-  root.querySelector("#property-condition-object-path").value =
-    condition.objectPath || "";
-  root.querySelector("#property-condition-path").value = condition.path || "";
-  root.querySelector("#property-condition-static-value").value =
-    condition.sourceValue ?? "null";
-  root.querySelector("#property-condition-item-path").value =
-    condition.itemPath || "";
-  root.querySelector("#property-condition-form-field").value =
-    condition.fieldName || "";
-  root
-    .querySelector("#property-condition-extra")
-    .replaceChildren(
-      ...state.elements.flatMap((element) =>
-        normalizeExtraData(element.extraData).map(
-          (extra) =>
-            new Option(
-              `${getElementName(element)} · ${extra.key}`,
-              `${element.id}.extra.${extra.key}`,
-            ),
-        ),
-      ),
-    );
-  const extraSelect = root.querySelector("#property-condition-extra");
-  if (!extraSelect.options.length)
-    extraSelect.add(new Option(localize.AddAdditionalInfoFirst[editorLanguage], ""));
-  extraSelect.value = condition.extraPath || "";
-  const elementPageSelect = root.querySelector(
-    "#property-condition-element-page",
-  );
-  const elementPageId = getTargetPageId(
-    state,
-    condition,
-    "elementId",
-    "elementPageId",
-  );
-  elementPageSelect.replaceChildren(
-    ...state.pages
-      .filter((page) => page.kind === "page")
-      .map((page) => new Option(page.name, page.id)),
-  );
-  elementPageSelect.value = elementPageId;
-  const pageElements = getElementsOnPage(state, elementPageId);
-  const elementSelect = root.querySelector("#property-condition-element");
-  elementSelect.replaceChildren(
-    ...pageElements.map(
-      (element) => new Option(getElementName(element), element.id),
-    ),
-  );
-  if (!pageElements.length)
-    elementSelect.add(new Option(localize.NoMatchingElements[editorLanguage], ""));
-  elementSelect.value = pageElements.some(
-    (element) => element.id === condition.elementId,
-  )
-    ? condition.elementId
-    : pageElements[0]?.id || "";
-  condition.elementId = elementSelect.value;
-  const selectedElement = elementSelect.value;
-  const conditionElement =
-    pageElements.find((element) => element.id === selectedElement);
-  const elementPropertySelect = root.querySelector(
-    "#property-condition-element-property",
-  );
-  const currentProperty = condition.property || "";
-  elementPropertySelect.replaceChildren(
-    ...(conditionElement
-      ? getElementSourcePropertyOptions(conditionElement).map(
-          ([label, value]) => new Option(label, value),
-        )
-      : []),
-  );
-  elementPropertySelect.value = [...elementPropertySelect.options].some(
-    (option) => option.value === currentProperty,
-  )
-    ? currentProperty
-    : elementPropertySelect.options[0]?.value || "";
-  condition.property = elementPropertySelect.value;
-  root.querySelector("#property-condition-operator").value = [
-    "equals",
-    "notEquals",
-    "empty",
-    "notEmpty",
-    "greaterThan",
-    "lessThan",
-    "contains",
-  ].includes(condition.operator)
-    ? condition.operator
-    : "equals";
-  root.querySelector("#condition-value-fields").hidden = [
-    "empty",
-    "notEmpty",
-  ].includes(condition.operator);
-  root.querySelector("#property-condition-value").value =
-    condition.value ?? "null";
+  function getConditionActionAtPath(owner, path) {
+    return path.reduce((action, step) => {
+      if (!isWorkflowBranchAction(action)) return null;
+      const actions = getWorkflowBranchActions(action, step.branch);
+      return Number.isInteger(step.index) ? actions[step.index] || null : null;
+    }, owner);
   }
 
-  const { actions: configuredActions, elseActions: configuredElseActions } =
-    getConditionActionLists(action);
-  const actionLists = configuredActionLists || [
-    {
-      branch: "actions",
-      heading: localize.ConditionIsMet[editorLanguage],
-      actions: configuredActions,
-    },
-    {
-      branch: "elseActions",
-      heading: localize.ConditionIsNotMet[editorLanguage],
-      actions: configuredElseActions,
-    },
-  ];
-  actionLists.forEach(({ branch, heading, actions, listSelector }) => {
-    const list = root.querySelector(
-      listSelector || `#condition-${branch}`,
-    );
-    if (!list) return;
-    list.replaceChildren();
-    actions.forEach((item, index) => {
-      const row = document.createElement("div");
-      row.className = "condition-action";
-      const title = document.createElement("span");
-      title.className = "field-label";
-      const actionLabel = localize.IndexedAction[editorLanguage].replace(
-        "{index}",
-        () => String(index + 1),
-      );
-      title.textContent = localize.ConditionActionTitle[editorLanguage]
-        .replace("{condition}", () => heading)
-        .replace("{action}", () => actionLabel);
-      const type = document.createElement("select");
-      type.dataset.conditionAction = "type";
-      type.dataset.conditionBranch = branch;
-      type.dataset.actionIndex = String(index);
-      type.setAttribute("aria-label", `${title.textContent}: ${localize.ActionType[editorLanguage]}`);
-      [
-        ["showElement", localize.ShowElement[editorLanguage]],
-        ["hideElement", localize.HideElement[editorLanguage]],
-        ["navigate", localize.NavigateToPageAction[editorLanguage]],
-        ["back", localize.GoBackAction[editorLanguage]],
-        ["request", localize.SendAPIRequestAction[editorLanguage]],
-        ["setVariable", localize.SetVariableAction[editorLanguage]],
-        ["changeProperty", localize.ChangeElementPropertyAction[editorLanguage]],
-        ["openService", localize.OpenTawakkalnaServiceAction[editorLanguage]],
-        ["message", localize.ShowMessageAction[editorLanguage]],
-        ["showSheet", localize.ShowSheetAction[editorLanguage]],
-        ["hideSheet", localize.HideSheetAction[editorLanguage]],
-        ["showToast", localize.ShowToastAction[editorLanguage]],
-        ["function", localize.CallJavaScriptFunctionAction[editorLanguage]],
-        ["globalAction", localize.CallGlobalAction[editorLanguage]],
-        ["condition", localize.RunConditionalActionsAction[editorLanguage]],
-        ...twkSystemActionOptions.map(([label, value]) => [value, label]),
-      ].forEach(([value, label]) => type.add(new Option(label, value)));
-      type.value = [
-        "showElement",
-        "hideElement",
-        "navigate",
-        "back",
-        "request",
-        "setVariable",
-        "changeProperty",
-        "openService",
-        "message",
-        "showSheet",
-        "hideSheet",
-        "showToast",
-        "function",
-        "globalAction",
-        "condition",
-        ...twkSystemActionOptions.map(([, value]) => value),
-      ].includes(item.type)
-        ? item.type
-        : "showElement";
-      row.append(title, type);
+  function getConditionOwnerForField(owner, field) {
+    const directOwner = conditionOwnerForField.get(field);
+    if (directOwner) return directOwner;
+    const pathValue = field.dataset.conditionActionOwnerPath;
+    if (
+      field.closest(".condition-action-nested-condition") &&
+      pathValue === undefined
+    ) {
+      return null;
+    }
+    return getConditionActionAtPath(owner, parseConditionActionPath(pathValue));
+  }
 
-      if (["showElement", "hideElement"].includes(type.value)) {
+  function getConditionActionForField(field) {
+    return conditionActionForField.get(field) || null;
+  }
+
+  function syncConditionHeaderFields(
+    condition,
+    root,
+    actionPathValue,
+    handlerContext,
+    ownerAction,
+    actionPath,
+  ) {
+    if (handlerContext) {
+      root.querySelectorAll('[id^="property-condition-"]').forEach((field) => {
+        field.dataset.eventConditionField = field.id;
+        field.dataset.conditionActionOwnerPath = actionPathValue;
+        if (actionPath.length) conditionOwnerForField.set(field, ownerAction);
+        field.dataset.eventHandlerIndex = String(handlerContext.index);
+        field.dataset.eventHandlerPrimary = String(handlerContext.isPrimary);
+        field.dataset.eventHandlerAppLoad = String(handlerContext.appLoad);
+        if (handlerContext.globalActionId) {
+          field.dataset.globalActionId = handlerContext.globalActionId;
+        }
+      });
+    }
+
+    const sourceSelect = root.querySelector("#property-condition-source");
+    const eventIsAppLoad = handlerContext?.appLoad === true;
+    const selectedContextElement = state.elements.find(
+      (element) => element.id === state.selectedId,
+    );
+    populateValueSourceOptions(
+      sourceSelect,
+      !eventIsAppLoad &&
+      Boolean(selectedContextElement && isInsideCollection(selectedContextElement)),
+    );
+
+    const requestSelect = root.querySelector("#property-condition-request");
+    const requestOptions = state.requests.length
+      ? state.requests.map((request) => [request.name, request.id])
+      : [[t("AddARequestInAPISettings"), ""]];
+    requestSelect.disabled = !state.requests.length;
+    populateSelectOptions(
+      requestSelect,
+      requestOptions,
+      condition.requestId,
+      state.requests[0]?.id || "",
+    );
+
+    const variableSelect = root.querySelector("#property-condition-variable");
+    const variableOptions = state.variables.length
+      ? state.variables.map((variable) => [variable.name, variable.name])
+      : [[t("AddAStaticVariable"), ""]];
+    variableSelect.disabled = !state.variables.length;
+    const variableName = populateSelectOptions(
+      variableSelect,
+      variableOptions,
+      condition.variableName,
+      state.variables[0]?.name || "",
+    );
+
+    const twkSelect = root.querySelector("#property-condition-twk-field");
+    populateSelectOptions(
+      twkSelect,
+      TWK_FIELDS.map((field) => [field.label, field.key]),
+      condition.fieldKey,
+      TWK_FIELDS[0]?.key || "",
+    );
+
+    const source =
+      condition.source === "api"
+        ? "endpoint"
+        : variableSourceTypes.includes(condition.source)
+          ? condition.source
+          : "endpoint";
+
+    if (source === "variable" && variableName) {
+      condition.variableName = variableName;
+    }
+    sourceSelect.value = source;
+
+    CONDITION_SOURCE_SECTIONS.forEach(([sectionSource, selector]) => {
+      root.querySelector(selector).hidden = source !== sectionSource;
+    });
+
+    root.querySelector("#condition-object-path-fields").hidden = false;
+    root.querySelector("#property-condition-object-path").value =
+      condition.objectPath || "";
+    root.querySelector("#property-condition-path").value = condition.path || "";
+    root.querySelector("#property-condition-static-value").value =
+      condition.sourceValue ?? "null";
+    root.querySelector("#property-condition-item-path").value =
+      condition.itemPath || "";
+    root.querySelector("#property-condition-form-field").value =
+      condition.fieldName || "";
+
+    const extraSelect = root.querySelector("#property-condition-extra");
+    const extraOptions = state.elements.flatMap((element) =>
+      normalizeExtraData(element.extraData).map((extra) => [
+        `${getElementName(element)} · ${extra.key}`,
+        `${element.id}.extra.${extra.key}`,
+      ]),
+    );
+    if (!extraOptions.length) {
+      extraOptions.push([t("AddAdditionalInfoFirst"), ""]);
+    }
+    populateSelectOptions(extraSelect, extraOptions, condition.extraPath || "", "");
+
+    const elementPageSelect = root.querySelector("#property-condition-element-page");
+    const elementPageId = getTargetPageId(
+      state,
+      condition,
+      "elementId",
+      "elementPageId",
+    );
+    populateSelectOptions(
+      elementPageSelect,
+      state.pages
+        .filter((page) => page.kind === "page")
+        .map((page) => [page.name, page.id]),
+      elementPageId,
+      elementPageId,
+    );
+
+    const pageElements = getElementsOnPage(state, elementPageId);
+    const elementSelect = root.querySelector("#property-condition-element");
+    const elementOptions = pageElements.length
+      ? pageElements.map((element) => [getElementName(element), element.id])
+      : [[t("NoMatchingElements"), ""]];
+    const selectedElementId = populateSelectOptions(
+      elementSelect,
+      elementOptions,
+      condition.elementId,
+      pageElements[0]?.id || "",
+    );
+    condition.elementId = selectedElementId;
+
+    const conditionElement = pageElements.find(
+      (element) => element.id === selectedElementId,
+    );
+    const elementPropertySelect = root.querySelector(
+      "#property-condition-element-property",
+    );
+    const propertyOptions = conditionElement
+      ? getElementSourcePropertyOptions(conditionElement)
+      : [];
+    condition.property = populateSelectOptions(
+      elementPropertySelect,
+      propertyOptions,
+      condition.property || "",
+      propertyOptions[0]?.[1] || "",
+    );
+
+    root.querySelector("#property-condition-operator").value =
+      CONDITION_OPERATORS.includes(condition.operator)
+        ? condition.operator
+        : "equals";
+    root.querySelector("#condition-value-fields").hidden =
+      VALUE_LESS_OPERATORS.has(condition.operator);
+    root.querySelector("#property-condition-value").value =
+      condition.value ?? "null";
+  }
+
+  function renderBranchActionRow(
+    item,
+    index,
+    branch,
+    heading,
+    actionPath,
+    handlerContext,
+  ) {
+    const row = document.createElement("div");
+    row.className = "condition-action";
+
+    const title = document.createElement("span");
+    title.className = "field-label";
+    const actionLabel = t("IndexedAction").replace("{index}", () =>
+      String(index + 1),
+    );
+    title.textContent = t("ConditionActionTitle")
+      .replace("{condition}", () => heading)
+      .replace("{action}", () => actionLabel);
+
+    const fieldLabel = (key) => `${title.textContent}: ${t(key)}`;
+
+    const renderNestedCondition = () => {
+      const nestedContainer = document.createElement("div");
+      nestedContainer.className = "condition-action-nested-condition";
+
+      const nestedFields = document
+        .querySelector("#action-condition-fields")
+        .cloneNode(true);
+      nestedFields.hidden = false;
+      nestedFields.removeAttribute("id");
+
+      renderConditionOptions(item, nestedFields, actionPath, {
+        ...handlerContext,
+        branchOnly: false,
+      });
+
+      const suffix = `nested-${handlerContext?.index || 0}-${conditionActionPathValue(
+        actionPath,
+      ).replace(/[^A-Za-z0-9_-]/g, "-")}`;
+      nestedFields.querySelectorAll("[id]").forEach((field) => {
+        if (
+          field.closest(".condition-action-nested-condition") !==
+          nestedFields.closest(".condition-action-nested-condition")
+        )
+          return;
+        const previousId = field.id;
+        field.id = `${previousId}-${suffix}`;
+        nestedFields
+          .querySelectorAll(`label[for="${previousId}"]`)
+          .forEach((label) => {
+            label.htmlFor = field.id;
+          });
+      });
+
+      nestedContainer.append(nestedFields);
+      row.append(nestedContainer);
+    };
+
+    const actionTypeOptions = [
+      ["showElement", t("ShowElement")],
+      ["hideElement", t("HideElement")],
+      ["navigate", t("NavigateToPageAction")],
+      ["back", t("GoBackAction")],
+      ["request", t("SendAPIRequestAction")],
+      ["setVariable", t("SetVariableAction")],
+      ["changeProperty", t("ChangeElementPropertyAction")],
+      ["openService", t("OpenTawakkalnaServiceAction")],
+      ["message", t("ShowMessageAction")],
+      ["showSheet", t("ShowSheetAction")],
+      ["hideSheet", t("HideSheetAction")],
+      ["showToast", t("ShowToastAction")],
+      ["function", t("CallJavaScriptFunctionAction")],
+      ["globalAction", t("CallGlobalAction")],
+      ...twkSystemActionOptions.map(([label, value]) => [value, label]),
+    ];
+    const availableActionTypeOptions =
+      item.type === "condition"
+        ? [
+            ...actionTypeOptions,
+            ["condition", t("RunConditionalActionsAction")],
+          ]
+        : actionTypeOptions;
+
+    const type = createBranchControl("select", {
+      actionKey: "type",
+      branch,
+      index,
+      ariaLabel: fieldLabel("ActionType"),
+    });
+    populateSelectOptions(
+      type,
+      availableActionTypeOptions.map(([value, label]) => [label, value]),
+      item.type,
+      "showElement",
+    );
+    if (item.type === "condition") {
+      const legacyConditionOption = Array.from(type.options).find(
+        (option) => option.value === "condition",
+      );
+      if (legacyConditionOption) legacyConditionOption.disabled = true;
+    }
+    row.append(title, type);
+
+    const renderElementVisibilityFields = () => {
+      const pageElements = addTargetPagePicker(
+        row,
+        item,
+        branch,
+        index,
+        title,
+        "elementId",
+      );
+      const target = createBranchControl("select", {
+        actionKey: "elementId",
+        branch,
+        index,
+        ariaLabel: fieldLabel("Element"),
+      });
+      populateSelectOptions(
+        target,
+        getTargetOptions(pageElements, getElementName),
+        item.elementId,
+        pageElements[0]?.id || "",
+      );
+      row.append(target);
+    };
+
+    const renderSheetFields = () => {
+      const pageElements = addTargetPagePicker(
+        row,
+        item,
+        branch,
+        index,
+        title,
+        "sheetId",
+      );
+      const sheets = pageElements.filter((candidate) => candidate.type === "sheet");
+      const target = createBranchControl("select", {
+        actionKey: "sheetId",
+        branch,
+        index,
+        ariaLabel: fieldLabel("SheetWindow"),
+      });
+      populateSelectOptions(
+        target,
+        getTargetOptions(sheets, (candidate) => candidate.content || candidate.id),
+        item.sheetId,
+        sheets[0]?.id || "",
+      );
+      row.append(target);
+    };
+
+    const renderFunctionFields = () => {
+      const source = createBranchControl("select", {
+        actionKey: "functionSource",
+        branch,
+        index,
+        ariaLabel: fieldLabel("FunctionSource"),
+      });
+      populateSelectOptions(
+        source,
+        [
+          [t("GlobalFunction"), "global"],
+          [t("JavaScriptAsset"), "asset"],
+          [t("PluginScriptExport"), "plugin"],
+        ],
+        item.functionSource,
+        "global",
+      );
+      row.append(source);
+
+      if (source.value === "asset") {
+        const script = createBranchControl("select", {
+          actionKey: "scriptAssetId",
+          branch,
+          index,
+          ariaLabel: fieldLabel("JavaScriptFile"),
+        });
+        const jsAssets = state.assets.filter(isJavaScriptAsset);
+        const scriptOptions = jsAssets.length
+          ? jsAssets.map((asset) => [asset.name, asset.id])
+          : [[t("AddJavaScriptAssetFirst"), ""]];
+        populateSelectOptions(
+          script,
+          scriptOptions,
+          item.scriptAssetId,
+          jsAssets[0]?.id || "",
+        );
+        row.append(script);
+      }
+
+      if (source.value === "plugin") {
         const pageElements = addTargetPagePicker(
           row,
           item,
           branch,
           index,
           title,
-          "elementId",
+          "pluginElementId",
         );
-        const target = document.createElement("select");
-        target.dataset.conditionAction = "elementId";
-        target.dataset.conditionBranch = branch;
-        target.dataset.actionIndex = String(index);
-        target.setAttribute("aria-label", `${title.textContent}: ${localize.Element[editorLanguage]}`);
-        getTargetOptions(pageElements, getElementName).forEach(
-          ([label, value]) => target.add(new Option(label, value)),
+        const pluginElements = pageElements.filter(
+          (element) =>
+            element.type === "custom" &&
+            state.userComponents.some(
+              (component) =>
+                component.id === element.customComponentId && component.plugin,
+            ),
         );
-        target.value = pageElements.some(
-          (candidate) => candidate.id === item.elementId,
-        )
-          ? item.elementId
-          : pageElements[0]?.id || "";
-        row.append(target);
-      } else if (type.value === "navigate") {
-        const target = document.createElement("select");
-        target.dataset.conditionAction = "pageId";
-        target.dataset.conditionBranch = branch;
-        target.dataset.actionIndex = String(index);
-        target.setAttribute("aria-label", `${title.textContent}: ${localize.PageAlternativeA[editorLanguage]}`);
-        state.pages
+        const pluginElement = createBranchControl("select", {
+          actionKey: "pluginElementId",
+          branch,
+          index,
+          ariaLabel: fieldLabel("PluginElement"),
+        });
+        populateSelectOptions(
+          pluginElement,
+          getTargetOptions(pluginElements, getElementName),
+          item.pluginElementId,
+          pluginElements[0]?.id || "",
+        );
+        row.append(pluginElement);
+      }
+
+      const functionName = createBranchControl("input", {
+        actionKey: "functionName",
+        branch,
+        index,
+        ariaLabel: fieldLabel("FunctionName"),
+      });
+      functionName.type = "text";
+      functionName.dir = "ltr";
+      functionName.value = item.functionName || "";
+      functionName.placeholder = "myFunction";
+
+      const parameters = createBranchControl("textarea", {
+        actionKey: "parameters",
+        branch,
+        index,
+        ariaLabel: fieldLabel("FunctionParametersJSON"),
+      });
+      parameters.rows = 2;
+      parameters.dir = "ltr";
+      parameters.value = item.parameters || "[]";
+      parameters.placeholder = '["{{form.name}}", "{{var.user_id}}"]';
+
+      const resultVariable = createBranchControl("select", {
+        actionKey: "resultVariableId",
+        branch,
+        index,
+        ariaLabel: fieldLabel("StoreResultInVariable"),
+      });
+      const staticVarOptions = [
+        [t("DoNotStoreResult"), ""],
+        ...state.variables
+          .filter((variable) => variable.source === "static")
+          .map((variable) => [variable.name, variable.id]),
+      ];
+      populateSelectOptions(
+        resultVariable,
+        staticVarOptions,
+        item.resultVariableId,
+        "",
+      );
+
+      const help = document.createElement("span");
+      help.className = "field-help";
+      help.textContent = t("OfflineAssetsFunctionHelp");
+
+      row.append(functionName, parameters, resultVariable, help);
+    };
+
+    const renderChangePropertyFields = () => {
+      const pageElements = addTargetPagePicker(
+        row,
+        item,
+        branch,
+        index,
+        title,
+        "targetElementId",
+      );
+      const target = createBranchControl("select", {
+        actionKey: "targetElementId",
+        branch,
+        index,
+        ariaLabel: fieldLabel("Element"),
+      });
+      populateSelectOptions(
+        target,
+        getTargetOptions(pageElements, (candidate) => candidate.id),
+        item.targetElementId,
+        pageElements[0]?.id || "",
+      );
+
+      const targetElement =
+        pageElements.find((candidate) => candidate.id === item.targetElementId) ||
+        pageElements[0];
+
+      const property = createBranchControl("select", {
+        actionKey: "property",
+        branch,
+        index,
+        ariaLabel: fieldLabel("Property"),
+      });
+      const propOptions = getChangePropertyOptions(targetElement || { type: "" });
+      populateSelectOptions(
+        property,
+        propOptions,
+        item.property,
+        propOptions[0]?.[1] || "",
+      );
+
+      const valueType = getActionValueType(property.value);
+      const tagName =
+        valueType === "text"
+          ? property.value === "content"
+            ? "textarea"
+            : "input"
+          : "select";
+      const value = createBranchControl(tagName, {
+        actionKey: "value",
+        branch,
+        index,
+        ariaLabel: fieldLabel("Value"),
+      });
+
+      if (valueType === "boolean") {
+        if (property.value === "visibility") {
+          populateSelectOptions(
+            value,
+            [
+              [t("ShowElement"), "show"],
+              [t("HideElement"), "hide"],
+            ],
+            item.value === "hide" ? "hide" : "show",
+            "show",
+          );
+        } else if (property.value === "checked") {
+          populateSelectOptions(
+            value,
+            [
+              [t("UncheckSwitch"), "false"],
+              [t("CheckSwitch"), "true"],
+            ],
+            item.value === true || item.value === "true" ? "true" : "false",
+            "false",
+          );
+        } else {
+          populateSelectOptions(
+            value,
+            [
+              [t("Enabled"), "false"],
+              [t("Disabled"), "true"],
+            ],
+            item.value === true || item.value === "true" ? "true" : "false",
+            "false",
+          );
+        }
+      } else if (valueType === "variant") {
+        populateSelectOptions(
+          value,
+          getVariantOptions(targetElement?.type).map((variant) => [
+            variantLabels[variant],
+            variant,
+          ]),
+          item.value || "primary",
+          "primary",
+        );
+      } else if (property.value === "assetId") {
+        const imageAssets = state.assets
+          .filter((asset) => asset.type.startsWith("image/"))
+          .map((asset) => [asset.name, asset.id]);
+        if (!imageAssets.length) {
+          imageAssets.push([t("AddAnImageAssetFirst"), ""]);
+        }
+        populateSelectOptions(value, imageAssets, item.value, "");
+      } else {
+        if (value instanceof HTMLTextAreaElement) value.rows = 2;
+        value.dir = "ltr";
+        value.value = item.value ?? "";
+        value.placeholder =
+          property.value === "content"
+            ? t("TextOrFormToken")
+            : t("ValueOrFormToken");
+      }
+
+      row.append(target, property, value);
+    };
+
+    const branchActionRenderers = {
+      showElement: renderElementVisibilityFields,
+      hideElement: renderElementVisibilityFields,
+      navigate: () => {
+        const target = createBranchControl("select", {
+          actionKey: "pageId",
+          branch,
+          index,
+          ariaLabel: fieldLabel("PageAlternativeA"),
+        });
+        const pageOptions = state.pages
           .filter((page) => page.kind === "page")
-          .forEach((page) => target.add(new Option(page.name, page.id)));
-        target.value = state.pages.some(
-          (page) => page.kind === "page" && page.id === item.pageId,
-        )
-          ? item.pageId
-          : state.pages.find((page) => page.kind === "page")?.id || "";
+          .map((page) => [page.name, page.id]);
+        populateSelectOptions(
+          target,
+          pageOptions,
+          item.pageId,
+          pageOptions[0]?.[1] || "",
+        );
         row.append(target);
-      } else if (type.value === "back") {
+      },
+      back: () => {
         row.append(
           Object.assign(document.createElement("span"), {
-            textContent: localize.ReturnToPreviousPageOrStayOnFirstPage[editorLanguage],
+            textContent: t("ReturnToPreviousPageOrStayOnFirstPage"),
           }),
         );
-      } else if (["showSheet", "hideSheet"].includes(type.value)) {
-        const pageElements = addTargetPagePicker(
-          row,
-          item,
-          branch,
-          index,
-          title,
-          "sheetId",
-        );
-        const sheets = pageElements.filter(
-          (candidate) => candidate.type === "sheet",
-        );
-        const target = document.createElement("select");
-        target.dataset.conditionAction = "sheetId";
-        target.dataset.conditionBranch = branch;
-        target.dataset.actionIndex = String(index);
-        target.setAttribute("aria-label", `${title.textContent}: ${localize.SheetWindow[editorLanguage]}`);
-        getTargetOptions(sheets, (candidate) =>
-          candidate.content || candidate.id,
-        ).forEach(
-          ([label, value]) => target.add(new Option(label, value)),
-        );
-        target.value = sheets.some(
-          (candidate) =>
-            candidate.type === "sheet" && candidate.id === item.sheetId,
-        )
-          ? item.sheetId
-          : sheets[0]?.id || "";
-        row.append(target);
-      } else if (type.value === "showToast") {
+      },
+      showSheet: renderSheetFields,
+      hideSheet: renderSheetFields,
+      showToast: () => {
         const pageElements = addTargetPagePicker(
           row,
           item,
@@ -433,464 +723,268 @@ function renderConditionOptions(
           title,
           "toastId",
         );
-        const toasts = pageElements.filter(
-          (candidate) => candidate.type === "toast",
+        const toasts = pageElements.filter((candidate) => candidate.type === "toast");
+        const target = createBranchControl("select", {
+          actionKey: "toastId",
+          branch,
+          index,
+          ariaLabel: fieldLabel("ToastNotification"),
+        });
+        populateSelectOptions(
+          target,
+          getTargetOptions(toasts, getElementName),
+          item.toastId,
+          toasts[0]?.id || "",
         );
-        const target = document.createElement("select");
-        target.dataset.conditionAction = "toastId";
-        target.dataset.conditionBranch = branch;
-        target.dataset.actionIndex = String(index);
-        target.setAttribute("aria-label", `${title.textContent}: ${localize.ToastNotification[editorLanguage]}`);
-        getTargetOptions(toasts, getElementName).forEach(
-          ([label, value]) => target.add(new Option(label, value)),
-        );
-        target.value = toasts.some(
-          (candidate) =>
-            candidate.type === "toast" && candidate.id === item.toastId,
-        )
-          ? item.toastId
-          : toasts[0]?.id || "";
         row.append(target);
-      } else if (type.value === "function") {
-        const source = document.createElement("select");
-        source.dataset.conditionAction = "functionSource";
-        source.dataset.conditionBranch = branch;
-        source.dataset.actionIndex = String(index);
-        source.setAttribute(
-          "aria-label",
-          `${title.textContent}: ${localize.FunctionSource[editorLanguage]}`,
+      },
+      function: renderFunctionFields,
+      request: () => {
+        const target = createBranchControl("select", {
+          actionKey: "requestId",
+          branch,
+          index,
+          ariaLabel: fieldLabel("APIRequest"),
+        });
+        const requestOptions = state.requests.length
+          ? state.requests.map((request) => [request.name, request.id])
+          : [[t("AddARequestInAPISettings"), ""]];
+        populateSelectOptions(
+          target,
+          requestOptions,
+          item.requestId,
+          state.requests[0]?.id || "",
         );
-        source.add(
-          new Option(localize.GlobalFunction[editorLanguage], "global"),
-        );
-        source.add(
-          new Option(localize.JavaScriptAsset[editorLanguage], "asset"),
-        );
-        source.add(
-          new Option(localize.PluginScriptExport[editorLanguage], "plugin"),
-        );
-        source.value = ["asset", "plugin"].includes(item.functionSource)
-          ? item.functionSource
-          : "global";
-        row.append(source);
-
-        if (source.value === "asset") {
-          const script = document.createElement("select");
-          script.dataset.conditionAction = "scriptAssetId";
-          script.dataset.conditionBranch = branch;
-          script.dataset.actionIndex = String(index);
-          script.setAttribute(
-            "aria-label",
-            `${title.textContent}: ${localize.JavaScriptFile[editorLanguage]}`,
-          );
-          state.assets
-            .filter(isJavaScriptAsset)
-            .forEach((asset) => script.add(new Option(asset.name, asset.id)));
-          if (!script.options.length)
-            script.add(new Option(localize.AddJavaScriptAssetFirst[editorLanguage], ""));
-          script.value = state.assets.some(
-            (asset) =>
-              isJavaScriptAsset(asset) && asset.id === item.scriptAssetId,
-          )
-            ? item.scriptAssetId
-            : state.assets.find(isJavaScriptAsset)?.id || "";
-          row.append(script);
-        }
-
-        if (source.value === "plugin") {
-          const pageElements = addTargetPagePicker(
-            row,
-            item,
-            branch,
-            index,
-            title,
-            "pluginElementId",
-          );
-          const pluginElement = document.createElement("select");
-          pluginElement.dataset.conditionAction = "pluginElementId";
-          pluginElement.dataset.conditionBranch = branch;
-          pluginElement.dataset.actionIndex = String(index);
-          pluginElement.setAttribute(
-            "aria-label",
-            `${title.textContent}: ${localize.PluginElement[editorLanguage]}`,
-          );
-          const pluginElements = pageElements.filter(
-            (element) =>
-              element.type === "custom" &&
-              state.userComponents.some(
-                (component) =>
-                  component.id === element.customComponentId &&
-                  component.plugin,
-              ),
-          );
-          getTargetOptions(pluginElements, getElementName).forEach(
-            ([label, value]) =>
-              pluginElement.add(new Option(label, value)),
-          );
-          pluginElement.value = pluginElements.some(
-            (element) => element.id === item.pluginElementId,
-          )
-            ? item.pluginElementId
-            : pluginElements[0]?.id || "";
-          row.append(pluginElement);
-        }
-
-        const functionName = document.createElement("input");
-        functionName.type = "text";
-        functionName.dir = "ltr";
-        functionName.value = item.functionName || "";
-        functionName.placeholder = "myFunction";
-        functionName.dataset.conditionAction = "functionName";
-        functionName.dataset.conditionBranch = branch;
-        functionName.dataset.actionIndex = String(index);
-        functionName.setAttribute(
-          "aria-label",
-          `${title.textContent}: ${localize.FunctionName[editorLanguage]}`,
-        );
-        const parameters = document.createElement("textarea");
-        parameters.rows = 2;
-        parameters.dir = "ltr";
-        parameters.value = item.parameters || "[]";
-        parameters.placeholder = '["{{form.name}}", "{{var.user_id}}"]';
-        parameters.dataset.conditionAction = "parameters";
-        parameters.dataset.conditionBranch = branch;
-        parameters.dataset.actionIndex = String(index);
-        parameters.setAttribute(
-          "aria-label",
-          `${title.textContent}: ${localize.FunctionParametersJSON[editorLanguage]}`,
-        );
-        const resultVariable = document.createElement("select");
-        resultVariable.dataset.conditionAction = "resultVariableId";
-        resultVariable.dataset.conditionBranch = branch;
-        resultVariable.dataset.actionIndex = String(index);
-        resultVariable.setAttribute(
-          "aria-label",
-          `${title.textContent}: ${localize.StoreResultInVariable[editorLanguage]}`,
-        );
-        resultVariable.add(new Option(localize.DoNotStoreResult[editorLanguage], ""));
-        state.variables
-          .filter((variable) => variable.source === "static")
-          .forEach((variable) =>
-            resultVariable.add(new Option(variable.name, variable.id)),
-          );
-        resultVariable.value = state.variables.some(
-          (variable) =>
-            variable.source === "static" &&
-            variable.id === item.resultVariableId,
-        )
-          ? item.resultVariableId
-          : "";
-        row.append(functionName, parameters, resultVariable);
-        const help = document.createElement("span");
-        help.className = "field-help";
-        help.textContent = localize.OfflineAssetsFunctionHelp[editorLanguage];
-        row.append(help);
-      } else if (type.value === "request") {
-        const target = document.createElement("select");
-        target.dataset.conditionAction = "requestId";
-        target.dataset.conditionBranch = branch;
-        target.dataset.actionIndex = String(index);
-        target.setAttribute("aria-label", `${title.textContent}: ${localize.APIRequest[editorLanguage]}`);
-        state.requests.forEach((request) =>
-          target.add(new Option(request.name, request.id)),
-        );
-        if (!state.requests.length)
-          target.add(new Option(localize.AddARequestInAPISettings[editorLanguage], ""));
-        target.value = state.requests.some(
-          (request) => request.id === item.requestId,
-        )
-          ? item.requestId
-          : state.requests[0]?.id || "";
         row.append(target);
-      } else if (type.value === "setVariable") {
-        const variable = document.createElement("select");
-        variable.dataset.conditionAction = "variableId";
-        variable.dataset.conditionBranch = branch;
-        variable.dataset.actionIndex = String(index);
-        variable.setAttribute("aria-label", `${title.textContent}: ${localize.Variable[editorLanguage]}`);
-        state.variables
+      },
+      setVariable: () => {
+        const variable = createBranchControl("select", {
+          actionKey: "variableId",
+          branch,
+          index,
+          ariaLabel: fieldLabel("Variable"),
+        });
+        const staticVars = state.variables
           .filter((candidate) => candidate.source === "static")
-          .forEach((candidate) =>
-            variable.add(new Option(candidate.name, candidate.id)),
-          );
-        if (!variable.options.length)
-          variable.add(new Option(localize.AddAStaticVariable[editorLanguage], ""));
-        if (!item.variableId)
+          .map((candidate) => [candidate.name, candidate.id]);
+        if (!staticVars.length) {
+          staticVars.push([t("AddAStaticVariable"), ""]);
+        }
+        if (!item.variableId) {
           item.variableId =
             state.variables.find((candidate) => candidate.source === "static")
               ?.id || "";
+        }
         if (
           item.variableId &&
-          ![...variable.options].some(
-            (option) => option.value === item.variableId,
-          )
-        )
-          variable.add(
-            new Option(
-              localize.MissingStaticVariable[editorLanguage].replace(
-                "{id}",
-                () => item.variableId,
-              ),
-              item.variableId,
-            ),
-          );
-        variable.value = item.variableId || "";
-        const value = document.createElement("textarea");
+          !staticVars.some(([, id]) => id === item.variableId)
+        ) {
+          staticVars.push([
+            t("MissingStaticVariable").replace("{id}", () => item.variableId),
+            item.variableId,
+          ]);
+        }
+        populateSelectOptions(variable, staticVars, item.variableId || "", "");
+
+        const value = createBranchControl("textarea", {
+          actionKey: "value",
+          branch,
+          index,
+          ariaLabel: fieldLabel("Value"),
+        });
         value.rows = 2;
         value.dir = "ltr";
         value.spellcheck = false;
         value.value = item.value || "null";
-        value.placeholder = localize.JSONValueOrFormToken[editorLanguage];
-        value.dataset.conditionAction = "value";
-        value.dataset.conditionBranch = branch;
-        value.dataset.actionIndex = String(index);
-        value.setAttribute("aria-label", `${title.textContent}: ${localize.Value[editorLanguage]}`);
+        value.placeholder = t("JSONValueOrFormToken");
         row.append(variable, value);
-      } else if (type.value === "changeProperty") {
-        const pageElements = addTargetPagePicker(
-          row,
-          item,
+      },
+      changeProperty: renderChangePropertyFields,
+      openService: () => {
+        const serviceId = createBranchControl("input", {
+          actionKey: "serviceId",
           branch,
           index,
-          title,
-          "targetElementId",
-        );
-        const target = document.createElement("select");
-        target.dataset.conditionAction = "targetElementId";
-        target.dataset.conditionBranch = branch;
-        target.dataset.actionIndex = String(index);
-        target.setAttribute("aria-label", `${title.textContent}: ${localize.Element[editorLanguage]}`);
-        getTargetOptions(pageElements, (candidate) => candidate.id).forEach(
-          ([label, value]) => target.add(new Option(label, value)),
-        );
-        target.value = pageElements.some(
-          (candidate) => candidate.id === item.targetElementId,
-        )
-          ? item.targetElementId
-          : pageElements[0]?.id || "";
-        const property = document.createElement("select");
-        property.dataset.conditionAction = "property";
-        property.dataset.conditionBranch = branch;
-        property.dataset.actionIndex = String(index);
-        property.setAttribute("aria-label", `${title.textContent}: ${localize.Property[editorLanguage]}`);
-        const targetElement =
-          pageElements.find(
-            (candidate) => candidate.id === item.targetElementId,
-          ) || pageElements[0];
-        getChangePropertyOptions(targetElement || { type: "" }).forEach(
-          ([label, propertyValue]) =>
-            property.add(new Option(label, propertyValue)),
-        );
-        property.value = [...property.options].some(
-          (option) => option.value === item.property,
-        )
-          ? item.property
-          : property.options[0]?.value || "";
-        const valueType = getActionValueType(property.value);
-        const value = document.createElement(
-          valueType === "text"
-            ? property.value === "content"
-              ? "textarea"
-              : "input"
-            : "select",
-        );
-        value.dataset.conditionAction = "value";
-        value.dataset.conditionBranch = branch;
-        value.dataset.actionIndex = String(index);
-        value.setAttribute("aria-label", `${title.textContent}: ${localize.Value[editorLanguage]}`);
-        if (valueType === "boolean") {
-          if (property.value === "visibility") {
-            value.add(new Option(localize.ShowElement[editorLanguage], "show"));
-            value.add(new Option(localize.HideElement[editorLanguage], "hide"));
-            value.value = item.value === "hide" ? "hide" : "show";
-          } else if (property.value === "checked") {
-            value.add(new Option(localize.UncheckSwitch[editorLanguage], "false"));
-            value.add(new Option(localize.CheckSwitch[editorLanguage], "true"));
-            value.value =
-              item.value === true || item.value === "true" ? "true" : "false";
-          } else {
-            value.add(new Option(localize.Enabled[editorLanguage], "false"));
-            value.add(new Option(localize.Disabled[editorLanguage], "true"));
-            value.value =
-              item.value === true || item.value === "true" ? "true" : "false";
-          }
-        } else if (valueType === "variant") {
-          getVariantOptions(targetElement?.type).forEach((variant) =>
-            value.add(new Option(variantLabels[variant], variant)),
-          );
-          value.value = item.value || "primary";
-        } else if (property.value === "assetId") {
-          state.assets
-            .filter((asset) => asset.type.startsWith("image/"))
-            .forEach((asset) => value.add(new Option(asset.name, asset.id)));
-          if (!value.options.length)
-            value.add(new Option(localize.AddAnImageAssetFirst[editorLanguage], ""));
-          value.value = state.assets.some(
-            (asset) =>
-              asset.type.startsWith("image/") && asset.id === item.value,
-          )
-            ? item.value
-            : "";
-        } else {
-          if (value instanceof HTMLTextAreaElement) value.rows = 2;
-          value.dir = "ltr";
-          value.value = item.value ?? "";
-          value.placeholder =
-            property.value === "content"
-              ? localize.TextOrFormToken[editorLanguage]
-              : localize.ValueOrFormToken[editorLanguage];
-        }
-        row.append(target, property, value);
-      } else if (type.value === "openService") {
-        const serviceId = document.createElement("input");
+          ariaLabel: fieldLabel("ServiceID"),
+        });
         serviceId.type = "text";
         serviceId.dir = "ltr";
         serviceId.value = item.serviceId || "";
         serviceId.placeholder = "service_id";
-        serviceId.dataset.conditionAction = "serviceId";
-        serviceId.dataset.conditionBranch = branch;
-        serviceId.dataset.actionIndex = String(index);
-        serviceId.setAttribute(
-          "aria-label",
-          `${title.textContent}: ${localize.ServiceID[editorLanguage]}`,
-        );
-        const values = document.createElement("textarea");
+
+        const values = createBranchControl("textarea", {
+          actionKey: "values",
+          branch,
+          index,
+          ariaLabel: fieldLabel("Values"),
+        });
         values.rows = 2;
         values.dir = "ltr";
         values.value = item.values || "{}";
-        values.placeholder = localize.ValuesJSON[editorLanguage];
-        values.dataset.conditionAction = "values";
-        values.dataset.conditionBranch = branch;
-        values.dataset.actionIndex = String(index);
-        values.setAttribute("aria-label", `${title.textContent}: ${localize.Values[editorLanguage]}`);
+        values.placeholder = t("ValuesJSON");
         row.append(serviceId, values);
-      } else if (type.value === "message") {
-        const messageTitle = document.createElement("input");
+      },
+      message: () => {
+        const messageTitle = createBranchControl("input", {
+          actionKey: "title",
+          branch,
+          index,
+          ariaLabel: fieldLabel("MessageDialogTitle"),
+        });
         messageTitle.type = "text";
         messageTitle.maxLength = 80;
         messageTitle.value = item.title || "";
-        messageTitle.placeholder = localize.Message[editorLanguage];
-        messageTitle.dataset.conditionAction = "title";
-        messageTitle.dataset.conditionBranch = branch;
-        messageTitle.dataset.actionIndex = String(index);
-        messageTitle.setAttribute(
-          "aria-label",
-          `${title.textContent}: ${localize.MessageDialogTitle[editorLanguage]}`,
-        );
-        const message = document.createElement("textarea");
+        messageTitle.placeholder = t("Message");
+
+        const message = createBranchControl("textarea", {
+          actionKey: "message",
+          branch,
+          index,
+          ariaLabel: fieldLabel("MessageText"),
+        });
         message.rows = 2;
         message.value = item.message || "";
-        message.dataset.conditionAction = "message";
-        message.dataset.conditionBranch = branch;
-        message.dataset.actionIndex = String(index);
-        message.setAttribute("aria-label", `${title.textContent}: ${localize.MessageText[editorLanguage]}`);
         row.append(messageTitle, message);
-      } else if (type.value === "globalAction") {
-        const globalAction = document.createElement("select");
-        globalAction.dataset.conditionAction = "globalActionId";
-        globalAction.dataset.conditionBranch = branch;
-        globalAction.dataset.actionIndex = String(index);
-        globalAction.setAttribute(
-          "aria-label",
-          `${title.textContent}: ${localize.GlobalActionNameLabel[editorLanguage]}`,
-        );
-        (state.settings.globalActions || []).forEach((action) =>
-          globalAction.add(new Option(action.name, action.id)),
-        );
-        if (!globalAction.options.length)
-          globalAction.add(
-            new Option(localize.DefineAGlobalActionFirst[editorLanguage], ""),
-          );
-        if (!item.globalActionId)
-          item.globalActionId = globalAction.options[0]?.value || "";
-        if (
-          item.globalActionId &&
-          ![...globalAction.options].some(
-            (option) => option.value === item.globalActionId,
-          )
-        )
-          globalAction.add(
-            new Option(
-              localize.MissingGlobalAction[editorLanguage].replace(
-                "{id}",
-                () => item.globalActionId,
-              ),
-              item.globalActionId,
-            ),
-          );
-        globalAction.value = item.globalActionId || "";
-        row.append(globalAction);
-      } else if (type.value === "condition") {
-        const nestedCondition = document
-          .querySelector("#action-condition-fields")
-          .cloneNode(true);
-        nestedCondition.hidden = false;
-        nestedCondition.removeAttribute("id");
-        nestedCondition.classList.add("condition-action-nested-condition");
-        const nestedPath = [...actionPath, { branch, index }];
-        // Include the full branch path in cloned IDs so recursively nested forms remain label-safe.
-        row.append(nestedCondition);
-        renderConditionOptions(item, nestedCondition, nestedPath, handlerContext);
-        nestedCondition.querySelectorAll("[id]").forEach((field) => {
-          const previousId = field.id;
-          field.id = `${previousId}-${nestedPath.map(({ branch: pathBranch, index: pathIndex }) => `${pathBranch}-${pathIndex}`).join("-")}`;
-          nestedCondition
-            .querySelectorAll(`label[for="${previousId}"]`)
-            .forEach((label) => {
-              label.htmlFor = field.id;
-            });
+      },
+      globalAction: () => {
+        const globalAction = createBranchControl("select", {
+          actionKey: "globalActionId",
+          branch,
+          index,
+          ariaLabel: fieldLabel("GlobalAction"),
         });
-      }
+        const actions = state.settings.globalActions || [];
+        const options = actions.length
+          ? actions.map((action) => [action.name, action.id])
+          : [[t("DefineAGlobalActionFirst"), ""]];
+        populateSelectOptions(
+          globalAction,
+          options,
+          item.globalActionId,
+          actions[0]?.id || "",
+        );
+        row.append(globalAction);
+      },
+      condition: renderNestedCondition,
+    };
 
-      const itemPath = [...actionPath, { branch, index }];
-      row.querySelectorAll("[data-condition-action]").forEach((field) => {
+    branchActionRenderers[type.value]?.();
+    const actionPathValue = conditionActionPathValue(actionPath);
+    const ownerPathValue = conditionActionPathValue(actionPath.slice(0, -1));
+    const enclosingCondition = row.closest(".condition-action-nested-condition");
+    row.querySelectorAll("[data-condition-action]").forEach((field) => {
+      if (
+        field.closest(".condition-action-nested-condition") !==
+        enclosingCondition
+      )
+        return;
+      field.dataset.conditionActionPath = actionPathValue;
+      field.dataset.conditionActionOwnerPath = ownerPathValue;
+      conditionActionForField.set(field, item);
+    });
+    return row;
+  }
+
+  function renderConditionOptions(
+    action = {},
+    root = document,
+    actionPath = [],
+    handlerContext = null,
+    configuredActionLists = null,
+  ) {
+    const condition = handlerContext?.branchOnly
+      ? {}
+      : action.condition || (action.condition = {});
+    const actionPathValue = conditionActionPathValue(actionPath);
+
+    if (!handlerContext?.branchOnly) {
+      syncConditionHeaderFields(
+        condition,
+        root,
+        actionPathValue,
+        handlerContext,
+        action,
+        actionPath,
+      );
+    }
+
+    const { actions: configuredActions, elseActions: configuredElseActions } =
+      getConditionActionLists(action);
+    const actionLists = configuredActionLists || [
+      {
+        branch: "actions",
+        heading: t("ConditionIsMet"),
+        actions: configuredActions,
+      },
+      {
+        branch: "elseActions",
+        heading: t("ConditionIsNotMet"),
+        actions: configuredElseActions,
+      },
+    ];
+
+    actionLists.forEach(({ branch, heading, actions, listSelector }) => {
+      const list = root.querySelector(listSelector || `#condition-${branch}`);
+      if (!list) return;
+      list.replaceChildren();
+      actions.forEach((item, index) => {
+        const row = renderBranchActionRow(
+          item,
+          index,
+          branch,
+          heading,
+          [...actionPath, { branch, index }],
+          handlerContext,
+        );
+        list.append(row);
+      });
+    });
+
+    const enclosingCondition = root.closest(".condition-action-nested-condition");
+    if (handlerContext) {
+      root.querySelectorAll("[data-condition-action]").forEach((field) => {
         if (
           field.closest(".condition-action-nested-condition") !==
-          (root.classList.contains("condition-action-nested-condition")
-            ? root
-            : null)
+          enclosingCondition
         )
           return;
-        field.dataset.conditionActionPath = conditionActionPathValue(itemPath);
-        if (handlerContext) {
-          field.dataset.eventHandlerIndex = String(handlerContext.index);
-          field.dataset.eventHandlerPrimary = String(handlerContext.isPrimary);
-          field.dataset.eventHandlerAppLoad = String(handlerContext.appLoad);
+        field.dataset.eventHandlerIndex = String(handlerContext.index);
+        field.dataset.eventHandlerPrimary = String(handlerContext.isPrimary);
+        field.dataset.eventHandlerAppLoad = String(handlerContext.appLoad);
+        if (handlerContext.globalActionId) {
+          field.dataset.globalActionId = handlerContext.globalActionId;
         }
       });
-      const remove = document.createElement("button");
-      remove.type = "button";
-      remove.className = "button button-quiet condition-action-remove";
-      remove.dataset.removeConditionAction = branch;
-      remove.dataset.actionIndex = String(index);
-      remove.dataset.conditionActionOwnerPath = actionPathValue;
-      if (handlerContext) {
-        remove.dataset.eventHandlerIndex = String(handlerContext.index);
-        remove.dataset.eventHandlerPrimary = String(handlerContext.isPrimary);
-        remove.dataset.eventHandlerAppLoad = String(handlerContext.appLoad);
-      }
-      remove.textContent = localize.RemoveAction[editorLanguage];
-      row.append(remove);
-      list.append(row);
-    });
-    const addButton = [...root.querySelectorAll("[data-add-condition-action]")].find(
-      (button) =>
-        button.dataset.addConditionAction === branch &&
-        button.closest(".condition-action-nested-condition") ===
-        (root.classList.contains("condition-action-nested-condition")
-          ? root
-          : null),
-    );
-    if (addButton) {
-      addButton.dataset.conditionActionOwnerPath = actionPathValue;
-      if (handlerContext) {
-        addButton.dataset.eventHandlerIndex = String(handlerContext.index);
-        addButton.dataset.eventHandlerPrimary = String(handlerContext.isPrimary);
-        addButton.dataset.eventHandlerAppLoad = String(handlerContext.appLoad);
-      }
     }
-  });
-}
 
-  return { conditionActionPathValue, parseConditionActionPath, getConditionActionAtPath, getConditionOwnerForField, renderConditionOptions };
+    root
+      .querySelectorAll(
+        "[data-add-condition-action], [data-remove-condition-action]",
+      )
+      .forEach((button) => {
+        if (
+          button.closest(".condition-action-nested-condition") !==
+          enclosingCondition
+        )
+          return;
+        button.dataset.conditionActionOwnerPath = actionPathValue;
+        if (actionPath.length) conditionOwnerForField.set(button, action);
+        if (!handlerContext) return;
+        button.dataset.eventHandlerIndex = String(handlerContext.index);
+        button.dataset.eventHandlerPrimary = String(handlerContext.isPrimary);
+        button.dataset.eventHandlerAppLoad = String(handlerContext.appLoad);
+        if (handlerContext.globalActionId) {
+          button.dataset.globalActionId = handlerContext.globalActionId;
+        }
+      });
+  }
+
+  return {
+    renderConditionOptions,
+    getConditionOwnerForField,
+    getConditionActionForField,
+    conditionActionPathValue,
+    parseConditionActionPath,
+    getConditionActionAtPath,
+  };
 }

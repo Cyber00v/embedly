@@ -2,6 +2,49 @@
 
 // Draws workflow connection paths and the compact node overview.
 
+const MIN_BEZIER_CURVE = 42;
+const MINIMAP_WIDTH = 170;
+const MINIMAP_HEIGHT = 86;
+const MIN_MINIMAP_NODE_WIDTH = 5;
+const MIN_MINIMAP_NODE_HEIGHT = 4;
+
+function computeEdgeBezierPath(source, target, stageRect, zoom) {
+  const sourceRect = source.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  const x1 = (sourceRect.left + sourceRect.width / 2 - stageRect.left) / zoom;
+  const y1 = (sourceRect.top + sourceRect.height / 2 - stageRect.top) / zoom;
+  const x2 = (targetRect.left + targetRect.width / 2 - stageRect.left) / zoom;
+  const y2 = (targetRect.top + targetRect.height / 2 - stageRect.top) / zoom;
+  const curve = Math.max(MIN_BEZIER_CURVE, Math.abs(x2 - x1) / 2);
+  return `M ${x1} ${y1} C ${x1 + curve} ${y1}, ${x2 - curve} ${y2}, ${x2} ${y2}`;
+}
+
+function buildEdgePathsMarkup(edge, path, escapeHtml) {
+  const kindClass = `workflow-edge-${escapeHtml(edge.kind)}`;
+  const visiblePath = `<path class="workflow-edge-visible ${kindClass}" d="${path}"></path>`;
+  // Keep an invisible, focusable path above the visible stroke for reliable edge selection.
+  const hitPath = `<path class="workflow-edge-path ${kindClass}" d="${path}" data-workflow-edge-id="${escapeHtml(edge.id)}" tabindex="0" role="button" aria-label="${escapeHtml(edge.label || "Workflow connection")}"></path>`;
+  return { visiblePath, hitPath };
+}
+
+function bindEdgeSelectionHandlers(svg, getEditorState) {
+  const edgeElements = [...svg.querySelectorAll("[data-workflow-edge-id]")];
+  edgeElements.forEach((path) => {
+    path.addEventListener("click", () => {
+      const graphState = getEditorState(svg.dataset.workflowGraph);
+      graphState.selectedEdgeId = path.dataset.workflowEdgeId;
+      graphState.selectedNodeId = "";
+      path.focus({ preventScroll: true });
+      edgeElements.forEach((edge) =>
+        edge.classList.toggle(
+          "is-selected",
+          edge.dataset.workflowEdgeId === graphState.selectedEdgeId,
+        ),
+      );
+    });
+  });
+}
+
 export function renderWorkflowEdges(
   stage,
   svg,
@@ -9,90 +52,75 @@ export function renderWorkflowEdges(
   zoom,
   { getEditorState, escapeHtml },
 ) {
-
   const stageRect = stage.getBoundingClientRect();
-  const edgeMarkup = [];
-  const paths = [];
+  const visiblePaths = [];
+  const hitPaths = [];
+
   layout.edges.forEach((edge) => {
-    const source = stage.querySelector(
-      `[data-workflow-port-id="${CSS.escape(edge.fromPort || edge.from)}"]`,
-    );
-    const target = stage.querySelector(
-      `[data-workflow-port-id="${CSS.escape(edge.toPort || edge.to)}"]`,
-    );
+    const sourcePortKey = CSS.escape(edge.fromPort || edge.from);
+    const targetPortKey = CSS.escape(edge.toPort || edge.to);
+    const source = stage.querySelector(`[data-workflow-port-id="${sourcePortKey}"]`);
+    const target = stage.querySelector(`[data-workflow-port-id="${targetPortKey}"]`);
     if (!source || !target) return;
-    const sourceRect = source.getBoundingClientRect();
-    const targetRect = target.getBoundingClientRect();
-    const x1 =
-      (sourceRect.left + sourceRect.width / 2 - stageRect.left) / zoom;
-    const y1 =
-      (sourceRect.top + sourceRect.height / 2 - stageRect.top) / zoom;
-    const x2 =
-      (targetRect.left + targetRect.width / 2 - stageRect.left) / zoom;
-    const y2 =
-      (targetRect.top + targetRect.height / 2 - stageRect.top) / zoom;
-    const curve = Math.max(42, Math.abs(x2 - x1) / 2);
-    const path = `M ${x1} ${y1} C ${x1 + curve} ${y1}, ${x2 - curve} ${y2}, ${x2} ${y2}`;
-    // Keep an invisible, focusable path above the visible stroke for reliable edge selection.
-    paths.push(
-      `<path class="workflow-edge-path workflow-edge-${escapeHtml(edge.kind)}" d="${path}" data-workflow-edge-id="${escapeHtml(edge.id)}" tabindex="0" role="button" aria-label="${escapeHtml(edge.label || "Workflow connection")}"></path>`,
-    );
-    edgeMarkup.push(
-      `<path class="workflow-edge-visible workflow-edge-${edge.kind}" d="${path}"></path>`,
-    );
+
+    const path = computeEdgeBezierPath(source, target, stageRect, zoom);
+    const { visiblePath, hitPath } = buildEdgePathsMarkup(edge, path, escapeHtml);
+    visiblePaths.push(visiblePath);
+    hitPaths.push(hitPath);
   });
-  svg.innerHTML = `${edgeMarkup.join("")}${paths.join("")}`;
-  svg.querySelectorAll("[data-workflow-edge-id]").forEach((path) => {
-    path.addEventListener("click", () => {
-      const graphState = getEditorState(svg.dataset.workflowGraph);
-      graphState.selectedEdgeId = path.dataset.workflowEdgeId;
-      graphState.selectedNodeId = "";
-      path.focus({ preventScroll: true });
-      svg
-        .querySelectorAll("[data-workflow-edge-id]")
-        .forEach((edge) =>
-          edge.classList.toggle(
-            "is-selected",
-            edge.dataset.workflowEdgeId === graphState.selectedEdgeId,
-          ),
-        );
-    });
-  });
+
+  svg.innerHTML = `${visiblePaths.join("")}${hitPaths.join("")}`;
+  bindEdgeSelectionHandlers(svg, getEditorState);
+}
+
+function readNodeCoordinate(value, fallback) {
+  const parsed = Number.parseFloat(value);
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function renderMinimapNodeMarkup(node, maxX, maxY) {
+  const x = readNodeCoordinate(node.style.left, node.offsetLeft);
+  const y = readNodeCoordinate(node.style.top, node.offsetTop);
+  const left = (x / maxX) * MINIMAP_WIDTH;
+  const top = (y / maxY) * MINIMAP_HEIGHT;
+  const width = Math.max(
+    MIN_MINIMAP_NODE_WIDTH,
+    (node.offsetWidth / maxX) * MINIMAP_WIDTH,
+  );
+  const height = Math.max(
+    MIN_MINIMAP_NODE_HEIGHT,
+    (node.offsetHeight / maxY) * MINIMAP_HEIGHT,
+  );
+  const triggerClass = node.classList.contains("workflow-trigger-node")
+    ? " is-trigger"
+    : "";
+
+  return `<span class="workflow-minimap-node${triggerClass}" style="left:${left}px;top:${top}px;width:${width}px;height:${height}px"></span>`;
 }
 
 export function renderWorkflowMinimap(minimap, nodeLayer, layout, graphKey) {
   if (!minimap) return;
   const nodes = [...nodeLayer.children];
-  
-  const readPos = (value, fallback) => {
-    const n = Number.parseFloat(value);
-    return Number.isFinite(n) ? n : fallback;
-  };
 
   const maxX = Math.max(
     1,
     ...nodes.map(
-      (node) => readPos(node.style.left, node.offsetLeft) + node.offsetWidth,
+      (node) =>
+        readNodeCoordinate(node.style.left, node.offsetLeft) + node.offsetWidth,
     ),
   );
-
   const maxY = Math.max(
     1,
     ...nodes.map(
-      (node) => readPos(node.style.top, node.offsetTop) + node.offsetHeight,
+      (node) =>
+        readNodeCoordinate(node.style.top, node.offsetTop) + node.offsetHeight,
     ),
   );
 
   minimap.dataset.workflowGraph = graphKey;
   // Scale nodes relative to the graph bounds so their relative positions remain recognizable.
   minimap.innerHTML = nodes
-    .map((node) => {
-      const left = (readPos(node.style.left, node.offsetLeft) / maxX) * 170;
-      const top = (readPos(node.style.top, node.offsetTop) / maxY) * 86;
-      const width = Math.max(5, (node.offsetWidth / maxX) * 170);
-      const height = Math.max(4, (node.offsetHeight / maxY) * 86);
-      return `<span class="workflow-minimap-node ${node.classList.contains("workflow-trigger-node") ? "is-trigger" : ""}" style="left:${left}px;top:${top}px;width:${width}px;height:${height}px"></span>`;
-    })
+    .map((node) => renderMinimapNodeMarkup(node, maxX, maxY))
     .join("");
   minimap.hidden = !layout.minimapOpen;
 }

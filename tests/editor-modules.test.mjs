@@ -11,9 +11,12 @@ import { createPreviewRenderer } from "../src/preview-renderer.ts";
 import { createWorkflowActionFields } from "../src/workflow/action-fields.ts";
 import {
   ensureWorkflowActionIds,
+  getNestedWorkflowBranchNodes,
   getWorkflowActionBranches,
+  getWorkflowBranchActions,
   isWorkflowBranchAction,
   serializeWorkflowGraph,
+  setWorkflowBranchActions,
 } from "../src/workflow/graph.ts";
 import { createWorkflowConditionEditor } from "../src/workflow/condition-editor.ts";
 import { TemplateEngine } from "../src/template-engine.ts";
@@ -176,7 +179,7 @@ test("keeps unselected radio handling self-contained in the embedded runtime", (
 
   assert.match(
     runtimeSource,
-    /setValue\(name, selected \? readFormValue\(selected\) : ""\)/,
+    /return selected \? readFormValue\(selected\) : ""/,
   );
   assert.doesNotMatch(runtimeSource, /\bgetRadioGroupValue\b/);
 });
@@ -216,6 +219,443 @@ test("resolves nested actions in Switch branches with colon-delimited branch IDs
     conditionEditor.getConditionActionAtPath(switchAction, parsedPath),
     selectedAction,
   );
+});
+
+test("collects nested condition nodes from condition and switch branches", () => {
+  const nestedCondition = {
+    type: "condition",
+    workflowId: "nested-condition",
+    actions: [
+      {
+        type: "switch",
+        workflowId: "nested-switch",
+        cases: [
+          {
+            id: "ready",
+            actions: [
+              {
+                type: "condition",
+                workflowId: "deep-condition",
+                actions: [],
+                elseActions: [],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    elseActions: [],
+  };
+  const nodes = getNestedWorkflowBranchNodes(
+    [nestedCondition],
+    (action) => ["condition", "switch"].includes(action?.type),
+    "action:root",
+    "elseActions",
+    "branch:root:elseActions",
+  );
+
+  assert.deepEqual(
+    nodes.map(({ id, parentConditionId, branch, parentBranchRootId }) => ({
+      id,
+      parentConditionId,
+      branch,
+      parentBranchRootId,
+    })),
+    [
+      {
+        id: "nested-condition:nested-condition",
+        parentConditionId: "action:root",
+        branch: "elseActions",
+        parentBranchRootId: "branch:root:elseActions",
+      },
+      {
+        id: "nested-condition:nested-switch",
+        parentConditionId: "nested-condition:nested-condition",
+        branch: "actions",
+        parentBranchRootId: "branch:nested-condition:actions",
+      },
+      {
+        id: "nested-condition:deep-condition",
+        parentConditionId: "nested-condition:nested-switch",
+        branch: "case:ready",
+        parentBranchRootId: "branch:nested-switch:case:ready",
+      },
+    ],
+  );
+});
+
+test("preserves legacy parent actions while editing nested branches", () => {
+  const nestedCondition = {
+    type: "condition",
+    condition: { source: "element" },
+    actions: [],
+    elseActions: [],
+  };
+  const parentCondition = {
+    type: "condition",
+    effect: nestedCondition,
+    elseActions: [],
+  };
+  const editor = createWorkflowConditionEditor({
+    isWorkflowBranchAction: (action) =>
+      isWorkflowBranchAction(action, []),
+  });
+  const nestedPath = editor.parseConditionActionPath("actions:0");
+
+  assert.equal(
+    getWorkflowBranchActions(parentCondition, "actions")[0],
+    nestedCondition,
+  );
+  assert.equal(
+    editor.getConditionActionAtPath(parentCondition, nestedPath),
+    nestedCondition,
+  );
+
+  setWorkflowBranchActions(parentCondition, "elseActions", [{ type: "back" }]);
+  assert.equal(parentCondition.effect, nestedCondition);
+
+  setWorkflowBranchActions(parentCondition, "actions", [nestedCondition]);
+  assert.equal(parentCondition.effect, undefined);
+  assert.deepEqual(parentCondition.actions, [nestedCondition]);
+});
+
+test("binds branch action fields to their owning condition or switch branch", () => {
+  class FakeElement {
+    constructor(tagName) {
+      this.tagName = tagName;
+      this.dataset = {};
+      this.children = [];
+      this.value = "";
+    }
+
+    append(...children) {
+      this.children.push(...children);
+    }
+
+    replaceChildren(...children) {
+      this.children = children;
+    }
+
+    setAttribute() {}
+
+    closest() {
+      return null;
+    }
+
+    querySelectorAll(selector) {
+      if (selector !== "[data-condition-action]") return [];
+      return this.children.flatMap((child) => [
+        ...(child.dataset?.conditionAction ? [child] : []),
+        ...(typeof child.querySelectorAll === "function"
+          ? child.querySelectorAll(selector)
+          : []),
+      ]);
+    }
+  }
+
+  const previousDocument = globalThis.document;
+  const previousOption = globalThis.Option;
+  globalThis.document = {
+    createElement: (tagName) => new FakeElement(tagName),
+  };
+  globalThis.Option = class {
+    constructor(label, value) {
+      this.label = label;
+      this.value = value;
+    }
+  };
+
+  try {
+    const conditionEditor = createWorkflowConditionEditor({
+      editorLanguage: "en",
+      localize: {},
+      twkSystemActionOptions: [],
+      isWorkflowBranchAction: (action) =>
+        ["condition", "switch"].includes(action?.type),
+      getConditionActionLists: (action) => ({
+        actions: action.actions || [],
+        elseActions: action.elseActions || [],
+      }),
+    });
+
+    const cases = [
+      {
+        branch: "actions",
+        owner: { type: "condition", actions: [{ type: "back" }] },
+      },
+      {
+        branch: "elseActions",
+        owner: { type: "condition", elseActions: [{ type: "back" }] },
+      },
+      {
+        branch: "case:ready",
+        owner: {
+          type: "switch",
+          cases: [{ id: "ready", actions: [{ type: "back" }] }],
+        },
+      },
+    ];
+
+    cases.forEach(({ branch, owner }) => {
+      const actionList = new FakeElement("div");
+      const addButton = new FakeElement("button");
+      addButton.dataset.addConditionAction = branch;
+      const action = branch.startsWith("case:")
+        ? owner.cases[0].actions[0]
+        : owner[branch][0];
+      conditionEditor.renderConditionOptions(
+        owner,
+        {
+          closest: () => null,
+          querySelector: () => actionList,
+          querySelectorAll: (selector) =>
+            selector === "[data-condition-action]"
+              ? actionList.querySelectorAll(selector)
+              : [addButton],
+        },
+        [],
+        {
+          index: 0,
+          isPrimary: true,
+          appLoad: false,
+          branchOnly: true,
+        },
+        [
+          {
+            branch,
+            heading: branch,
+            actions: [action],
+            listSelector: "#condition-actions",
+          },
+        ],
+      );
+
+      const actionType = actionList.children[0].children.find(
+        (field) => field.dataset.conditionAction === "type",
+      );
+      assert.equal(
+        actionType.children.some((option) => option.value === "condition"),
+        false,
+      );
+      const parsedPath = conditionEditor.parseConditionActionPath(
+        actionType.dataset.conditionActionPath,
+      );
+      assert.equal(
+        conditionEditor.getConditionActionAtPath(owner, parsedPath),
+        action,
+      );
+      assert.equal(actionType.dataset.eventHandlerIndex, "0");
+      assert.equal(actionType.dataset.eventHandlerAppLoad, "false");
+      assert.equal(addButton.dataset.conditionActionOwnerPath, "");
+      assert.equal(
+        conditionEditor.getConditionOwnerForField(owner, addButton),
+        owner,
+      );
+      assert.equal(addButton.dataset.eventHandlerIndex, "0");
+    });
+
+    const nestedCondition = {
+      type: "condition",
+      actions: [{ type: "back" }],
+    };
+    const outerCondition = {
+      type: "condition",
+      actions: [nestedCondition],
+    };
+    const nestedActionList = new FakeElement("div");
+    const nestedAddButton = new FakeElement("button");
+    nestedAddButton.dataset.addConditionAction = "actions";
+    conditionEditor.renderConditionOptions(
+      nestedCondition,
+      {
+        closest: () => null,
+        querySelector: () => nestedActionList,
+        querySelectorAll: (selector) =>
+          selector === "[data-condition-action]"
+            ? nestedActionList.querySelectorAll(selector)
+            : [nestedAddButton],
+      },
+      [{ branch: "actions", index: 0 }],
+      {
+        index: 0,
+        isPrimary: true,
+        appLoad: false,
+        branchOnly: true,
+      },
+      [
+        {
+          branch: "actions",
+          heading: "True",
+          actions: nestedCondition.actions,
+          listSelector: "#condition-actions",
+        },
+      ],
+    );
+    const nestedActionType = nestedActionList.children[0].children.find(
+      (field) => field.dataset.conditionAction === "type",
+    );
+    assert.equal(nestedActionType.dataset.eventHandlerIndex, "0");
+    assert.equal(nestedActionType.dataset.eventHandlerAppLoad, "false");
+    assert.equal(nestedActionType.dataset.conditionActionOwnerPath, "actions:0");
+    const nestedActionOwner = conditionEditor.getConditionOwnerForField(
+      outerCondition,
+      nestedActionType,
+    );
+    assert.equal(nestedActionOwner, nestedCondition);
+    assert.equal(
+      getWorkflowBranchActions(
+        nestedActionOwner,
+        nestedActionType.dataset.conditionBranch,
+      )[Number(nestedActionType.dataset.actionIndex)],
+      nestedCondition.actions[0],
+    );
+    assert.equal(
+      conditionEditor.getConditionActionForField(nestedActionType),
+      nestedCondition.actions[0],
+    );
+    assert.equal(
+      conditionEditor.getConditionOwnerForField(
+        outerCondition,
+        nestedAddButton,
+      ),
+      nestedCondition,
+    );
+  } finally {
+    if (previousDocument === undefined) delete globalThis.document;
+    else globalThis.document = previousDocument;
+    if (previousOption === undefined) delete globalThis.Option;
+    else globalThis.Option = previousOption;
+  }
+});
+
+test("routes global-action condition fields through the managed workflow", () => {
+  class FakeElement {
+    constructor(id = "") {
+      this.id = id;
+      this.dataset = {};
+      this.value = "";
+      this.hidden = false;
+      this.disabled = false;
+    }
+
+    replaceChildren() {}
+
+    closest() {
+      return null;
+    }
+  }
+
+  const controlIds = [
+    "property-condition-source",
+    "property-condition-request",
+    "property-condition-path",
+    "property-condition-object-path",
+    "property-condition-static-value",
+    "property-condition-variable",
+    "property-condition-twk-field",
+    "property-condition-form-field",
+    "property-condition-item-path",
+    "property-condition-extra",
+    "property-condition-element-page",
+    "property-condition-element",
+    "property-condition-element-property",
+    "property-condition-operator",
+    "property-condition-value",
+  ];
+  const controls = new Map(
+    controlIds.map((id) => [`#${id}`, new FakeElement(id)]),
+  );
+  [
+    "#condition-static-fields",
+    "#condition-api-fields",
+    "#condition-variable-fields",
+    "#condition-twk-fields",
+    "#condition-form-fields",
+    "#condition-item-fields",
+    "#condition-extra-fields",
+    "#condition-element-fields",
+    "#condition-object-path-fields",
+    "#condition-value-fields",
+    "#condition-actions",
+    "#condition-elseActions",
+  ].forEach((selector) => controls.set(selector, new FakeElement()));
+
+  const previousOption = globalThis.Option;
+  globalThis.Option = class {
+    constructor(label, value) {
+      this.label = label;
+      this.value = value;
+    }
+  };
+
+  try {
+    const conditionEditor = createWorkflowConditionEditor({
+      state: {
+        currentPageId: "page-one",
+        pages: [{ id: "page-one", kind: "page", name: "One" }],
+        elements: [],
+        requests: [],
+        variables: [],
+        assets: [],
+      },
+      editorLanguage: "en",
+      localize: {},
+      TWK_FIELDS: [],
+      variableSourceTypes: [
+        "static",
+        "endpoint",
+        "variable",
+        "twk",
+        "form",
+        "item",
+        "extra",
+        "element",
+      ],
+      twkSystemActionOptions: [],
+      populateValueSourceOptions() {},
+      isInsideCollection: () => false,
+      normalizeExtraData: () => [],
+      getElementName: (element) => element.id,
+      getElementSourcePropertyOptions: () => [],
+      getConditionActionLists: (action) => ({
+        actions: action.actions || [],
+        elseActions: action.elseActions || [],
+      }),
+      isWorkflowBranchAction: (action) =>
+        ["condition", "switch"].includes(action?.type),
+    });
+
+    const action = {
+      type: "condition",
+      condition: { source: "element" },
+      actions: [],
+      elseActions: [],
+    };
+    const root = {
+      closest: () => null,
+      querySelector: (selector) => controls.get(selector),
+      querySelectorAll: (selector) =>
+        selector === '[id^="property-condition-"]'
+          ? controlIds.map((id) => controls.get(`#${id}`))
+          : [],
+    };
+
+    conditionEditor.renderConditionOptions(action, root, [], {
+      index: 2,
+      isPrimary: false,
+      appLoad: true,
+      branchOnly: false,
+      globalActionId: "global-action-1",
+    });
+
+    const sourceField = controls.get("#property-condition-source");
+    assert.equal(sourceField.dataset.globalActionId, "global-action-1");
+    assert.equal(controls.get("#condition-api-fields").hidden, true);
+    assert.equal(controls.get("#condition-element-fields").hidden, false);
+  } finally {
+    if (previousOption === undefined) delete globalThis.Option;
+    else globalThis.Option = previousOption;
+  }
 });
 
 test("switch source element choices are scoped to a selected page", () => {
@@ -622,10 +1062,80 @@ test("exports global actions and multiple element events into a runtime script",
   );
   assert.match(
     script,
+    /const globalActionFormValues = \{\s*\.\.\.collectFormValues\(elementContext\),\s*\.\.\.formValues,\s*\};[\s\S]*?await runActionSequence\(\s*globalAction\.actions,\s*globalActionFormValues,/,
+  );
+  assert.match(
+    script,
     /elementContext\?\.closest\("\.content-collection-item"\)/,
   );
   assert.match(script, /Recursive global action call:/);
   assert.doesNotThrow(() => new Function(script));
+});
+
+test("refreshes form values before running a global action", () => {
+  const runtimeSource = startRuntime.toString();
+  const globalActionStart = runtimeSource.indexOf('case "globalAction": {');
+  const globalActionEnd = runtimeSource.indexOf(
+    'case "showElement":',
+    globalActionStart,
+  );
+  const globalActionCase = runtimeSource.slice(
+    globalActionStart,
+    globalActionEnd,
+  );
+
+  assert.notEqual(globalActionStart, -1);
+  assert.notEqual(globalActionEnd, -1);
+  assert.match(
+    globalActionCase,
+    /const globalActionFormValues = \{\s*\.\.\.collectFormValues\(elementContext\),\s*\.\.\.formValues,\s*\};/,
+  );
+  assert.match(
+    globalActionCase,
+    /runActionSequence\(\s*globalAction\.actions,\s*globalActionFormValues,/,
+  );
+});
+
+test("collects form values from the page containing the action element", () => {
+  const runtimeSource = startRuntime.toString();
+  const formControlsStart = runtimeSource.indexOf(
+    "function getActivePageFormControls(",
+  );
+  const formControlsEnd = runtimeSource.indexOf(
+    "function groupFormControls(",
+    formControlsStart,
+  );
+  const formControls = runtimeSource.slice(formControlsStart, formControlsEnd);
+
+  assert.notEqual(formControlsStart, -1);
+  assert.notEqual(formControlsEnd, -1);
+  assert.match(
+    formControls,
+    /contextElement\?\.closest\("\[data-app-page\]"\)/,
+  );
+  assert.match(
+    formControls,
+    /contextElement\?\.closest\(ACTIVE_SHEET_SELECTOR\)/,
+  );
+  assert.match(formControls, /contextPage \|\|/);
+  assert.match(formControls, /getActivePageSheets\(pageId\)/);
+  assert.match(runtimeSource, /validateRequiredFormFields\(elementNode\)/);
+  assert.match(runtimeSource, /formValues = collectFormValues\(elementNode\)/);
+});
+
+test("runtime resolves nested Tawakkalna helper responses", () => {
+  const runtimeSource = startRuntime.toString();
+
+  assert.match(
+    runtimeSource,
+    /function parseHelperValue\(result, responseKey\)/,
+  );
+  assert.match(runtimeSource, /Object\.hasOwn\(data, responseKey\)/);
+  assert.match(runtimeSource, /const nested = data\.results \?\? data\.data/);
+  assert.match(
+    runtimeSource,
+    /parseHelperValue\(await method\.call\(window\.TWK\), field\.responseKey\)/,
+  );
 });
 
 test("runtime preserves missing locales for first-translation fallback", () => {

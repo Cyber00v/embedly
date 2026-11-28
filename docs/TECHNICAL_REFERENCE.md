@@ -44,7 +44,7 @@ Element history is separate from project persistence: element snapshots have a 1
 3. Use existing token resolution, escaping, URL/color/dimension guards, and event delegation. Keep raw custom HTML sanitized and CSS scoped.
 4. Add validation for imported and saved input. Keep error reporting explicit and test both preview and exported HTML/runtime behavior.
 5. When changing a user-visible property or behavior, update [`USER_GUIDE.md`](./USER_GUIDE.md) and this reference.
-6. Plugin manifests may define `localizations` keyed by `en` and `ar`, with optional `title`, `group`, `description`, and per-property `label`/`options` translations. Option keys remain the stored values. `pluginContext.language` exposes the app language to plugin scripts.
+6. Plugin manifests may define `localizations` keyed by `en` and `ar`, with optional `title`, `group`, `description`, and per-property `label`/`options` translations. Option keys remain the stored values. `pluginContext.language` exposes the app language to plugin scripts. `pluginContext.onEditorEvent(name, handler)` subscribes to editor events prefixed with `embedly-editor:`; handlers receive the event detail and return an unsubscribe function. `element-selection-changed` provides `{ selectedId, selectedIds }`.
 
 ## 2. Data contracts
 
@@ -188,7 +188,7 @@ The app is browser TypeScript. The supported public runtime calls are listed und
 | `syncSavedComponentInstances(component, templateElements)` | void | Synchronize a component definition into all its instances, preserving instance/page IDs and remapping internal references. |
 | `startSavedComponentEditing(instanceId)` | void | Enter preview edit mode for one saved component instance and defer autosave. |
 | `applySavedComponentEditing(saveChanges)` | void | Apply the edited instance to the shared template and all instances, or restore the template when `saveChanges` is false. |
-| `renderThemeFields()`, `renderSettingsFields()`, `applyTheme()` | void | Render and apply app theme/settings controls. |
+| `renderThemeFields()`, `applyTheme()` | void | Render and apply app theme controls. |
 | `renameElementId(element, nextId)` | void | Update element ID and dependent references. |
 | `syncSelectedSharedProperty(element, control)`, `updateSelectedElement(event)` | void | Apply shared inspector property changes to the current multi-selection; validate, rerender, and persist edits. |
 

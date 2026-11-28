@@ -767,6 +767,23 @@ export function mountPluginElements(
           }),
         );
       };
+      const onEditorEvent = (
+        eventName: string,
+        handler: (detail: unknown) => void,
+      ) => {
+        if (
+          typeof eventName !== "string" ||
+          !/^[a-z][a-z0-9-]{0,63}$/.test(eventName)
+        )
+          throw new Error("Editor event names must be lowercase kebab-case.");
+        if (typeof handler !== "function")
+          throw new Error("Editor event handlers must be functions.");
+        const eventType = `embedly-editor:${eventName}`;
+        const listener: EventListener = (event) =>
+          handler((event as CustomEvent).detail);
+        document.addEventListener(eventType, listener);
+        return () => document.removeEventListener(eventType, listener);
+      };
       const pluginContext = Object.freeze({
         pluginId: plugin.id,
         language,
@@ -774,6 +791,7 @@ export function mountPluginElements(
         element: host,
         root: shadow,
         emit,
+        onEditorEvent,
         exposeFunction: (
           name: string,
           fn: (...args: unknown[]) => unknown,
